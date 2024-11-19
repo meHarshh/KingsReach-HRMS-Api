@@ -1,0 +1,94 @@
+package com.kingsmen.kingsreach.entity;
+
+import java.time.LocalDate;
+
+import com.kingsmen.kingsreach.enums.LeaveStatus;
+import com.kingsmen.kingsreach.enums.LeaveType;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+
+@Entity
+public class Leave {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int leaveId;
+	private LeaveType leaveType;
+	private LocalDate from;
+	private LocalDate to;
+	private int numberOfDays;
+	private String reason;
+	private LeaveStatus leaveStatus;
+
+	@OneToOne
+	private Employee approvedBy;
+
+	public int getLeaveId() {
+		return leaveId;
+	}
+
+	public void setLeaveId(int leaveId) {
+		this.leaveId = leaveId;
+	}
+
+	public LeaveType getLeaveType() {
+		return leaveType;
+	}
+
+	public void setLeaveType(LeaveType leaveType) {
+		this.leaveType = leaveType;
+	}
+
+	public LocalDate getFrom() {
+		return from;
+	}
+
+	public void setFrom(LocalDate from) {
+		this.from = from;
+	}
+
+	public LocalDate getTo() {
+		return to;
+	}
+
+	public void setTo(LocalDate to) {
+		this.to = to;
+	}
+
+	public int getNumberOfDays() {
+		return numberOfDays;
+	}
+
+	public void setNumberOfDays(int numberOfDays) {
+		this.numberOfDays = numberOfDays;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
+	public LeaveStatus getLeaveStatus() {
+		return leaveStatus;
+	}
+
+	public void setLeaveStatus(LeaveStatus leaveStatus) {
+		this.leaveStatus = leaveStatus;
+	}
+
+	public Employee getApprovedBy() {
+		return approvedBy;
+	}
+
+	public void setApprovedBy(Employee approvedBy) {
+		this.approvedBy = approvedBy;
+	}
+
+}
