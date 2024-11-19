@@ -3,11 +3,13 @@ package com.kingsmen.kingsreach.serviceimpl;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.kingsmen.kingsreach.entity.PolicyDetail;
 import com.kingsmen.kingsreach.repo.PolicyDetailRepo;
 import com.kingsmen.kingsreach.service.PolicyDetailService;
 
+@Service
 public class PolicyDetailServiceImpl implements PolicyDetailService {
 
 	@Autowired
