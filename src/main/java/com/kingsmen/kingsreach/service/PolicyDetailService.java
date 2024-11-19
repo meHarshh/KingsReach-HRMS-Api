@@ -6,4 +6,7 @@ public interface PolicyDetailService {
 
 	PolicyDetail policyDetail(PolicyDetail detail);
 
+
+	PolicyDetail editPolicy(String policyName, PolicyDetail policyDetail);
+
 }

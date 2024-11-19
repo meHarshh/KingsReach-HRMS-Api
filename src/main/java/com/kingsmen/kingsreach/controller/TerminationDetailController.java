@@ -4,6 +4,7 @@ package com.kingsmen.kingsreach.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind      .annotation.RestController;
 
@@ -19,5 +20,10 @@ public class TerminationDetailController {
 	@PostMapping(value ="/terminationDetail")
 	private TerminationDetail terminationDetail(@RequestBody TerminationDetail detail) {
 		return terminationDetailService.terminationDetail(detail);
+	}
+	
+	@PutMapping("/editTerminationDetail")
+	public TerminationDetail editTermination(@RequestBody TerminationDetail terminationDetail) {
+		return terminationDetailService.editTermination(terminationDetail);
 	}
 }
