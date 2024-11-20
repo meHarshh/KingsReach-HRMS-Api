@@ -27,8 +27,103 @@ public class Employee {
 	private LocalDate joiningDate;
 	private long phoneNumber;
 	private Department department;
+	
+//	Personal Detail
+	
+	private String aadharCardNumber;
+	private String panCardNumber;
+	private LocalDate dob;
+	private String bloodGroup;
+	private String fatherName;
+	private String motherName;
+	private long fatherContactNumber;
+	private long motherContactNumber;
+	private String permanentAdres;
+	private Long emergencyContact;
+	
+	
 
 	
+
+	public String getAadharCardNumber() {
+		return aadharCardNumber;
+	}
+
+	public void setAadharCardNumber(String aadharCardNumber) {
+		this.aadharCardNumber = aadharCardNumber;
+	}
+
+	public String getPanCardNumber() {
+		return panCardNumber;
+	}
+
+	public void setPanCardNumber(String panCardNumber) {
+		this.panCardNumber = panCardNumber;
+	}
+
+	public LocalDate getDob() {
+		return dob;
+	}
+
+	public void setDob(LocalDate dob) {
+		this.dob = dob;
+	}
+
+	public String getBloodGroup() {
+		return bloodGroup;
+	}
+
+	public void setBloodGroup(String bloodGroup) {
+		this.bloodGroup = bloodGroup;
+	}
+
+	public String getFatherName() {
+		return fatherName;
+	}
+
+	public void setFatherName(String fatherName) {
+		this.fatherName = fatherName;
+	}
+
+	public String getMotherName() {
+		return motherName;
+	}
+
+	public void setMotherName(String motherName) {
+		this.motherName = motherName;
+	}
+
+	public long getFatherContactNumber() {
+		return fatherContactNumber;
+	}
+
+	public void setFatherContactNumber(long fatherContactNumber) {
+		this.fatherContactNumber = fatherContactNumber;
+	}
+
+	public long getMotherContactNumber() {
+		return motherContactNumber;
+	}
+
+	public void setMotherContactNumber(long motherContactNumber) {
+		this.motherContactNumber = motherContactNumber;
+	}
+
+	public String getPermanentAdres() {
+		return permanentAdres;
+	}
+
+	public void setPermanentAdres(String permanentAdres) {
+		this.permanentAdres = permanentAdres;
+	}
+
+	public Long getEmergencyContact() {
+		return emergencyContact;
+	}
+
+	public void setEmergencyContact(Long emergencyContact) {
+		this.emergencyContact = emergencyContact;
+	}
 
 	public EmployeeRole getRole() {
 		return role;
