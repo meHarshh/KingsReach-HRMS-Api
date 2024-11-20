@@ -25,6 +25,17 @@ public class Leave {
 	private LeaveStatus leaveStatus;
 	private LeaveStatus status;
 	private Employee approved;
+	private String employeeId;
+	
+	
+
+	public String getEmployeeId() {
+		return employeeId;
+	}
+
+	public void setEmployeeId(String employeeId) {
+		this.employeeId = employeeId;
+	}
 
 	@Transient
 	private String approvedBy;

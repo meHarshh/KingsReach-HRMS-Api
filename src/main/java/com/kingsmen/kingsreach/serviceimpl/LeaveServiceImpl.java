@@ -33,4 +33,17 @@ public class LeaveServiceImpl implements LeaveService {
 
 	}
 
+	@Override
+	public Leave changeLeaveStatus(Leave leave) {
+
+		String employeeId = leave.getEmployeeId();
+
+		Optional<Leave> optional = leaveRepo.findByEmployeeId(employeeId);
+
+		Leave leave2 = optional.get();
+
+		leave2.setLeaveStatus(leave.getLeaveStatus());
+		return leaveRepo.save(leave2);
+	}
+
 }
