@@ -6,4 +6,6 @@ public interface LeaveService {
 
 	Leave applyLeave(Leave leave);
 
+	Leave changeLeaveStatus(Leave leave);
+
 }
