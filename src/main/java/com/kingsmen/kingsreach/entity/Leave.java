@@ -9,7 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.Transient;
 
 @Entity
 public class Leave {
@@ -23,9 +23,27 @@ public class Leave {
 	private int numberOfDays;
 	private String reason;
 	private LeaveStatus leaveStatus;
+	private LeaveStatus status;
+	private Employee approved;
 
-	@OneToOne
-	private Employee approvedBy;
+	@Transient
+	private String approvedBy;
+
+	public LeaveStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(LeaveStatus status) {
+		this.status = status;
+	}
+
+	public Employee getApproved() {
+		return approved;
+	}
+
+	public void setApproved(Employee approved) {
+		this.approved = approved;
+	}
 
 	public int getLeaveId() {
 		return leaveId;
@@ -83,11 +101,11 @@ public class Leave {
 		this.leaveStatus = leaveStatus;
 	}
 
-	public Employee getApprovedBy() {
+	public String getApprovedBy() {
 		return approvedBy;
 	}
 
-	public void setApprovedBy(Employee approvedBy) {
+	public void setApprovedBy(String approvedBy) {
 		this.approvedBy = approvedBy;
 	}
 
