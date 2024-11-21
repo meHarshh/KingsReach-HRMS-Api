@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Employee {
@@ -27,9 +28,9 @@ public class Employee {
 	private LocalDate joiningDate;
 	private long phoneNumber;
 	private Department department;
-	
+
 //	Personal Detail
-	
+
 	private String aadharCardNumber;
 	private String panCardNumber;
 	private LocalDate dob;
@@ -40,10 +41,17 @@ public class Employee {
 	private long motherContactNumber;
 	private String permanentAdres;
 	private Long emergencyContact;
-	
-	
 
-	
+	@OneToMany
+	private Asset asset;
+
+	public Asset getAsset() {
+		return asset;
+	}
+
+	public void setAsset(Asset asset) {
+		this.asset = asset;
+	}
 
 	public String getAadharCardNumber() {
 		return aadharCardNumber;

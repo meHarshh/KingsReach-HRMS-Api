@@ -16,4 +16,6 @@ public interface EmployeeRepo extends JpaRepository<Employee, Integer> {
 
 	public Optional<Employee> findByEmployeeFirstName(String firstName);
 
+	public Optional<Employee> findByEmployeeId(String employeeId);
+
 }
