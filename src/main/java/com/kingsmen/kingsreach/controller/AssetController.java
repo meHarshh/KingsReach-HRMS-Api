@@ -1,12 +1,14 @@
 package com.kingsmen.kingsreach.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kingsmen.kingsreach.entity.Asset;
 import com.kingsmen.kingsreach.service.AssetService;
+import com.kingsmen.kingsreach.util.ResponseStructure;
 
 @RestController
 public class AssetController {
@@ -15,7 +17,7 @@ public class AssetController {
 	private AssetService assetService;
 
 	@PostMapping(value = "/grantAsset")
-	private Asset grantedAsset(@PathVariable Asset asset) {
+	private ResponseEntity<ResponseStructure<Asset>> grantedAsset(@PathVariable Asset asset) {
 		return assetService.grantAssets(asset);
 	}
 	

@@ -1,12 +1,15 @@
 package com.kingsmen.kingsreach.service;
 
+import org.springframework.http.ResponseEntity;
+
 import com.kingsmen.kingsreach.entity.PolicyDetail;
+import com.kingsmen.kingsreach.util.ResponseStructure;
 
 public interface PolicyDetailService {
 
-	PolicyDetail policyDetail(PolicyDetail detail);
+	ResponseEntity<ResponseStructure<PolicyDetail>> policyDetail(PolicyDetail detail);
 
 
-	PolicyDetail editPolicy(String policyName, PolicyDetail policyDetail);
+	ResponseEntity<ResponseStructure<PolicyDetail>> editPolicy(String policyName, PolicyDetail policyDetail);
 
 }
