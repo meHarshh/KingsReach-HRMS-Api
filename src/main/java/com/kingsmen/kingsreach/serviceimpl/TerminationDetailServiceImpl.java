@@ -3,11 +3,14 @@ package com.kingsmen.kingsreach.serviceimpl;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.kingsmen.kingsreach.entity.TerminationDetail;
 import com.kingsmen.kingsreach.repo.TerminationDetailRepo;
 import com.kingsmen.kingsreach.service.TerminationDetailService;
+import com.kingsmen.kingsreach.util.ResponseStructure;
 
 @Service
 public class TerminationDetailServiceImpl implements TerminationDetailService {
@@ -16,13 +19,22 @@ public class TerminationDetailServiceImpl implements TerminationDetailService {
 	private TerminationDetailRepo detailRepo;
 
 	@Override
-	public TerminationDetail terminationDetail(TerminationDetail detail) {
+	public ResponseEntity<ResponseStructure<TerminationDetail>> terminationDetail(TerminationDetail detail) {
 
-		return detailRepo.save(detail);
+		detail=detailRepo.save(detail);
+		
+		String message="Termination ID: " + detail.getTerminationDetailId() + " added successfully!!";
+		
+		ResponseStructure<TerminationDetail> responseStructure=new ResponseStructure<TerminationDetail>();
+		responseStructure.setStatusCode(HttpStatus.CREATED.value());
+		responseStructure.setMessage(message);
+		responseStructure.setData(detail);
+		
+		return new ResponseEntity<ResponseStructure<TerminationDetail>>(responseStructure,HttpStatus.CREATED);
 	}
 
 	@Override
-	public TerminationDetail editTermination(TerminationDetail terminationDetail) {
+	public ResponseEntity<ResponseStructure<TerminationDetail>> editTermination(TerminationDetail terminationDetail) {
 
 		Optional<TerminationDetail> byEmployeeName = detailRepo.findByEmployeeName(terminationDetail.getEmployeeName());
 		TerminationDetail employee = byEmployeeName.get();
@@ -32,7 +44,17 @@ public class TerminationDetailServiceImpl implements TerminationDetailService {
 		employee.setTerminationReason(terminationDetail.getTerminationReason());
 		employee.setTerminationType(terminationDetail.getTerminationType());
 
-		return detailRepo.save(employee);
+		TerminationDetail updatedDetail=detailRepo.save(employee);
+		
+		String message="Termination ID: " + terminationDetail.getTerminationDetailId() +" of " +terminationDetail.getEmployeeName() + "updated successfully!!";
+		
+		ResponseStructure<TerminationDetail> responseStructure=new ResponseStructure<TerminationDetail>();
+		responseStructure.setStatusCode(HttpStatus.ACCEPTED.value());
+		responseStructure.setMessage(message);
+		responseStructure.setData(updatedDetail);
+		
+		return new ResponseEntity<ResponseStructure<TerminationDetail>>(responseStructure,HttpStatus.ACCEPTED);
 	}
+
 
 }

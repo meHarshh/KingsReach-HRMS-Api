@@ -1,6 +1,7 @@
 package com.kingsmen.kingsreach.entity;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.enums.EmployeeRole;
@@ -10,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Employee {
@@ -42,14 +44,17 @@ public class Employee {
 	private String permanentAdres;
 	private Long emergencyContact;
 
-	@OneToMany
-	private Asset asset;
+	@OneToMany(mappedBy = "employee")
+	private List<Asset> asset;
 
-	public Asset getAsset() {
+	@OneToOne(mappedBy = "employee")
+	private Payroll payroll;
+
+	public List<Asset> getAsset() {
 		return asset;
 	}
 
-	public void setAsset(Asset asset) {
+	public void setAsset(List<Asset> asset) {
 		this.asset = asset;
 	}
 
