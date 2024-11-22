@@ -1,6 +1,7 @@
 package com.kingsmen.kingsreach.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kingsmen.kingsreach.entity.PolicyDetail;
 import com.kingsmen.kingsreach.service.PolicyDetailService;
+import com.kingsmen.kingsreach.util.ResponseStructure;
 
 @RestController
 public class PolicyDetailController {
@@ -17,12 +19,12 @@ public class PolicyDetailController {
 	private PolicyDetailService policyDetailService; 
 	
 	@PostMapping(value = "/policyDetail")
-	private PolicyDetail policyDetail(@RequestBody PolicyDetail detail) {
+	private ResponseEntity<ResponseStructure<PolicyDetail>> policyDetail(@RequestBody PolicyDetail detail) {
 		return policyDetailService.policyDetail(detail);
 	}
 	
 	@PutMapping("/editPolicy")
-	public PolicyDetail editPolicy(@RequestParam String policyName ,@RequestBody PolicyDetail policyDetail) {
+	public ResponseEntity<ResponseStructure<PolicyDetail>> editPolicy(@RequestParam String policyName ,@RequestBody PolicyDetail policyDetail) {
 		
 		return policyDetailService.editPolicy(policyName, policyDetail);
 	}

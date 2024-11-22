@@ -3,12 +3,17 @@ package com.kingsmen.kingsreach.entity;
 import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Transient;
 
 @Entity
 public class Asset {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String assetName;
 	private String assetId;
@@ -21,8 +26,6 @@ public class Asset {
 
 	@ManyToOne
 	private Employee employee;
-	
-	
 
 	public String getEmployeeId() {
 		return employeeId;
