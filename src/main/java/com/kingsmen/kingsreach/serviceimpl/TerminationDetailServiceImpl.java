@@ -23,7 +23,7 @@ public class TerminationDetailServiceImpl implements TerminationDetailService {
 
 		detail=detailRepo.save(detail);
 		
-		String message="Termination ID: " + detail.getTerminationDetailId() + " added successfully!!";
+		String message="Termination details of " + detail.getEmployeeName() + " added.";
 		
 		ResponseStructure<TerminationDetail> responseStructure=new ResponseStructure<TerminationDetail>();
 		responseStructure.setStatusCode(HttpStatus.CREATED.value());

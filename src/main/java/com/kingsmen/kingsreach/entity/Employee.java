@@ -1,37 +1,48 @@
 package com.kingsmen.kingsreach.entity;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
 import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.enums.EmployeeRole;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
+@SuppressWarnings("serial")
 @Entity
-public class Employee {
+public class Employee implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+
+	@Column(name="emp_id")
 	private String employeeId;
 	private String firstName;
 	private String lastName;
 	private String userName;
+
+	@Enumerated(EnumType.STRING)
 	private EmployeeRole role;
 	private String email;
 	private String password;
 	private String confirmPassword;
 	private LocalDate joiningDate;
 	private long phoneNumber;
+
+	@Enumerated(EnumType.STRING)
 	private Department department;
 
-//	Personal Detail
+	//	Personal Detail
 
 	private String aadharCardNumber;
 	private String panCardNumber;
