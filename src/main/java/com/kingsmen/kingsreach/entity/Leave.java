@@ -9,11 +9,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
 @Entity
-@Table(name="`leave`")
+@Table(name = "`leave`")
 public class Leave {
 
 	@Id
@@ -27,7 +28,37 @@ public class Leave {
 	private LeaveStatus leaveStatus;
 	private Employee approved;
 	private String employeeId;
-	
+	private int casualLeaveBalance;
+	private int sickLeaveBalance;
+	private int paidLeaveBalance;
+
+	@ManyToOne
+	private Employee employee;
+
+	public int getCasualLeaveBalance() {
+		return casualLeaveBalance;
+	}
+
+	public void setCasualLeaveBalance(int casualLeaveBalance) {
+		this.casualLeaveBalance = casualLeaveBalance;
+	}
+
+	public int getSickLeaveBalance() {
+		return sickLeaveBalance;
+	}
+
+	public void setSickLeaveBalance(int sickLeaveBalance) {
+		this.sickLeaveBalance = sickLeaveBalance;
+	}
+
+	public int getPaidLeaveBalance() {
+		return paidLeaveBalance;
+	}
+
+	public void setPaidLeaveBalance(int paidLeaveBalance) {
+		this.paidLeaveBalance = paidLeaveBalance;
+	}
+
 	public String getEmployeeId() {
 		return employeeId;
 	}
