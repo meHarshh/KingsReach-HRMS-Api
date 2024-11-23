@@ -9,25 +9,58 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
 @Entity
+@Table(name = "`leave`")
 public class Leave {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int leaveId;
 	private LeaveType leaveType;
-	private LocalDate from;
-	private LocalDate to;
+	private LocalDate fromDate;
+	private LocalDate toDate;
 	private int numberOfDays;
 	private String reason;
 	private LeaveStatus leaveStatus;
-	private LeaveStatus status;
+
 	private Employee approved;
+
 	private String employeeId;
-	
-	
+
+	private int casualLeaveBalance;
+	private int sickLeaveBalance;
+	private int paidLeaveBalance;
+
+	@ManyToOne
+	private Employee employee;
+
+	public int getCasualLeaveBalance() {
+		return casualLeaveBalance;
+	}
+
+	public void setCasualLeaveBalance(int casualLeaveBalance) {
+		this.casualLeaveBalance = casualLeaveBalance;
+	}
+
+	public int getSickLeaveBalance() {
+		return sickLeaveBalance;
+	}
+
+	public void setSickLeaveBalance(int sickLeaveBalance) {
+		this.sickLeaveBalance = sickLeaveBalance;
+	}
+
+	public int getPaidLeaveBalance() {
+		return paidLeaveBalance;
+	}
+
+	public void setPaidLeaveBalance(int paidLeaveBalance) {
+		this.paidLeaveBalance = paidLeaveBalance;
+	}
 
 	public String getEmployeeId() {
 		return employeeId;
@@ -39,14 +72,6 @@ public class Leave {
 
 	@Transient
 	private String approvedBy;
-
-	public LeaveStatus getStatus() {
-		return status;
-	}
-
-	public void setStatus(LeaveStatus status) {
-		this.status = status;
-	}
 
 	public Employee getApproved() {
 		return approved;
@@ -72,20 +97,20 @@ public class Leave {
 		this.leaveType = leaveType;
 	}
 
-	public LocalDate getFrom() {
-		return from;
+	public LocalDate getFromDate() {
+		return fromDate;
 	}
 
-	public void setFrom(LocalDate from) {
-		this.from = from;
+	public void setFromDate(LocalDate fromDate) {
+		this.fromDate = fromDate;
 	}
 
-	public LocalDate getTo() {
-		return to;
+	public LocalDate getToDate() {
+		return toDate;
 	}
 
-	public void setTo(LocalDate to) {
-		this.to = to;
+	public void setToDate(LocalDate toDate) {
+		this.toDate = toDate;
 	}
 
 	public int getNumberOfDays() {

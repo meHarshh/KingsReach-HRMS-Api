@@ -1,237 +1,278 @@
 package com.kingsmen.kingsreach.entity;
 
+import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.enums.EmployeeRole;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
+@SuppressWarnings("serial")
 @Entity
-public class Employee {
+public class Employee implements Serializable {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	private String employeeId;
-	private String firstName;
-	private String lastName;
-	private String userName;
-	private EmployeeRole role;
-	private String email;
-	private String password;
-	private String confirmPassword;
-	private LocalDate joiningDate;
-	private long phoneNumber;
-	private Department department;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "emp_id")
+    private int id;
+    
+    @Column(nullable = false)
+    private String employeeId;
+    
+    @Column(nullable = false)
+    private String firstName;
+    
+    @Column(nullable = false)
+    private String lastName;
+    
+    private String userName;
+    
+    @Enumerated(EnumType.STRING)
+    private EmployeeRole role;
+    
+    private String email;
+    
+    private String password;
+    
+    private String confirmPassword;
+    
+    private LocalDate joiningDate;
+    
+    private Long phoneNumber;
+    
+    @Enumerated(EnumType.STRING)
+    private Department department;
 
-//	Personal Detail
+    
+    private String aadharCardNumber;
+    
+    private String panCardNumber;
+    
+    private LocalDate dob;
+    
+    private String bloodGroup;
+    
+    private String fatherName;
+    
+    private String motherName;
+    
+    private Long fatherContactNumber;
+    
+    private Long motherContactNumber;
+    
+    private String permanentAdres;
+    
+    private Long emergencyContact;
+    
+    @OneToMany(mappedBy = "employee")
+    private List<Asset> asset = new ArrayList<>();
 
-	private String aadharCardNumber;
-	private String panCardNumber;
-	private LocalDate dob;
-	private String bloodGroup;
-	private String fatherName;
-	private String motherName;
-	private long fatherContactNumber;
-	private long motherContactNumber;
-	private String permanentAdres;
-	private Long emergencyContact;
+    @OneToOne(mappedBy = "employee")
+    private Payroll payroll;
 
-	@OneToMany(mappedBy = "employee")
-	private List<Asset> asset;
+    
+    // Getters and Setters
+    
+    public int getId() {
+        return id;
+    }
 
-	@OneToOne(mappedBy = "employee")
-	private Payroll payroll;
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public List<Asset> getAsset() {
-		return asset;
-	}
+    public String getEmployeeId() {
+        return employeeId;
+    }
 
-	public void setAsset(List<Asset> asset) {
-		this.asset = asset;
-	}
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
+    }
 
-	public String getAadharCardNumber() {
-		return aadharCardNumber;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public void setAadharCardNumber(String aadharCardNumber) {
-		this.aadharCardNumber = aadharCardNumber;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public String getPanCardNumber() {
-		return panCardNumber;
-	}
+    public String getLastName() {
+        return lastName;
+    }
 
-	public void setPanCardNumber(String panCardNumber) {
-		this.panCardNumber = panCardNumber;
-	}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	public LocalDate getDob() {
-		return dob;
-	}
+    public String getUserName() {
+        return userName;
+    }
 
-	public void setDob(LocalDate dob) {
-		this.dob = dob;
-	}
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-	public String getBloodGroup() {
-		return bloodGroup;
-	}
+    public EmployeeRole getRole() {
+        return role;
+    }
 
-	public void setBloodGroup(String bloodGroup) {
-		this.bloodGroup = bloodGroup;
-	}
+    public void setRole(EmployeeRole role) {
+        this.role = role;
+    }
 
-	public String getFatherName() {
-		return fatherName;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setFatherName(String fatherName) {
-		this.fatherName = fatherName;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public String getMotherName() {
-		return motherName;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setMotherName(String motherName) {
-		this.motherName = motherName;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public long getFatherContactNumber() {
-		return fatherContactNumber;
-	}
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
 
-	public void setFatherContactNumber(long fatherContactNumber) {
-		this.fatherContactNumber = fatherContactNumber;
-	}
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
 
-	public long getMotherContactNumber() {
-		return motherContactNumber;
-	}
+    public LocalDate getJoiningDate() {
+        return joiningDate;
+    }
 
-	public void setMotherContactNumber(long motherContactNumber) {
-		this.motherContactNumber = motherContactNumber;
-	}
+    public void setJoiningDate(LocalDate joiningDate) {
+        this.joiningDate = joiningDate;
+    }
 
-	public String getPermanentAdres() {
-		return permanentAdres;
-	}
+    public Long getPhoneNumber() {
+        return phoneNumber;
+    }
 
-	public void setPermanentAdres(String permanentAdres) {
-		this.permanentAdres = permanentAdres;
-	}
+    public void setPhoneNumber(Long phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
-	public Long getEmergencyContact() {
-		return emergencyContact;
-	}
+    public Department getDepartment() {
+        return department;
+    }
 
-	public void setEmergencyContact(Long emergencyContact) {
-		this.emergencyContact = emergencyContact;
-	}
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
 
-	public EmployeeRole getRole() {
-		return role;
-	}
+    public String getAadharCardNumber() {
+        return aadharCardNumber;
+    }
 
-	public void setRole(EmployeeRole role) {
-		this.role = role;
-	}
+    public void setAadharCardNumber(String aadharCardNumber) {
+        this.aadharCardNumber = aadharCardNumber;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public String getPanCardNumber() {
+        return panCardNumber;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setPanCardNumber(String panCardNumber) {
+        this.panCardNumber = panCardNumber;
+    }
 
-	public String getEmployeeId() {
-		return employeeId;
-	}
+    public LocalDate getDob() {
+        return dob;
+    }
 
-	public void setEmployeeId(String employeeId) {
-		this.employeeId = employeeId;
-	}
+    public void setDob(LocalDate dob) {
+        this.dob = dob;
+    }
 
-	public String getFirstName() {
-		return firstName;
-	}
+    public String getBloodGroup() {
+        return bloodGroup;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public void setBloodGroup(String bloodGroup) {
+        this.bloodGroup = bloodGroup;
+    }
 
-	public String getLastName() {
-		return lastName;
-	}
+    public String getFatherName() {
+        return fatherName;
+    }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    public void setFatherName(String fatherName) {
+        this.fatherName = fatherName;
+    }
 
-	public String getUserName() {
-		return userName;
-	}
+    public String getMotherName() {
+        return motherName;
+    }
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    public void setMotherName(String motherName) {
+        this.motherName = motherName;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public Long getFatherContactNumber() {
+        return fatherContactNumber;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setFatherContactNumber(Long fatherContactNumber) {
+        this.fatherContactNumber = fatherContactNumber;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public Long getMotherContactNumber() {
+        return motherContactNumber;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setMotherContactNumber(Long motherContactNumber) {
+        this.motherContactNumber = motherContactNumber;
+    }
 
-	public String getConfirmPassword() {
-		return confirmPassword;
-	}
+    public String getPermanentAdres() {
+        return permanentAdres;
+    }
 
-	public void setConfirmPassword(String confirmPassword) {
-		this.confirmPassword = confirmPassword;
-	}
+    public void setPermanentAdres(String permanentAdres) {
+        this.permanentAdres = permanentAdres;
+    }
 
-	public LocalDate getJoiningDate() {
-		return joiningDate;
-	}
+    public Long getEmergencyContact() {
+        return emergencyContact;
+    }
 
-	public void setJoiningDate(LocalDate joiningDate) {
-		this.joiningDate = joiningDate;
-	}
+    public void setEmergencyContact(Long emergencyContact) {
+        this.emergencyContact = emergencyContact;
+    }
 
-	public long getPhoneNumber() {
-		return phoneNumber;
-	}
+    public List<Asset> getAsset() {
+        return asset;
+    }
 
-	public void setPhoneNumber(long phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
+    public void setAsset(List<Asset> asset) {
+        this.asset = asset;
+    }
 
-	public Department getDepartment() {
-		return department;
-	}
+    public Payroll getPayroll() {
+        return payroll;
+    }
 
-	public void setDepartment(Department department) {
-		this.department = department;
-	}
-
+    public void setPayroll(Payroll payroll) {
+        this.payroll = payroll;
+    }
 }

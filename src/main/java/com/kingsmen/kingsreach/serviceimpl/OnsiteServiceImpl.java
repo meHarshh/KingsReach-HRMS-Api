@@ -18,10 +18,6 @@ public class OnsiteServiceImpl implements OnsiteService {
 	
 
 	@Override
-<<<<<<< HEAD
-	public Onsite onsiteEmployee(Onsite onsite) {
-		return onsiteRepo.save(onsite);
-=======
 	public ResponseEntity<ResponseStructure<Onsite>> onsiteEmployee(Onsite onsite) {
 
 		onsite=onsiteRepo.save(onsite);
@@ -34,7 +30,6 @@ public class OnsiteServiceImpl implements OnsiteService {
 		responseStructure.setData(onsite);
 
 		return new ResponseEntity<ResponseStructure<Onsite>>(responseStructure, HttpStatus.OK);
->>>>>>> 973128086ad1b476817bc77ac0f37efecc6aabe4
 	}
 
 }

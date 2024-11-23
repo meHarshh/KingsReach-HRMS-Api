@@ -28,7 +28,7 @@ public class LeaveServiceImpl implements LeaveService {
 		String approvedBy = leave.getApprovedBy();
 		String[] split = approvedBy.split(" ");
 
-		Optional<Employee> byEmployeeName = employeeRepo.findByEmployeeFirstName(split[0]);
+		Optional<Employee> byEmployeeName = employeeRepo.findByFirstName(split[0]);
 
 		leave.setApproved(byEmployeeName.get());
 
@@ -66,6 +66,8 @@ public class LeaveServiceImpl implements LeaveService {
 		return new ResponseEntity<ResponseStructure<Leave>>(responseStructure,HttpStatus.ACCEPTED);
 
 	}
+	
+	
 
 
 }
