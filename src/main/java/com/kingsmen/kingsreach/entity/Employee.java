@@ -81,10 +81,39 @@ public class Employee implements Serializable {
     @OneToOne(mappedBy = "employee")
     private Payroll payroll;
 
+    private double clBalance; // Casual Leave Balance
+    private double slBalance; // Sick Leave Balance
+    private double plBalance; // Paid Leave Balance
+    
+    
     
     // Getters and Setters
     
-    public int getId() {
+    public double getClBalance() {
+		return clBalance;
+	}
+
+	public void setClBalance(double clBalance) {
+		this.clBalance = clBalance;
+	}
+
+	public double getSlBalance() {
+		return slBalance;
+	}
+
+	public void setSlBalance(double slBalance) {
+		this.slBalance = slBalance;
+	}
+
+	public double getPlBalance() {
+		return plBalance;
+	}
+
+	public void setPlBalance(double plBalance) {
+		this.plBalance = plBalance;
+	}
+
+	public int getId() {
         return id;
     }
 
