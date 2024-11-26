@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Leave;
+import com.kingsmen.kingsreach.entity.Payroll;
 import com.kingsmen.kingsreach.enums.LeaveType;
 import com.kingsmen.kingsreach.exceptions.InvalidEmployeeIdException;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
@@ -47,6 +48,8 @@ public class LeaveServiceImpl implements LeaveService {
 
         // Set approval information
         leave.setApproved(approver.orElse(null));
+        
+        Payroll payroll = employee.getPayroll();
 
         // Get the leave date and month
         LocalDate fromDate = leave.getFromDate();
@@ -82,7 +85,7 @@ public class LeaveServiceImpl implements LeaveService {
         // Calculate Loss of Pay (LOP) if applicable
         double lopDeduction = calculateLopDeduction(employee, leave, month);
         if (lopDeduction > 0) {
-            employee.setSalary(employee.getPayroll().getGrossSalary() - lopDeduction);
+            payroll.setSalary(employee.getPayroll().getGrossSalary() - lopDeduction);
         }
 
         // Save updated leave data
