@@ -24,9 +24,9 @@ public class Employee implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="emp_id")
 	private int id;
 
-	@Column(name="emp_id")
 	private String employeeId;
 	private String firstName;
 	private String lastName;
@@ -55,6 +55,9 @@ public class Employee implements Serializable {
     private Long motherContactNumber;   
     private String permanentAdres;  
     private Long emergencyContact;
+    private int clBalance;
+    private int slBalance;
+    private int plBalance;
     
     @OneToMany(mappedBy = "employee")
     private List<Asset> asset = new ArrayList<>();
@@ -255,4 +258,33 @@ public class Employee implements Serializable {
     public void setPayroll(Payroll payroll) {
         this.payroll = payroll;
     }
+
+	public int getClBalance() {
+		return clBalance;
+	}
+
+	public void setClBalance(int clBalance) {
+		this.clBalance = clBalance;
+	}
+
+	public int getSlBalance() {
+		return slBalance;
+	}
+
+	public void setSlBalance(int slBalance) {
+		this.slBalance = slBalance;
+	}
+
+	public int getPlBalance() {
+		return plBalance;
+	}
+
+	public void setPlBalance(int plBalance) {
+		this.plBalance = plBalance;
+	}
+
+	public void setPhoneNumber(long phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+    
 }

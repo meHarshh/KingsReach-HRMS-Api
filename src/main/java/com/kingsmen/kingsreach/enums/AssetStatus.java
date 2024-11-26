@@ -2,5 +2,5 @@ package com.kingsmen.kingsreach.enums;
 
 public enum AssetStatus {
 
-	GRANTED , PENDING , APPROVED
+	GRANTED , PENDING , APPROVED , RETURNED
 }
