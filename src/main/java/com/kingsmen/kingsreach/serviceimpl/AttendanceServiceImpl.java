@@ -22,7 +22,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 	@Override
 	public Attendance addAttendance(Attendance attendance) {
-		Optional<Employee> byEmployeeId = employeeRepo.findByEmployeeId(attendance.getEmpId());
+		Optional<Employee> byEmployeeId = employeeRepo.findByEmployeeId(attendance.getEmployeeId());
 		Employee employee = byEmployeeId.get();
 		attendance.setEmployee(employee);
 		return attendanceRepo.save(attendance);
