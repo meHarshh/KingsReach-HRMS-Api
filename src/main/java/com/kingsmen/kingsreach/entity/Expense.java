@@ -1,33 +1,30 @@
 package com.kingsmen.kingsreach.entity;
 
 import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 
 @Entity
-public class Reimbursement {
+public class Expense {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int reimbursementId;
+	private int expenseId;
+
+	private String expenseName;
+
+	@Transient
 	private String employeeName;
+
+	@Transient
 	private String employeeId;
-	private String purpose;
-	private LocalDate date;
-	private int[] projects;
 	private double amount;
-	
-	
-
-	public double getAmount() {
-		return amount;
-	}
-
-	public void setAmount(double amount) {
-		this.amount = amount;
-	}
+	private LocalDate date;
+	private String reason;
 
 	private Employee employee;
 
@@ -39,20 +36,20 @@ public class Reimbursement {
 		this.employee = employee;
 	}
 
-	public String getEmployeeId() {
-		return employeeId;
+	public int getExpenseId() {
+		return expenseId;
 	}
 
-	public void setEmployeeId(String employeeId) {
-		this.employeeId = employeeId;
+	public void setExpenseId(int expenseId) {
+		this.expenseId = expenseId;
 	}
 
-	public int getReimbursementId() {
-		return reimbursementId;
+	public String getExpenseName() {
+		return expenseName;
 	}
 
-	public void setReimbursementId(int reimbursementId) {
-		this.reimbursementId = reimbursementId;
+	public void setExpenseName(String expenseName) {
+		this.expenseName = expenseName;
 	}
 
 	public String getEmployeeName() {
@@ -63,12 +60,20 @@ public class Reimbursement {
 		this.employeeName = employeeName;
 	}
 
-	public String getPurpose() {
-		return purpose;
+	public String getEmployeeId() {
+		return employeeId;
 	}
 
-	public void setPurpose(String purpose) {
-		this.purpose = purpose;
+	public void setEmployeeId(String employeeId) {
+		this.employeeId = employeeId;
+	}
+
+	public double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
 	}
 
 	public LocalDate getDate() {
@@ -79,12 +84,12 @@ public class Reimbursement {
 		this.date = date;
 	}
 
-	public int[] getProjects() {
-		return projects;
+	public String getReason() {
+		return reason;
 	}
 
-	public void setProjects(int[] projects) {
-		this.projects = projects;
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 
 }

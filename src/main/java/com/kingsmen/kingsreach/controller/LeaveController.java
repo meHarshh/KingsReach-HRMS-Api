@@ -26,4 +26,5 @@ public class LeaveController {
 	private ResponseEntity<ResponseStructure<Leave>> changeLeaveStatus(@RequestBody Leave leave) {
 		return leaveservice.changeLeaveStatus(leave);
 	}
+	
 }

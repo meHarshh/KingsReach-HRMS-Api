@@ -26,6 +26,18 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		Optional<Employee> byEmployeeId = employeeRepo.findByEmployeeId(reimbursement.getEmployeeId());
 		reimbursement.setEmployee(byEmployeeId.get());
 		
+		int[] projects = reimbursement.getProjects();
+		int amount=0;
+		int totalKms=0;
+		for (int i = 0; i < projects.length; i++) {
+			totalKms+=projects[i];
+		}
+		
+		totalKms= totalKms*2;
+		amount = totalKms/projects.length *5 ;
+		
+		reimbursement.setAmount(amount);
+		
 		return reimbursementRepo.save(reimbursement);
 	}
 

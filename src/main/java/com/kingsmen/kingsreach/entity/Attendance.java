@@ -12,6 +12,7 @@ public class Attendance {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int attendanceId;
+	
 	private int totalWorkMinutes;
 	private String firstPunchIn;
 	private String lastPunchOut;

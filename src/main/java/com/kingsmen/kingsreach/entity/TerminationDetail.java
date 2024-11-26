@@ -2,6 +2,8 @@ package com.kingsmen.kingsreach.entity;
 
 import java.time.LocalDate;
 
+import com.kingsmen.kingsreach.enums.Department;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,6 +20,24 @@ public class TerminationDetail {
 	private LocalDate terminationDate;
 	private String terminationReason;
 	private LocalDate noticeDate;
+	private String employeeId;
+	private Department department;
+
+	public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
+	}
+
+	public String getEmployeeId() {
+		return employeeId;
+	}
+
+	public void setEmployeeId(String employeeId) {
+		this.employeeId = employeeId;
+	}
 
 	public int getTerminationDetailId() {
 		return terminationDetailId;

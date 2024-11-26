@@ -22,58 +22,42 @@ import jakarta.persistence.OneToOne;
 @Entity
 public class Employee implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "emp_id")
-    private int id;
-    
-    @Column(nullable = false)
-    private String employeeId;
-    
-    @Column(nullable = false)
-    private String firstName;
-    
-    @Column(nullable = false)
-    private String lastName;
-    
-    private String userName;
-    
-    @Enumerated(EnumType.STRING)
-    private EmployeeRole role;
-    
-    private String email;
-    
-    private String password;
-    
-    private String confirmPassword;
-    
-    private LocalDate joiningDate;
-    
-    private Long phoneNumber;
-    
-    @Enumerated(EnumType.STRING)
-    private Department department;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="emp_id")
+	private int id;
 
-    
+	private String employeeId;
+	private String firstName;
+	private String lastName;
+	private String userName;
+
+	@Enumerated(EnumType.STRING)
+	private EmployeeRole role;
+	private String email;
+	private String password;
+	private String confirmPassword;
+	private LocalDate joiningDate;
+	private long phoneNumber;
+
+	@Enumerated(EnumType.STRING)
+	private Department department;
+
+	//	Personal Detail
+ 
     private String aadharCardNumber;
-    
     private String panCardNumber;
-    
     private LocalDate dob;
-    
-    private String bloodGroup;
-    
-    private String fatherName;
-    
-    private String motherName;
-    
-    private Long fatherContactNumber;
-    
-    private Long motherContactNumber;
-    
-    private String permanentAdres;
-    
+    private String bloodGroup;  
+    private String fatherName;   
+    private String motherName; 
+    private Long fatherContactNumber;   
+    private Long motherContactNumber;   
+    private String permanentAdres;  
     private Long emergencyContact;
+    private int clBalance;
+    private int slBalance;
+    private int plBalance;
     
     @OneToMany(mappedBy = "employee")
     private List<Asset> asset = new ArrayList<>();
@@ -81,38 +65,17 @@ public class Employee implements Serializable {
     @OneToOne(mappedBy = "employee")
     private Payroll payroll;
 
-    private double clBalance; // Casual Leave Balance
-    private double slBalance; // Sick Leave Balance
-    private double plBalance; // Paid Leave Balance
+  
+
+
     
     
     
+    
+
     // Getters and Setters
     
-    public double getClBalance() {
-		return clBalance;
-	}
-
-	public void setClBalance(double clBalance) {
-		this.clBalance = clBalance;
-	}
-
-	public double getSlBalance() {
-		return slBalance;
-	}
-
-	public void setSlBalance(double slBalance) {
-		this.slBalance = slBalance;
-	}
-
-	public double getPlBalance() {
-		return plBalance;
-	}
-
-	public void setPlBalance(double plBalance) {
-		this.plBalance = plBalance;
-	}
-
+    
 	public int getId() {
         return id;
     }
@@ -304,4 +267,33 @@ public class Employee implements Serializable {
     public void setPayroll(Payroll payroll) {
         this.payroll = payroll;
     }
+
+	public int getClBalance() {
+		return clBalance;
+	}
+
+	public void setClBalance(int clBalance) {
+		this.clBalance = clBalance;
+	}
+
+	public int getSlBalance() {
+		return slBalance;
+	}
+
+	public void setSlBalance(int slBalance) {
+		this.slBalance = slBalance;
+	}
+
+	public int getPlBalance() {
+		return plBalance;
+	}
+
+	public void setPlBalance(int plBalance) {
+		this.plBalance = plBalance;
+	}
+
+	public void setPhoneNumber(long phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+    
 }

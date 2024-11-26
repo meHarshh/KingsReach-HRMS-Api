@@ -33,9 +33,9 @@ public class PayrollServiceImpl implements PayrollService {
 		payroll.setEmployee(employee);
 
 		ResponseStructure<Payroll> responseStructure = new ResponseStructure<Payroll>();
-		responseStructure.setData(payrollRepo.save(payroll));
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage("The payroll for the employee " + employee.getFirstName() + " has been updated");
+		responseStructure.setMessage("The payroll of " + employee.getFirstName() + " from "+ payroll.getDepartment() + " department has been updated");
+		responseStructure.setData(payrollRepo.save(payroll));
 
 		return new ResponseEntity<ResponseStructure<Payroll>>(responseStructure, HttpStatus.OK);
 
