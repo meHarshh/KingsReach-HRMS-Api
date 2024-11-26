@@ -1,8 +1,12 @@
 package com.kingsmen.kingsreach.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +17,7 @@ import com.kingsmen.kingsreach.entity.TerminationDetail;
 import com.kingsmen.kingsreach.service.TerminationDetailService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
+@CrossOrigin(allowCredentials = "true", origins = "http://localhost:5173/")
 @RestController
 public class TerminationDetailController {
 
@@ -32,6 +37,11 @@ public class TerminationDetailController {
 	@DeleteMapping(value = "/deleteTerminationDetail")
 	public ResponseEntity<ResponseStructure<TerminationDetail>> deleteTermination(@RequestParam String employeeId){
 		return terminationDetailService.deleteTermination(employeeId);
+	}
+	
+	@GetMapping(value = "/findAllTermination")
+	public ResponseEntity<ResponseStructure<List<TerminationDetail>>> findAllTerminations(){
+		return terminationDetailService.findAllTerminations();
 	}
 
 }

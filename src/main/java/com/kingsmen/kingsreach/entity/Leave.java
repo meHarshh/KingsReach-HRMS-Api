@@ -35,30 +35,6 @@ public class Leave {
 	@ManyToOne
 	private Employee employee;
 
-	public int getCasualLeaveBalance() {
-		return casualLeaveBalance;
-	}
-
-	public void setCasualLeaveBalance(int casualLeaveBalance) {
-		this.casualLeaveBalance = casualLeaveBalance;
-	}
-
-	public int getSickLeaveBalance() {
-		return sickLeaveBalance;
-	}
-
-	public void setSickLeaveBalance(int sickLeaveBalance) {
-		this.sickLeaveBalance = sickLeaveBalance;
-	}
-
-	public int getPaidLeaveBalance() {
-		return paidLeaveBalance;
-	}
-
-	public void setPaidLeaveBalance(int paidLeaveBalance) {
-		this.paidLeaveBalance = paidLeaveBalance;
-	}
-
 	public String getEmployeeId() {
 		return employeeId;
 	}
@@ -140,6 +116,38 @@ public class Leave {
 
 	public void setApprovedBy(String approvedBy) {
 		this.approvedBy = approvedBy;
+	}
+
+	public int getCasualLeaveBalance() {
+		return casualLeaveBalance;
+	}
+
+	public void setCasualLeaveBalance(int casualLeaveBalance) {
+		this.casualLeaveBalance = casualLeaveBalance;
+	}
+
+	public int getSickLeaveBalance() {
+		return sickLeaveBalance;
+	}
+
+	public void setSickLeaveBalance(int sickLeaveBalance) {
+		this.sickLeaveBalance = sickLeaveBalance;
+	}
+
+	public int getPaidLeaveBalance() {
+		return paidLeaveBalance;
+	}
+
+	public void setPaidLeaveBalance(int paidLeaveBalance) {
+		this.paidLeaveBalance = paidLeaveBalance;
+	}
+
+	public Employee getEmployee() {
+		return employee;
+	}
+
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
 	}
 
 }

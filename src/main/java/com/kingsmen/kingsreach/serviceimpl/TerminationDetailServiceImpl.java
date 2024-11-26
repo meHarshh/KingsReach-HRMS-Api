@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +75,20 @@ public class TerminationDetailServiceImpl implements TerminationDetailService {
 
 		return new ResponseEntity<ResponseStructure<TerminationDetail>>(responseStructure, HttpStatus.OK);
 
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<List<TerminationDetail>>> findAllTerminations() {
+		List<TerminationDetail> terminationDetails = detailRepo.findAll();
+
+	    ResponseStructure<List<TerminationDetail>> responseStructure = new ResponseStructure<>();
+  
+	        responseStructure.setStatusCode(HttpStatus.OK.value());
+	        responseStructure.setMessage("Termination details retrieved successfully.");
+	        responseStructure.setData(terminationDetails);
+
+	        return new ResponseEntity<ResponseStructure<List<TerminationDetail>>>(responseStructure, HttpStatus.OK);
+	
 	}
 
 }
