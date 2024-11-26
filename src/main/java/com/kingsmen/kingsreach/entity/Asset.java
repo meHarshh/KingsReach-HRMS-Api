@@ -2,10 +2,13 @@ package com.kingsmen.kingsreach.entity;
 
 import java.time.LocalDate;
 
+import com.kingsmen.kingsreach.enums.AssetStatus;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Transient;
 
@@ -20,12 +23,41 @@ public class Asset {
 	private LocalDate grantedDate;
 	private LocalDate validUpto;
 	private String description;
+	private String employeeName;
+	private double assetValue;
+	private AssetStatus status;
+	
 	
 	@Transient
 	private String employeeId;
 
 	@ManyToOne
+	@JoinColumn(name = "employee_id")
 	private Employee employee;
+	
+	public String getEmployeeName() {
+		return employeeName;
+	}
+
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
+	}
+
+	public double getAssetValue() {
+		return assetValue;
+	}
+
+	public void setAssetValue(double assetValue) {
+		this.assetValue = assetValue;
+	}
+
+	public AssetStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(AssetStatus status) {
+		this.status = status;
+	}
 
 	public String getEmployeeId() {
 		return employeeId;

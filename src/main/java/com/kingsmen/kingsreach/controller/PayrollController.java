@@ -2,7 +2,7 @@ package com.kingsmen.kingsreach.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,7 +16,7 @@ public class PayrollController {
 	@Autowired
 	private PayrollService payrollService;
 	
-	@GetMapping(" /paysalary ")
+	@PostMapping(value= "/paysalary")
 	public ResponseEntity<ResponseStructure<Payroll>> paySalary(@RequestBody Payroll payroll){
 		return payrollService.paySalary(payroll);
 		

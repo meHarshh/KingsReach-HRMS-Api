@@ -26,12 +26,13 @@ public class Leave {
 	private int numberOfDays;
 	private String reason;
 	private LeaveStatus leaveStatus;
-
 	private Employee approved;
-
 	private String employeeId;
+	private int casualLeaveBalance;
+	private int sickLeaveBalance;
+	private int paidLeaveBalance;
 
-	
+
 	@ManyToOne
 	private Employee employee;
 

@@ -34,7 +34,7 @@ public class AssetServiceImpl implements AssetService {
 
 		Asset asset1=assetRepo.save(asset);
 
-		String message=asset.getAssetName() + "granted to " + asset.getAssetId();
+		String message=asset.getAssetName() + " granted to " + asset.getAssetId();
 
 		ResponseStructure<Asset> responseStructure=new ResponseStructure<Asset>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());

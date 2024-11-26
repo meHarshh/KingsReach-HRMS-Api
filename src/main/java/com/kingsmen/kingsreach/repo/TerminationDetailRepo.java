@@ -10,4 +10,6 @@ public interface TerminationDetailRepo extends JpaRepository<TerminationDetail, 
 
 	Optional<TerminationDetail> findByEmployeeName(String employeeName);
 
+	Optional<TerminationDetail> findByEmployeeId(String employeeId);
+
 }

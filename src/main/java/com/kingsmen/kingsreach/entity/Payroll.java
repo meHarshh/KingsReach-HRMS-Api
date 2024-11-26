@@ -1,11 +1,11 @@
 package com.kingsmen.kingsreach.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.Transient;
 
 @Entity
 public class Payroll {
@@ -14,7 +14,8 @@ public class Payroll {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int payrollId;
 	
-	@Transient
+	//@Transient
+	@Column(name = "employee_id")
 	private String employeeId;
 	
 	private String department;
@@ -108,7 +109,7 @@ public class Payroll {
 
 	public void setGrossSalary(double grossSalary) {
 		this.grossSalary = grossSalary;
-	}
+	}	
 
 	public double getOtherAllowance() {
 		return otherAllowance;

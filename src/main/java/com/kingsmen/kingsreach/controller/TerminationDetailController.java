@@ -2,9 +2,11 @@ package com.kingsmen.kingsreach.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kingsmen.kingsreach.entity.TerminationDetail;
@@ -23,7 +25,13 @@ public class TerminationDetailController {
 	}
 
 	@PutMapping(value = "/editTerminationDetail")
-	public ResponseEntity<ResponseStructure<TerminationDetail>> editTermination(@RequestBody TerminationDetail terminationDetail) {
-		return terminationDetailService.editTermination(terminationDetail);
+	public ResponseEntity<ResponseStructure<TerminationDetail>> editTermination(@RequestBody TerminationDetail terminationdetail) {
+		return terminationDetailService.editTermination(terminationdetail);
 	}
+
+	@DeleteMapping(value = "/deleteTerminationDetail")
+	public ResponseEntity<ResponseStructure<TerminationDetail>> deleteTermination(@RequestParam String employeeId){
+		return terminationDetailService.deleteTermination(employeeId);
+	}
+
 }

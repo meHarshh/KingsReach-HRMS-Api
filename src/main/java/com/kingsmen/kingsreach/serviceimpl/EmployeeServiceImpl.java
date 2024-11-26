@@ -90,7 +90,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		} else {
 			String errorMessage = "Invalid credentials: Employee not found.";
 
-			ResponseStructure<List<Employee>> errorResponse = new ResponseStructure<>();
+			ResponseStructure<List<Employee>> errorResponse = new ResponseStructure<List<Employee>>();
 			errorResponse.setStatusCode(HttpStatus.UNAUTHORIZED.value());  
 			errorResponse.setMessage(errorMessage);
 			errorResponse.setData(Collections.emptyList());  
