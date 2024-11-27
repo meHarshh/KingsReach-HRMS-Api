@@ -34,25 +34,9 @@ public class Leave {
 
 	@ManyToOne
 	private Employee employee;
-
-	public String getEmployeeId() {
-		return employeeId;
-	}
-
-	public void setEmployeeId(String employeeId) {
-		this.employeeId = employeeId;
-	}
-
+	
 	@Transient
 	private String approvedBy;
-
-	public Employee getApproved() {
-		return approved;
-	}
-
-	public void setApproved(Employee approved) {
-		this.approved = approved;
-	}
 
 	public int getLeaveId() {
 		return leaveId;
@@ -110,12 +94,20 @@ public class Leave {
 		this.leaveStatus = leaveStatus;
 	}
 
-	public String getApprovedBy() {
-		return approvedBy;
+	public Employee getApproved() {
+		return approved;
 	}
 
-	public void setApprovedBy(String approvedBy) {
-		this.approvedBy = approvedBy;
+	public void setApproved(Employee approved) {
+		this.approved = approved;
+	}
+
+	public String getEmployeeId() {
+		return employeeId;
+	}
+
+	public void setEmployeeId(String employeeId) {
+		this.employeeId = employeeId;
 	}
 
 	public int getCasualLeaveBalance() {
@@ -148,6 +140,14 @@ public class Leave {
 
 	public void setEmployee(Employee employee) {
 		this.employee = employee;
+	}
+
+	public String getApprovedBy() {
+		return approvedBy;
+	}
+
+	public void setApprovedBy(String approvedBy) {
+		this.approvedBy = approvedBy;
 	}
 
 }

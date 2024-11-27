@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Leave;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
@@ -22,15 +23,14 @@ public class LeaveServiceImpl implements LeaveService {
 
 	@Autowired
 	private LeaveRepo leaveRepo;
-
-
+	
 	@Override
 	public ResponseEntity<ResponseStructure<Leave>> applyLeave(Leave leave) {
-		String employeeId=leave.getEmployeeId();
+		String employeeId = leave.getEmployeeId();
 
 		// Find employee by employeeId
-		Optional<Employee> employeeOpt=employeeRepo.findByEmployeeId(employeeId);
-		if(!employeeOpt.isPresent()) {
+		Optional<Employee> employeeOpt = employeeRepo.findByEmployeeId(employeeId);
+		if (!employeeOpt.isPresent()) {
 			return buildErrorResponse("Invalid Employee ID");
 		}
 
@@ -47,13 +47,14 @@ public class LeaveServiceImpl implements LeaveService {
 		leave.setApprovedBy(approvedBy);
 		leave = leaveRepo.save(leave);
 
+
 		//calculate and handle loss of pay (LOP) if necessary
 		double lopDeduction = calculateLopDeduction(employee, leave);
 		if(lopDeduction > 0) {
 			if(employee.getPayroll() != null) {
 				double newSalary=employee.getPayroll().getGrossSalary() - lopDeduction;
 				employee.getPayroll().setGrossSalary(newSalary);
-			}else {
+			} else {
 				return buildErrorResponse("Employee Payroll information is missing");
 			}
 		}
@@ -68,21 +69,22 @@ public class LeaveServiceImpl implements LeaveService {
 		responseStructure.setMessage(message);
 		responseStructure.setData(leave);
 
-		return new ResponseEntity<ResponseStructure<Leave>>(responseStructure, HttpStatus.CREATED);	
+		return new ResponseEntity<ResponseStructure<Leave>>(responseStructure, HttpStatus.CREATED);
 
-	}	
+	}
+
 	private ResponseEntity<ResponseStructure<Leave>> validateAndApplyLeave(Employee employee, Leave leave) {
 		int month = leave.getFromDate().getMonthValue();
 
-		switch (leave.getLeaveType()){
+		switch (leave.getLeaveType()) {
 		case CASUAL:
-			return validateCasualLeave(employee , leave , month);
+			return validateCasualLeave(employee, leave, month);
 
 		case SICK:
-			return validateSickLeave(employee , leave);
+			return validateSickLeave(employee, leave);
 
 		case PAID:
-			return validatePaidLeave(employee , leave);
+			return validatePaidLeave(employee, leave);
 
 		default:
 			return buildErrorResponse("Invalid leave type");
@@ -90,14 +92,14 @@ public class LeaveServiceImpl implements LeaveService {
 	}
 
 	private ResponseEntity<ResponseStructure<Leave>> validateCasualLeave(Employee employee, Leave leave, int month) {
-		if(month == Month.MARCH.getValue() || month == Month.APRIL.getValue() ) {
-			return buildErrorResponse("Casual leave is not allowed in march and April. ");	
+		if (month == Month.MARCH.getValue() || month == Month.APRIL.getValue()) {
+			return buildErrorResponse("Casual leave is not allowed in march and April. ");
 		}
-		if(employee.getClBalance() + leave.getNumberOfDays() > 10 ) {
-			return buildErrorResponse("Cannot exceeds 10 days of casual Leave for the year. ");	
+		if (employee.getClBalance() + leave.getNumberOfDays() > 10) {
+			return buildErrorResponse("Cannot exceeds 10 days of casual Leave for the year. ");
 		}
-		if(employee.getClBalance() < leave.getNumberOfDays()) {
-			return buildErrorResponse("Insufficient casual leave balance. ");	
+		if (employee.getClBalance() < leave.getNumberOfDays()) {
+			return buildErrorResponse("Insufficient casual leave balance. ");
 		}
 
 		// Deduct the leave from balance
@@ -106,11 +108,11 @@ public class LeaveServiceImpl implements LeaveService {
 	}
 
 	private ResponseEntity<ResponseStructure<Leave>> validateSickLeave(Employee employee, Leave leave) {
-		if(employee.getSlBalance() + leave.getNumberOfDays() > 12 ) {
-			return buildErrorResponse("Cannot exceeds 12 days of sick Leave for the year. ");	
+		if (employee.getSlBalance() + leave.getNumberOfDays() > 12) {
+			return buildErrorResponse("Cannot exceeds 12 days of sick Leave for the year. ");
 		}
-		if(employee.getSlBalance() < leave.getNumberOfDays()) {
-			return buildErrorResponse("Insufficient sick leave balance. ");	
+		if (employee.getSlBalance() < leave.getNumberOfDays()) {
+			return buildErrorResponse("Insufficient sick leave balance. ");
 		}
 
 		// Deduct the leave from balance
@@ -119,11 +121,11 @@ public class LeaveServiceImpl implements LeaveService {
 	}
 
 	private ResponseEntity<ResponseStructure<Leave>> validatePaidLeave(Employee employee, Leave leave) {
-		if(employee.getPlBalance() + leave.getNumberOfDays() > 12 ) {
-			return buildErrorResponse("Cannot exceeds 12 days of Paid Leave for the year. ");	
+		if (employee.getPlBalance() + leave.getNumberOfDays() > 12) {
+			return buildErrorResponse("Cannot exceeds 12 days of Paid Leave for the year. ");
 		}
-		if(employee.getPlBalance() < leave.getNumberOfDays()) {
-			return buildErrorResponse("Insufficient paid leave balance. ");	
+		if (employee.getPlBalance() < leave.getNumberOfDays()) {
+			return buildErrorResponse("Insufficient paid leave balance. ");
 		}
 
 		// Deduct the leave from balance
@@ -153,7 +155,6 @@ public class LeaveServiceImpl implements LeaveService {
 		return new ResponseEntity<ResponseStructure<Leave>>(responseStructure, HttpStatus.BAD_REQUEST);
 	}
 
-
 	@Override
 	public ResponseEntity<ResponseStructure<Leave>> changeLeaveStatus(Leave leave) {
 		String employeeId = leave.getEmployeeId();
@@ -177,3 +178,5 @@ public class LeaveServiceImpl implements LeaveService {
 		return new ResponseEntity<>(responseStructure, HttpStatus.ACCEPTED);
 	}
 }
+
+	

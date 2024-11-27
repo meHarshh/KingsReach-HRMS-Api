@@ -13,22 +13,24 @@ public class Attendance {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int attendanceId;
+	
 	private int totalWorkMinutes;
 	private String firstPunchIn;
 	private String lastPunchOut;
 	
 	@Transient
-	private String empId;
+	private String employeeId;
 	
 	@ManyToOne
 	private Employee employee;
 	
 	
-	public String getEmpId() {
-		return empId;
+	
+	public String getEmployeeId() {
+		return employeeId;
 	}
-	public void setEmpId(String empId) {
-		this.empId = empId;
+	public void setEmployeeId(String employeeId) {
+		this.employeeId = employeeId;
 	}
 	public Employee getEmployee() {
 		return employee;
