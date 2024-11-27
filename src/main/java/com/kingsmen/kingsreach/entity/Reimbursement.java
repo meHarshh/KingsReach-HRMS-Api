@@ -26,8 +26,7 @@ public class Reimbursement {
 	
 	@ManyToOne
 	private Employee employee;
-	
-	
+
 
 	public ReimbursementStatus getReimbursementStatus() {
 		return reimbursementStatus;

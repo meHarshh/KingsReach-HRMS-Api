@@ -1,5 +1,7 @@
 package com.kingsmen.kingsreach.entity;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,14 +9,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 
+@SuppressWarnings("serial")
 @Entity
-public class Payroll {
+public class Payroll implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int payrollId;
 
-	// @Transient
 	@Column(name = "employee_id")
 	private String employeeId;
 

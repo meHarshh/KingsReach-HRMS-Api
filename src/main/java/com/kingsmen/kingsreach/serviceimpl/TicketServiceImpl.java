@@ -3,6 +3,8 @@ package com.kingsmen.kingsreach.serviceimpl;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.kingsmen.kingsreach.entity.Employee;
@@ -11,6 +13,7 @@ import com.kingsmen.kingsreach.enums.TicketStatus;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
 import com.kingsmen.kingsreach.repo.TicketRepo;
 import com.kingsmen.kingsreach.service.TicketService;
+import com.kingsmen.kingsreach.util.ResponseStructure;
 
 @Service
 public class TicketServiceImpl implements TicketService {
@@ -22,7 +25,7 @@ public class TicketServiceImpl implements TicketService {
 	private TicketRepo ticketRepo;
 
 	@Override
-	public Ticket raisedTicket(Ticket ticket) {
+	public ResponseEntity<ResponseStructure<Ticket>> raisedTicket(Ticket ticket) {
 
 		Optional<Employee> byEmployeeId = employeeRepo.findByEmployeeId(ticket.getEmployeeId());
 
@@ -30,7 +33,15 @@ public class TicketServiceImpl implements TicketService {
 
 		ticket.setStatus(TicketStatus.NEW);
 		
-		return ticketRepo.save(ticket);
+		 ticketRepo.save(ticket);
+		 
+		 ResponseStructure<Ticket> responseStructure = new ResponseStructure<Ticket>();
+		 responseStructure.setStatusCode(HttpStatus.OK.value());
+		 responseStructure.setMessage(" Ticket Raised successfully.");
+		 responseStructure.setData(ticket);
+		 
+		 return new ResponseEntity<ResponseStructure<Ticket>>(responseStructure, HttpStatus.OK);
+		 
 	}
 	
 

@@ -20,12 +20,13 @@ public class Expense {
 	@Transient
 	private String employeeName;
 
-	@Transient
+	//@Transient
 	private String employeeId;
 	private double amount;
 	private LocalDate date;
 	private String reason;
 
+	@Transient
 	private Employee employee;
 
 	public Employee getEmployee() {
