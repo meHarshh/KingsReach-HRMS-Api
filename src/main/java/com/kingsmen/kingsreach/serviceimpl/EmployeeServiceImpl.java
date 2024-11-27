@@ -26,7 +26,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Autowired
 	private EmployeeRepo employeeRepo;
 
-
 	@Override
 	public ResponseEntity<ResponseStructure<Employee>> addEmployee(Employee employee) {
 		String email = employee.getEmail();
@@ -45,13 +44,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 		employee = employeeRepo.save(employee);
 
-		String message="Employee ID :" + employee.getEmployeeId() +" Added Successfully!!";
+		String message = "Employee ID :" + employee.getEmployeeId() + " Added Successfully!!";
 
-		ResponseStructure<Employee> responseStructure=new ResponseStructure<Employee>();
+		ResponseStructure<Employee> responseStructure = new ResponseStructure<Employee>();
 		responseStructure.setStatusCode(HttpStatus.CREATED.value());
 		responseStructure.setMessage(message);
 		responseStructure.setData(employee);
-		return new ResponseEntity<ResponseStructure<Employee>>(responseStructure,HttpStatus.CREATED);
+		return new ResponseEntity<ResponseStructure<Employee>>(responseStructure, HttpStatus.CREATED);
 	}
 
 	@Override
@@ -65,38 +64,74 @@ public class EmployeeServiceImpl implements EmployeeService {
 			if (employee2.getRole() == EmployeeRole.ADMIN) {
 				List<Employee> updatedEmployee = employeeRepo.findAll();
 
-				String message="Employee ID :" + employee2.getEmployeeId() +" LoggedIn Successfully!!";
+				String message = "Employee ID :" + employee2.getEmployeeId() + " LoggedIn Successfully!!";
 
-				ResponseStructure<List<Employee>> responseStructure=new ResponseStructure<List<Employee>>();
+				ResponseStructure<List<Employee>> responseStructure = new ResponseStructure<List<Employee>>();
 				responseStructure.setStatusCode(HttpStatus.FOUND.value());
 				responseStructure.setMessage(message);
 				responseStructure.setData(updatedEmployee);
 
-				return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure,HttpStatus.FOUND);
+				return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.FOUND);
 
 			} else {
 				List<Employee> employees = new ArrayList<>();
 				employees.add(employee2);
 
-				String message="Employee ID :" + employee2.getEmployeeId() +" Added Successfully!!";
+				String message = "Employee ID :" + employee2.getEmployeeId() + " Added Successfully!!";
 
-				ResponseStructure<List<Employee>> responseStructure=new ResponseStructure<List<Employee>>();
+				ResponseStructure<List<Employee>> responseStructure = new ResponseStructure<List<Employee>>();
 				responseStructure.setStatusCode(HttpStatus.FOUND.value());
 				responseStructure.setMessage(message);
 				responseStructure.setData(employees);
 
-				return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure,HttpStatus.FOUND);
+				return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.FOUND);
 			}
 		} else {
 			String errorMessage = "Invalid credentials: Employee not found.";
 
 			ResponseStructure<List<Employee>> errorResponse = new ResponseStructure<List<Employee>>();
-			errorResponse.setStatusCode(HttpStatus.UNAUTHORIZED.value());  
+			errorResponse.setStatusCode(HttpStatus.UNAUTHORIZED.value());
 			errorResponse.setMessage(errorMessage);
-			errorResponse.setData(Collections.emptyList());  
+			errorResponse.setData(Collections.emptyList());
 
 			return new ResponseEntity<ResponseStructure<List<Employee>>>(errorResponse, HttpStatus.UNAUTHORIZED);
 		}
+	}
+
+	@Override
+	public List<Employee> getEmployees() {
+		return employeeRepo.findAll();
+	}
+
+	@Override
+	public Employee editEmployee(Employee employee) {
+		Optional<Employee> byEmployeeId = employeeRepo.findByEmployeeId(employee.getEmployeeId());
+		Employee employee2 = byEmployeeId.get();
+
+		employee2.setEmployeeId(employee.getEmployeeId());
+		employee2.setFirstName(employee.getFirstName());
+		employee2.setLastName(employee.getLastName());
+		employee2.setEmail(employee.getEmail());
+		employee2.setUserName(employee.getUserName());
+		employee2.setPassword(employee.getPassword());
+		employee2.setConfirmPassword(employee.getConfirmPassword());
+		employee2.setPhoneNumber(employee.getPhoneNumber());
+		employee2.setJoiningDate(employee.getJoiningDate());
+		employee2.setAadharCardNumber(employee.getAadharCardNumber());
+		employee2.setPanCardNumber(employee.getPanCardNumber());
+		employee2.setDob(employee.getDob());
+		employee2.setFatherName(employee.getFatherName());
+		employee2.setMotherName(employee.getMotherName());
+		employee2.setBloodGroup(employee.getBloodGroup());
+		employee2.setPermanentAddress(employee.getPermanentAddress());
+		employee2.setAsset(employee.getAsset());
+		employee2.setDepartment(employee.getDepartment());
+		employee2.setRole(employee.getRole());
+		employee2.setAttendance(employee.getAttendance());
+
+		employee2.setFatherContactNumber(employee.getFatherContactNumber());
+
+		return employeeRepo.save(employee);
 	}
 
 }

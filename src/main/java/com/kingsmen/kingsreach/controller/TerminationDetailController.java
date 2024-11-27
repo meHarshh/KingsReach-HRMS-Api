@@ -17,7 +17,7 @@ import com.kingsmen.kingsreach.entity.TerminationDetail;
 import com.kingsmen.kingsreach.service.TerminationDetailService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@CrossOrigin(allowCredentials = "true", origins = "http://localhost:5173/")
+@CrossOrigin(allowCredentials = "true", origins = "http://localhost:5173")
 @RestController
 public class TerminationDetailController {
 

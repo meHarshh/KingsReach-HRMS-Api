@@ -41,8 +41,22 @@ public class TicketServiceImpl implements TicketService {
 		 responseStructure.setData(ticket);
 		 
 		 return new ResponseEntity<ResponseStructure<Ticket>>(responseStructure, HttpStatus.OK);
-		 
 	}
-	
+
+	@Override
+	public Ticket updateTicket(Ticket ticket) {
+		
+		
+		Ticket ticket2 = ticketRepo.findById(ticket.getTicketId())
+				.orElseThrow(() -> new RuntimeException("Invalid ticketID"));
+
+		ticket2.setPriority(ticket.getPriority());
+		ticket2.setDescription(ticket.getDescription());
+		ticket2.setStatus(ticket.getStatus());
+		ticket2.setUpdatedAt(ticket.getUpdatedAt());
+		ticket2.setUpdatedBy(ticket.getUpdatedBy());
+
+		return ticketRepo.save(ticket2);
+	}
 
 }

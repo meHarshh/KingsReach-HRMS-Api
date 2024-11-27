@@ -2,7 +2,6 @@ package com.kingsmen.kingsreach.entity;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.kingsmen.kingsreach.enums.Department;
@@ -54,7 +53,7 @@ public class Employee implements Serializable {
 	private String motherName;
 	private Long fatherContactNumber;
 	private Long motherContactNumber;
-	private String permanentAdres;
+	private String permanentAddress;
 	private Long emergencyContact;
 
 	private double clBalance; // Casual Leave Balance
@@ -62,7 +61,7 @@ public class Employee implements Serializable {
 	private double plBalance; // Paid Leave Balance
 
 	@OneToMany(mappedBy = "employee")
-	private List<Asset> asset = new ArrayList<>();
+	private List<Asset> asset;
 
 	@OneToOne(mappedBy = "employee")
 	private Payroll payroll;
@@ -70,10 +69,27 @@ public class Employee implements Serializable {
 	@ManyToOne
 	private Reimbursement reimbursement;
 
+	@ManyToOne
+	private Attendance attendance;
+	
+	private Ticket ticket;
+	
+	
+	
 	// Getters and Setters
 
+	
+	
 	public int getId() {
 		return id;
+	}
+
+	public Ticket getTicket() {
+		return ticket;
+	}
+
+	public void setTicket(Ticket ticket) {
+		this.ticket = ticket;
 	}
 
 	public Reimbursement getReimbursement() {
@@ -244,12 +260,20 @@ public class Employee implements Serializable {
 		this.motherContactNumber = motherContactNumber;
 	}
 
-	public String getPermanentAdres() {
-		return permanentAdres;
+	public String getPermanentAddress() {
+		return permanentAddress;
 	}
 
-	public void setPermanentAdres(String permanentAdres) {
-		this.permanentAdres = permanentAdres;
+	public void setPermanentAddress(String permanentAdress) {
+		this.permanentAddress = permanentAdress;
+	}
+
+	public Attendance getAttendance() {
+		return attendance;
+	}
+
+	public void setAttendance(Attendance attendance) {
+		this.attendance = attendance;
 	}
 
 	public Long getEmergencyContact() {

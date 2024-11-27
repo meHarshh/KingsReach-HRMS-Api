@@ -1,5 +1,7 @@
 package com.kingsmen.kingsreach.entity;
 
+import java.io.Serializable;
+
 import com.kingsmen.kingsreach.enums.TicketPriority;
 import com.kingsmen.kingsreach.enums.TicketStatus;
 
@@ -7,9 +9,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Transient;
 
+@SuppressWarnings("serial")
 @Entity
-public class Ticket {
+public class Ticket implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,10 +22,41 @@ public class Ticket {
 	private String ticketTitle;
 	private TicketPriority priority;
 	private String description;
+
+	@Transient
 	private String employeeId;
 	private TicketStatus status;
 
+	private String updatedBy;
+	private String createdAt;
+	private String updatedAt;
+
+	@ManyToOne
 	private Employee employee;
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public String getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(String createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public String getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(String updatedAt) {
+		this.updatedAt = updatedAt;
+	}
 
 	public TicketStatus getStatus() {
 		return status;

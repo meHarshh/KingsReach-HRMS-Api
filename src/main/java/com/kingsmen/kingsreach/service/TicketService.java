@@ -9,4 +9,6 @@ public interface TicketService {
 
 	ResponseEntity<ResponseStructure<Ticket>> raisedTicket(Ticket ticket);
 
+	Ticket updateTicket(Ticket ticket);
+
 }
