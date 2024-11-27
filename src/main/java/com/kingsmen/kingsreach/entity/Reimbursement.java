@@ -1,10 +1,14 @@
 package com.kingsmen.kingsreach.entity;
 
 import java.time.LocalDate;
+
+import com.kingsmen.kingsreach.enums.ReimbursementStatus;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Reimbursement {
@@ -18,8 +22,20 @@ public class Reimbursement {
 	private LocalDate date;
 	private int[] projects;
 	private double amount;
+	private ReimbursementStatus reimbursementStatus;
+	
+	@ManyToOne
+	private Employee employee;
 	
 	
+
+	public ReimbursementStatus getReimbursementStatus() {
+		return reimbursementStatus;
+	}
+
+	public void setReimbursementStatus(ReimbursementStatus reimbursementStatus) {
+		this.reimbursementStatus = reimbursementStatus;
+	}
 
 	public double getAmount() {
 		return amount;
@@ -28,8 +44,7 @@ public class Reimbursement {
 	public void setAmount(double amount) {
 		this.amount = amount;
 	}
-
-	private Employee employee;
+	
 
 	public Employee getEmployee() {
 		return employee;
