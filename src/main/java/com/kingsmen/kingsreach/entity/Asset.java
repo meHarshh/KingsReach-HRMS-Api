@@ -27,7 +27,6 @@ public class Asset {
 	private double assetValue;
 	private AssetStatus status;
 	
-	
 	@Transient
 	private String employeeId;
 

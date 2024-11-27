@@ -23,11 +23,12 @@ public class LeaveServiceImpl implements LeaveService {
 
 	@Autowired
 	private LeaveRepo leaveRepo;
-
+	
 	@Override
 	public ResponseEntity<ResponseStructure<Leave>> applyLeave(Leave leave) {
 		String employeeId = leave.getEmployeeId();
 
+		// Find employee by employeeId
 		Optional<Employee> employeeOpt = employeeRepo.findByEmployeeId(employeeId);
 		if (!employeeOpt.isPresent()) {
 			return buildErrorResponse("Invalid Employee ID");
@@ -36,28 +37,34 @@ public class LeaveServiceImpl implements LeaveService {
 		Employee employee = employeeOpt.get();
 		String approvedBy = leave.getApprovedBy();
 
-		ResponseEntity<ResponseStructure<Leave>> validationResponse = validateAndApplyLeave(employee, leave);
-		if (validationResponse != null) {
-			return validationResponse;
+		// validate and apply leave based on type
+		ResponseEntity<ResponseStructure<Leave>> validateResponse = validateAndApplyLeave(employee, leave);
+		if(validateResponse != null) {
+			return validateResponse;
 		}
 
+		//Apply the leave
 		leave.setApprovedBy(approvedBy);
 		leave = leaveRepo.save(leave);
 
+
+		//calculate and handle loss of pay (LOP) if necessary
 		double lopDeduction = calculateLopDeduction(employee, leave);
-		if (lopDeduction > 0) {
-			if (employee.getPayroll() != null) {
-				double newSalary = employee.getPayroll().getGrossSalary() - lopDeduction;
+		if(lopDeduction > 0) {
+			if(employee.getPayroll() != null) {
+				double newSalary=employee.getPayroll().getGrossSalary() - lopDeduction;
 				employee.getPayroll().setGrossSalary(newSalary);
 			} else {
 				return buildErrorResponse("Employee Payroll information is missing");
 			}
 		}
 
+		// save the updated employee after applying leave and salary adjustments
 		employeeRepo.save(employee);
 
-		String message = "Employee Id:" + leave.getEmployeeId() + " Applied for " + leave.getLeaveType() + " leave";
-		ResponseStructure<Leave> responseStructure = new ResponseStructure<Leave>();
+		// Create and return response structure 
+		String message= "Employee Id:" + leave.getEmployeeId() + " Applied for " + leave.getLeaveType() + " leave";
+		ResponseStructure<Leave> responseStructure=new ResponseStructure<Leave>();
 		responseStructure.setStatusCode(HttpStatus.CREATED.value());
 		responseStructure.setMessage(message);
 		responseStructure.setData(leave);
@@ -95,6 +102,7 @@ public class LeaveServiceImpl implements LeaveService {
 			return buildErrorResponse("Insufficient casual leave balance. ");
 		}
 
+		// Deduct the leave from balance
 		employee.setClBalance(employee.getClBalance() - leave.getNumberOfDays());
 		return null;
 	}
@@ -107,6 +115,7 @@ public class LeaveServiceImpl implements LeaveService {
 			return buildErrorResponse("Insufficient sick leave balance. ");
 		}
 
+		// Deduct the leave from balance
 		employee.setSlBalance(employee.getSlBalance() - leave.getNumberOfDays());
 		return null;
 	}
@@ -119,21 +128,24 @@ public class LeaveServiceImpl implements LeaveService {
 			return buildErrorResponse("Insufficient paid leave balance. ");
 		}
 
+		// Deduct the leave from balance
 		employee.setPlBalance(employee.getPlBalance() - leave.getNumberOfDays());
 		return null;
 	}
 
+	//Helper method to calculate Loss of Pay deduction 
 	private double calculateLopDeduction(Employee employee, Leave leave) {
-		int maxAllowedLeaves = (leave.getFromDate().getMonthValue() == Month.MARCH.getValue()
-				|| leave.getFromDate().getMonthValue() == Month.APRIL.getValue()) ? 2 : 0;
+		int maxAllowedLeaves = ( leave.getFromDate().getMonthValue() == Month.MARCH.getValue() || leave.getFromDate().getMonthValue() == Month.APRIL.getValue()) ? 2 : 3;
 
-		if (leave.getNumberOfDays() > maxAllowedLeaves) {
+		//If the employee exceeds the allowed leave for the month
+		if(leave.getNumberOfDays() > maxAllowedLeaves) {
 			int excessLeaves = leave.getNumberOfDays() - maxAllowedLeaves;
-			return employee.getPayroll().getGrossSalary() * (excessLeaves / 30.0);
+			return employee.getPayroll().getGrossSalary() * (excessLeaves / 30.0);  //Assuming 30 days in a month
 		}
 		return 0.0;
 	}
 
+	// Helper method to build error response
 	private ResponseEntity<ResponseStructure<Leave>> buildErrorResponse(String message) {
 		ResponseStructure<Leave> responseStructure = new ResponseStructure<Leave>();
 		responseStructure.setStatusCode(HttpStatus.BAD_REQUEST.value());
@@ -145,24 +157,26 @@ public class LeaveServiceImpl implements LeaveService {
 
 	@Override
 	public ResponseEntity<ResponseStructure<Leave>> changeLeaveStatus(Leave leave) {
-
 		String employeeId = leave.getEmployeeId();
 
 		Optional<Leave> optional = leaveRepo.findByEmployeeId(employeeId);
 
-		Leave leave2 = optional.get();
+		if (!optional.isPresent()) {
+			return buildErrorResponse("Leave request not found for employee ID: " + employeeId);
+		}
 
-		leave2.setLeaveStatus(leave.getLeaveStatus());
-		Leave leave3 = leaveRepo.save(leave2);
+		Leave existingLeave = optional.get();
+		existingLeave.setLeaveStatus(leave.getLeaveStatus());
+		Leave updatedLeave = leaveRepo.save(existingLeave);
 
-		String message = "Employee ID: " + leave.getEmployeeId() + " leave is " + leave.getLeaveStatus();
-
-		ResponseStructure<Leave> responseStructure = new ResponseStructure<Leave>();
+		String message = "Employee ID: " + leave.getEmployeeId() + " leave status updated to " + leave.getLeaveStatus();
+		ResponseStructure<Leave> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.ACCEPTED.value());
 		responseStructure.setMessage(message);
-		responseStructure.setData(leave3);
+		responseStructure.setData(updatedLeave);
 
-		return new ResponseEntity<ResponseStructure<Leave>>(responseStructure, HttpStatus.ACCEPTED);
-
+		return new ResponseEntity<>(responseStructure, HttpStatus.ACCEPTED);
 	}
 }
+
+	

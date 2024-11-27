@@ -34,57 +34,9 @@ public class Leave {
 
 	@ManyToOne
 	private Employee employee;
-
-	public int getCasualLeaveBalance() {
-		return casualLeaveBalance;
-	}
-
-	public void setCasualLeaveBalance(int casualLeaveBalance) {
-		this.casualLeaveBalance = casualLeaveBalance;
-	}
-
-	public int getSickLeaveBalance() {
-		return sickLeaveBalance;
-	}
-
-	public void setSickLeaveBalance(int sickLeaveBalance) {
-		this.sickLeaveBalance = sickLeaveBalance;
-	}
-
-	public int getPaidLeaveBalance() {
-		return paidLeaveBalance;
-	}
-
-	public void setPaidLeaveBalance(int paidLeaveBalance) {
-		this.paidLeaveBalance = paidLeaveBalance;
-	}
-
-	public Employee getEmployee() {
-		return employee;
-	}
-
-	public void setEmployee(Employee employee) {
-		this.employee = employee;
-	}
-
-	public String getEmployeeId() {
-		return employeeId;
-	}
-
-	public void setEmployeeId(String employeeId) {
-		this.employeeId = employeeId;
-	}
-
+	
 	@Transient
 	private String approvedBy;
-
-	public Employee getApproved() {
-		return approved;
-	}
-
-	public void setApproved(Employee approved) {
-		this.approved = approved;
-	}
 
 	public int getLeaveId() {
 		return leaveId;
@@ -140,6 +92,54 @@ public class Leave {
 
 	public void setLeaveStatus(LeaveStatus leaveStatus) {
 		this.leaveStatus = leaveStatus;
+	}
+
+	public Employee getApproved() {
+		return approved;
+	}
+
+	public void setApproved(Employee approved) {
+		this.approved = approved;
+	}
+
+	public String getEmployeeId() {
+		return employeeId;
+	}
+
+	public void setEmployeeId(String employeeId) {
+		this.employeeId = employeeId;
+	}
+
+	public int getCasualLeaveBalance() {
+		return casualLeaveBalance;
+	}
+
+	public void setCasualLeaveBalance(int casualLeaveBalance) {
+		this.casualLeaveBalance = casualLeaveBalance;
+	}
+
+	public int getSickLeaveBalance() {
+		return sickLeaveBalance;
+	}
+
+	public void setSickLeaveBalance(int sickLeaveBalance) {
+		this.sickLeaveBalance = sickLeaveBalance;
+	}
+
+	public int getPaidLeaveBalance() {
+		return paidLeaveBalance;
+	}
+
+	public void setPaidLeaveBalance(int paidLeaveBalance) {
+		this.paidLeaveBalance = paidLeaveBalance;
+	}
+
+	public Employee getEmployee() {
+		return employee;
+	}
+
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
 	}
 
 	public String getApprovedBy() {

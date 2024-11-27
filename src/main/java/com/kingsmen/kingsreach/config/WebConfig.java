@@ -10,12 +10,13 @@ public class WebConfig implements WebMvcConfigurer {
 	 @Override
 	    public void addCorsMappings(CorsRegistry registry) {
 	        registry.addMapping("/api/**")  // Allow CORS for all API endpoints
-	                .allowedOrigins("http://localhost:3000")  // React app is usually hosted on this port during development
+	                .allowedOrigins("http://localhost:5173/")  // React app is usually hosted on this port during development
 	                .allowedMethods("GET", "POST", "PUT", "DELETE")
 	                .allowedHeaders("*")
 	                .allowCredentials(true);
 	    }
 }
+
 
 
 

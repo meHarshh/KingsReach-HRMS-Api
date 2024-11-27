@@ -55,24 +55,18 @@ public class Employee implements Serializable {
     private Long motherContactNumber;   
     private String permanentAdres;  
     private Long emergencyContact;
-    private int clBalance;
-    private int slBalance;
-    private int plBalance;
+   
+    private double clBalance; // Casual Leave Balance
+    private double slBalance; // Sick Leave Balance
+    private double plBalance; // Paid Leave Balance
     
     @OneToMany(mappedBy = "employee")
     private List<Asset> asset = new ArrayList<>();
 
     @OneToOne(mappedBy = "employee")
     private Payroll payroll;
-
-  
-
-
-    
-    
-    
-    
-
+ 
+		
     // Getters and Setters
     
     
@@ -251,49 +245,35 @@ public class Employee implements Serializable {
     public void setEmergencyContact(Long emergencyContact) {
         this.emergencyContact = emergencyContact;
     }
-
-    public List<Asset> getAsset() {
-        return asset;
-    }
-
-    public void setAsset(List<Asset> asset) {
-        this.asset = asset;
-    }
-
-    public Payroll getPayroll() {
-        return payroll;
-    }
-
-    public void setPayroll(Payroll payroll) {
-        this.payroll = payroll;
-    }
-
-	public int getClBalance() {
+	public double getClBalance() {
 		return clBalance;
 	}
-
-	public void setClBalance(int clBalance) {
+	public void setClBalance(double clBalance) {
 		this.clBalance = clBalance;
 	}
-
-	public int getSlBalance() {
+	public double getSlBalance() {
 		return slBalance;
 	}
-
-	public void setSlBalance(int slBalance) {
+	public void setSlBalance(double slBalance) {
 		this.slBalance = slBalance;
 	}
-
-	public int getPlBalance() {
+	public double getPlBalance() {
 		return plBalance;
 	}
-
-	public void setPlBalance(int plBalance) {
+	public void setPlBalance(double plBalance) {
 		this.plBalance = plBalance;
 	}
-
+	public Payroll getPayroll() {
+		return payroll;
+	}
+	public void setPayroll(Payroll payroll) {
+		this.payroll = payroll;
+	}
 	public void setPhoneNumber(long phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-    
+	public void setAsset(List<Asset> asset) {
+		this.asset = asset;
+	} 
+  
 }
