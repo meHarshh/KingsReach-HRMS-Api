@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.kingsmen.kingsreach.entity.Asset;
 import com.kingsmen.kingsreach.entity.Employee;
+import com.kingsmen.kingsreach.exceptions.AssetNotFoundException;
 import com.kingsmen.kingsreach.repo.AssetRepo;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
 import com.kingsmen.kingsreach.service.AssetService;
@@ -28,20 +29,22 @@ public class AssetServiceImpl implements AssetService {
 		String employeeId = asset.getEmployeeId();
 
 		Optional<Employee> optional = employeeRepo.findByEmployeeId(employeeId);
-		Employee employee = optional.get();
+		if (optional.isPresent()) {
+			Employee employee = optional.get();
+			asset.setEmployee(employee);
+			Asset asset1 = assetRepo.save(asset);
 
-		asset.setEmployee(employee);
+			String message = asset.getAssetName() + " granted to " + asset.getAssetId();
 
-		Asset asset1=assetRepo.save(asset);
+			ResponseStructure<Asset> responseStructure = new ResponseStructure<Asset>();
+			responseStructure.setStatusCode(HttpStatus.OK.value());
+			responseStructure.setMessage(message);
+			responseStructure.setData(asset1);
 
-		String message=asset.getAssetName() + " granted to " + asset.getAssetId();
+			return new ResponseEntity<ResponseStructure<Asset>>(responseStructure, HttpStatus.OK);
+		} else {
+			throw new AssetNotFoundException("Asset with ID " + asset.getAssetId() + " not found");
+		}
 
-		ResponseStructure<Asset> responseStructure=new ResponseStructure<Asset>();
-		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage(message);
-		responseStructure.setData(asset1);
-
-		return new ResponseEntity<ResponseStructure<Asset>>(responseStructure, HttpStatus.OK);
 	}
-
 }
