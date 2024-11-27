@@ -6,4 +6,6 @@ public interface TicketService {
 
 	Ticket raisedTicket(Ticket ticket);
 
+	Ticket updateTicket(Ticket ticket);
+
 }

@@ -14,4 +14,8 @@ public interface EmployeeService {
 
 	ResponseEntity<ResponseStructure<List<Employee>>> login(Credentials credentials);
 
+	List<Employee> getEmployees();
+
+	Employee editEmployee(Employee employee);
+
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +15,7 @@ import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.service.EmployeeService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
+@CrossOrigin(value = "http://localhost:5173" ,allowCredentials = "true")
 @RestController
 public class EmployeeController {
 
@@ -28,5 +30,14 @@ public class EmployeeController {
 	@GetMapping("/login")
 	public ResponseEntity<ResponseStructure<List<Employee>>> login(@RequestBody Credentials credentials) {
 		return employeeService.login(credentials);
+	}
+	
+	@GetMapping("/fetchAllEmployees")
+	public List<Employee> getEmployees(){
+		return employeeService.getEmployees();
+	}
+	
+	public Employee editEmployee(@RequestBody Employee employee) {
+		return employeeService.editEmployee(employee);
 	}
 }

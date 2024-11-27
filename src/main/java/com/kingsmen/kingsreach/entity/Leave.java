@@ -23,14 +23,13 @@ public class Leave {
 	private LeaveType leaveType;
 	private LocalDate fromDate;
 	private LocalDate toDate;
-	private int numberOfDays;
 	private String reason;
 	private LeaveStatus leaveStatus;
 	private Employee approved;
 	private String employeeId;
-	private int casualLeaveBalance;
-	private int sickLeaveBalance;
-	private int paidLeaveBalance;
+	private int casualLeaveBalance = 10;
+	private int sickLeaveBalance = 12;
+	private int paidLeaveBalance = 12;
 
 	@ManyToOne
 	private Employee employee;
@@ -68,14 +67,6 @@ public class Leave {
 
 	public void setToDate(LocalDate toDate) {
 		this.toDate = toDate;
-	}
-
-	public int getNumberOfDays() {
-		return numberOfDays;
-	}
-
-	public void setNumberOfDays(int numberOfDays) {
-		this.numberOfDays = numberOfDays;
 	}
 
 	public String getReason() {
