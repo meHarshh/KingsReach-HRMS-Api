@@ -9,15 +9,15 @@ import jakarta.persistence.OneToOne;
 
 @Entity
 public class Payroll {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int payrollId;
-	
-	//@Transient
+
+	// @Transient
 	@Column(name = "employee_id")
 	private String employeeId;
-	
+
 	private String department;
 	private double salary;
 	private double taxDeduction;
@@ -27,9 +27,18 @@ public class Payroll {
 	private double providentFund;
 	private double grossSalary;
 	private double otherAllowance;
-	
+	private double employeeProvidentFund;
+
 	@OneToOne
 	private Employee employee;
+
+	public double getEmployeeProvidentFund() {
+		return employeeProvidentFund;
+	}
+
+	public void setEmployeeProvidentFund(double employeeProvidentFund) {
+		this.employeeProvidentFund = employeeProvidentFund;
+	}
 
 	public int getPayrollId() {
 		return payrollId;
@@ -109,7 +118,7 @@ public class Payroll {
 
 	public void setGrossSalary(double grossSalary) {
 		this.grossSalary = grossSalary;
-	}	
+	}
 
 	public double getOtherAllowance() {
 		return otherAllowance;

@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,18 @@ public class PayrollServiceImpl implements PayrollService {
 
 		return new ResponseEntity<ResponseStructure<Payroll>>(responseStructure, HttpStatus.OK);
 
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<List<Payroll>>> getEmployeesSalary() {
+		List<Payroll> list = payrollRepo.findAll();
+
+		ResponseStructure<List<Payroll>> responseStructure = new ResponseStructure<List<Payroll>>();
+		responseStructure.setData(list);
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage("The employees payroll data is fetched");
+		
+		return null;
 	}
 
 }
