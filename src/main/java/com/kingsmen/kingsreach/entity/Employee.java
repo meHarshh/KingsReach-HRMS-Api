@@ -15,6 +15,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
@@ -24,7 +25,7 @@ public class Employee implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="emp_id")
+	@Column(name = "emp_id")
 	private int id;
 
 	private String employeeId;
@@ -43,237 +44,260 @@ public class Employee implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private Department department;
 
-	//	Personal Detail
- 
-    private String aadharCardNumber;
-    private String panCardNumber;
-    private LocalDate dob;
-    private String bloodGroup;  
-    private String fatherName;   
-    private String motherName; 
-    private Long fatherContactNumber;   
-    private Long motherContactNumber;   
-    private String permanentAdres;  
-    private Long emergencyContact;
-   
-    private double clBalance; // Casual Leave Balance
-    private double slBalance; // Sick Leave Balance
-    private double plBalance; // Paid Leave Balance
-    
-    @OneToMany(mappedBy = "employee")
-    private List<Asset> asset = new ArrayList<>();
+	// Personal Detail
 
-    @OneToOne(mappedBy = "employee")
-    private Payroll payroll;
- 
-		
-    // Getters and Setters
-    
-    
+	private String aadharCardNumber;
+	private String panCardNumber;
+	private LocalDate dob;
+	private String bloodGroup;
+	private String fatherName;
+	private String motherName;
+	private Long fatherContactNumber;
+	private Long motherContactNumber;
+	private String permanentAdres;
+	private Long emergencyContact;
+
+	private double clBalance; // Casual Leave Balance
+	private double slBalance; // Sick Leave Balance
+	private double plBalance; // Paid Leave Balance
+
+	@OneToMany(mappedBy = "employee")
+	private List<Asset> asset = new ArrayList<>();
+
+	@OneToOne(mappedBy = "employee")
+	private Payroll payroll;
+
+	@ManyToOne
+	private Reimbursement reimbursement;
+
+	// Getters and Setters
+
 	public int getId() {
-        return id;
-    }
+		return id;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public Reimbursement getReimbursement() {
+		return reimbursement;
+	}
 
-    public String getEmployeeId() {
-        return employeeId;
-    }
+	public void setReimbursement(Reimbursement reimbursement) {
+		this.reimbursement = reimbursement;
+	}
 
-    public void setEmployeeId(String employeeId) {
-        this.employeeId = employeeId;
-    }
+	public List<Asset> getAsset() {
+		return asset;
+	}
 
-    public String getFirstName() {
-        return firstName;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+	public String getEmployeeId() {
+		return employeeId;
+	}
 
-    public String getLastName() {
-        return lastName;
-    }
+	public void setEmployeeId(String employeeId) {
+		this.employeeId = employeeId;
+	}
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+	public String getFirstName() {
+		return firstName;
+	}
 
-    public String getUserName() {
-        return userName;
-    }
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+	public String getLastName() {
+		return lastName;
+	}
 
-    public EmployeeRole getRole() {
-        return role;
-    }
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 
-    public void setRole(EmployeeRole role) {
-        this.role = role;
-    }
+	public String getUserName() {
+		return userName;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public EmployeeRole getRole() {
+		return role;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public void setRole(EmployeeRole role) {
+		this.role = role;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    public LocalDate getJoiningDate() {
-        return joiningDate;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public void setJoiningDate(LocalDate joiningDate) {
-        this.joiningDate = joiningDate;
-    }
+	public String getConfirmPassword() {
+		return confirmPassword;
+	}
 
-    public Long getPhoneNumber() {
-        return phoneNumber;
-    }
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
+	}
 
-    public void setPhoneNumber(Long phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+	public LocalDate getJoiningDate() {
+		return joiningDate;
+	}
 
-    public Department getDepartment() {
-        return department;
-    }
+	public void setJoiningDate(LocalDate joiningDate) {
+		this.joiningDate = joiningDate;
+	}
 
-    public void setDepartment(Department department) {
-        this.department = department;
-    }
+	public Long getPhoneNumber() {
+		return phoneNumber;
+	}
 
-    public String getAadharCardNumber() {
-        return aadharCardNumber;
-    }
+	public void setPhoneNumber(Long phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
 
-    public void setAadharCardNumber(String aadharCardNumber) {
-        this.aadharCardNumber = aadharCardNumber;
-    }
+	public Department getDepartment() {
+		return department;
+	}
 
-    public String getPanCardNumber() {
-        return panCardNumber;
-    }
+	public void setDepartment(Department department) {
+		this.department = department;
+	}
 
-    public void setPanCardNumber(String panCardNumber) {
-        this.panCardNumber = panCardNumber;
-    }
+	public String getAadharCardNumber() {
+		return aadharCardNumber;
+	}
 
-    public LocalDate getDob() {
-        return dob;
-    }
+	public void setAadharCardNumber(String aadharCardNumber) {
+		this.aadharCardNumber = aadharCardNumber;
+	}
 
-    public void setDob(LocalDate dob) {
-        this.dob = dob;
-    }
+	public String getPanCardNumber() {
+		return panCardNumber;
+	}
 
-    public String getBloodGroup() {
-        return bloodGroup;
-    }
+	public void setPanCardNumber(String panCardNumber) {
+		this.panCardNumber = panCardNumber;
+	}
 
-    public void setBloodGroup(String bloodGroup) {
-        this.bloodGroup = bloodGroup;
-    }
+	public LocalDate getDob() {
+		return dob;
+	}
 
-    public String getFatherName() {
-        return fatherName;
-    }
+	public void setDob(LocalDate dob) {
+		this.dob = dob;
+	}
 
-    public void setFatherName(String fatherName) {
-        this.fatherName = fatherName;
-    }
+	public String getBloodGroup() {
+		return bloodGroup;
+	}
 
-    public String getMotherName() {
-        return motherName;
-    }
+	public void setBloodGroup(String bloodGroup) {
+		this.bloodGroup = bloodGroup;
+	}
 
-    public void setMotherName(String motherName) {
-        this.motherName = motherName;
-    }
+	public String getFatherName() {
+		return fatherName;
+	}
 
-    public Long getFatherContactNumber() {
-        return fatherContactNumber;
-    }
+	public void setFatherName(String fatherName) {
+		this.fatherName = fatherName;
+	}
 
-    public void setFatherContactNumber(Long fatherContactNumber) {
-        this.fatherContactNumber = fatherContactNumber;
-    }
+	public String getMotherName() {
+		return motherName;
+	}
 
-    public Long getMotherContactNumber() {
-        return motherContactNumber;
-    }
+	public void setMotherName(String motherName) {
+		this.motherName = motherName;
+	}
 
-    public void setMotherContactNumber(Long motherContactNumber) {
-        this.motherContactNumber = motherContactNumber;
-    }
+	public Long getFatherContactNumber() {
+		return fatherContactNumber;
+	}
 
-    public String getPermanentAdres() {
-        return permanentAdres;
-    }
+	public void setFatherContactNumber(Long fatherContactNumber) {
+		this.fatherContactNumber = fatherContactNumber;
+	}
 
-    public void setPermanentAdres(String permanentAdres) {
-        this.permanentAdres = permanentAdres;
-    }
+	public Long getMotherContactNumber() {
+		return motherContactNumber;
+	}
 
-    public Long getEmergencyContact() {
-        return emergencyContact;
-    }
+	public void setMotherContactNumber(Long motherContactNumber) {
+		this.motherContactNumber = motherContactNumber;
+	}
 
-    public void setEmergencyContact(Long emergencyContact) {
-        this.emergencyContact = emergencyContact;
-    }
+	public String getPermanentAdres() {
+		return permanentAdres;
+	}
+
+	public void setPermanentAdres(String permanentAdres) {
+		this.permanentAdres = permanentAdres;
+	}
+
+	public Long getEmergencyContact() {
+		return emergencyContact;
+	}
+
+	public void setEmergencyContact(Long emergencyContact) {
+		this.emergencyContact = emergencyContact;
+	}
+
 	public double getClBalance() {
 		return clBalance;
 	}
+
 	public void setClBalance(double clBalance) {
 		this.clBalance = clBalance;
 	}
+
 	public double getSlBalance() {
 		return slBalance;
 	}
+
 	public void setSlBalance(double slBalance) {
 		this.slBalance = slBalance;
 	}
+
 	public double getPlBalance() {
 		return plBalance;
 	}
+
 	public void setPlBalance(double plBalance) {
 		this.plBalance = plBalance;
 	}
+
 	public Payroll getPayroll() {
 		return payroll;
 	}
+
 	public void setPayroll(Payroll payroll) {
 		this.payroll = payroll;
 	}
+
 	public void setPhoneNumber(long phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
+
 	public void setAsset(List<Asset> asset) {
 		this.asset = asset;
-	} 
-  
+	}
+
 }

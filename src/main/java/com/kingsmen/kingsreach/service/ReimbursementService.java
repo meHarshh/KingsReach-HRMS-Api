@@ -6,4 +6,6 @@ public interface ReimbursementService {
 
 	Reimbursement reimbursement(Reimbursement reimbursement);
 
+	Reimbursement changeReimbursementStatus(Reimbursement reimbursement);
+
 }

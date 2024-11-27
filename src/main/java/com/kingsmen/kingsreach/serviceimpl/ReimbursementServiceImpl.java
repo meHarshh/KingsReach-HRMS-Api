@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Reimbursement;
+import com.kingsmen.kingsreach.enums.ReimbursementStatus;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
 import com.kingsmen.kingsreach.repo.ReimbursementRepo;
 import com.kingsmen.kingsreach.service.ReimbursementService;
@@ -37,8 +38,24 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		amount = totalKms/projects.length *5 ;
 		
 		reimbursement.setAmount(amount);
+		reimbursement.setReimbursementStatus(ReimbursementStatus.PENDING);
 		
 		return reimbursementRepo.save(reimbursement);
+	}
+
+	@Override
+	public Reimbursement changeReimbursementStatus(Reimbursement reimbursement) {
+		String employeeId = reimbursement.getEmployeeId();
+		Optional<Employee> byEmployeeId = employeeRepo.findByEmployeeId(employeeId);
+		Employee employee = byEmployeeId.get();
+		
+		Reimbursement reimbursement2 = employee.getReimbursement();
+		Optional<Reimbursement> byId = reimbursementRepo.findById(reimbursement2.getReimbursementId());
+		 reimbursement2 = byId.get();
+		reimbursement2.setReimbursementStatus(reimbursement.getReimbursementStatus());
+		
+		
+		return reimbursementRepo.save(reimbursement2);
 	}
 
 	
