@@ -12,7 +12,7 @@ import com.kingsmen.kingsreach.entity.Leave;
 import com.kingsmen.kingsreach.service.LeaveService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@CrossOrigin(value = "http://localhost:5173" ,allowCredentials = "true")
+@CrossOrigin(value = "http://localhost:5173", allowCredentials = "true")
 @RestController
 public class LeaveController {
 
@@ -23,10 +23,10 @@ public class LeaveController {
 	private String applyLeave(@RequestBody Leave leave) {
 		return leaveservice.applyLeave(leave);
 	}
-	
+
 	@PutMapping(value = "/leaveStatus")
 	private ResponseEntity<ResponseStructure<Leave>> changeLeaveStatus(@RequestBody Leave leave) {
 		return leaveservice.changeLeaveStatus(leave);
 	}
-	
+
 }

@@ -28,9 +28,20 @@ public class Payroll {
 	private double grossSalary;
 	private double otherAllowance;
 	private double employeeProvidentFund;
+	private double basicPay;
 
 	@OneToOne
 	private Employee employee;
+
+	
+	
+	public double getBasicPay() {
+		return basicPay;
+	}
+
+	public void setBasicPay(double basicPay) {
+		this.basicPay = basicPay;
+	}
 
 	public double getEmployeeProvidentFund() {
 		return employeeProvidentFund;
