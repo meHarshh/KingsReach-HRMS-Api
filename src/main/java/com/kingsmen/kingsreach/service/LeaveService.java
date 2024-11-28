@@ -7,7 +7,7 @@ import com.kingsmen.kingsreach.util.ResponseStructure;
 
 public interface LeaveService {
 
-	ResponseEntity<ResponseStructure<Leave>> applyLeave(Leave leave);
+	String applyLeave(Leave leave);
 
 	ResponseEntity<ResponseStructure<Leave>> changeLeaveStatus(Leave leave);
 

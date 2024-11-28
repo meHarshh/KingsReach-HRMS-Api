@@ -1,7 +1,6 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
-import java.time.LocalDate;
-import java.util.Optional;
+import java.time.temporal.ChronoUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,71 +8,104 @@ import org.springframework.stereotype.Service;
 
 import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Leave;
+import com.kingsmen.kingsreach.entity.Payroll;
 import com.kingsmen.kingsreach.enums.LeaveStatus;
 import com.kingsmen.kingsreach.enums.LeaveType;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
 import com.kingsmen.kingsreach.repo.LeaveRepo;
+import com.kingsmen.kingsreach.repository.PayrollRepo;
 import com.kingsmen.kingsreach.service.LeaveService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
 @Service
 public class LeaveServiceImpl implements LeaveService {
 
-    @Autowired
-    private EmployeeRepo employeeRepo;
+	@Autowired
+	private LeaveRepo leaveRepository;
 
-    @Autowired
-    private LeaveRepo leaveRepo;
+	@Autowired
+	private PayrollRepo payrollRepository;
 
-    @Override
-    public ResponseEntity<ResponseStructure<Leave>> applyLeave(Leave leave) {
-        String employeeId = leave.getEmployeeId();
-        // Find employee by employeeId
-        Employee employee = employeeRepo.findByEmployeeId(employeeId)
-                .orElseThrow(() -> new RuntimeException("No employee found with the selected id"));
+	@Autowired
+	private EmployeeRepo employeeRepository;
 
-        // Get the fromDate of leave
-        LocalDate d1 = leave.getFromDate();
+	// Apply Leave Logic
+	public String applyLeave(Leave leave) {
+		Employee employee = employeeRepository.findByEmployeeId(leave.getEmployeeId())
+				.orElseThrow(() -> new RuntimeException());
+		Payroll payroll = payrollRepository.findByEmployeeId(leave.getEmployeeId());
 
-        // Check if the leave type is CASUAL
-        if (leave.getLeaveType() == LeaveType.CASUAL) {
-            // Check if Casual leave is restricted in March or April
-            if (isCasualLeaveRestricted(d1)) {
-                throw new RuntimeException("Casual leave cannot be taken in March or April");
-            }
-        }
+		// Calculate days of leave requested
+		long leaveDays = ChronoUnit.DAYS.between(leave.getFromDate(), leave.getToDate()) + 1;
 
-        // Further leave application logic can be added here, e.g., checking leave balance, etc.
+		// Validate leave balance
+		switch (leave.getLeaveType()) {
+		case LeaveType.SICK:
+			if (employee.getLeave().getSickLeaveBalance() < leaveDays) {
+				return "Insufficient sick leave balance";
+			}
+			employee.getLeave().setSickLeaveBalance(employee.getLeave().getSickLeaveBalance() - (int) leaveDays);
+			break;
 
-        // Assuming leave is applied successfully, you can save the leave entity
-        leave.setLeaveStatus(LeaveStatus.PENDING);  // Example: Set status to pending initially
-        leaveRepo.save(leave); // Save leave application
+		case LeaveType.CASUAL:
+			if (employee.getLeave().getCasualLeaveBalance() < leaveDays) {
+				return "Insufficient casual leave balance";
+			}
+			employee.getLeave().setCasualLeaveBalance(employee.getLeave().getCasualLeaveBalance() - (int) leaveDays);
+			break;
 
-        // Create a structured response to return to the user
-        ResponseStructure<Leave> responseStructure = new ResponseStructure<>();
-        responseStructure.setMessage("Leave applied successfully");
-        responseStructure.setStatusCode(200);
-        responseStructure.setData(leave);
+		case LeaveType.PAID:
+			if (employee.getLeave().getPaidLeaveBalance() < leaveDays) {
+				return "Insufficient paid leave balance";
+			}
+			employee.getLeave().setPaidLeaveBalance(employee.getLeave().getPaidLeaveBalance() - (int) leaveDays);
+			break;
 
-        return ResponseEntity.ok(responseStructure);
-    }
+		default:
+			return "Invalid leave type";
+		}
 
-    // Helper method to check if Casual leave is restricted in March or April
-    private boolean isCasualLeaveRestricted(LocalDate date) {
-        return date.getMonthValue() == 3 || date.getMonthValue() == 4;  // March (3) and April (4) restrictions
-    }
+//        leave.(LeaveStatus.APPROVED);
+		leaveRepository.save(leave);
 
-    @Override
-    public ResponseEntity<ResponseStructure<Leave>> changeLeaveStatus(Leave leave) {
-        // Implement logic for changing leave status
-        // Example: Approve or Reject leave requests
-        
-        // Returning a placeholder response for now
-        ResponseStructure<Leave> responseStructure = new ResponseStructure<>();
-        responseStructure.setMessage("Leave status updated successfully");
-        responseStructure.setStatusCode(200);
-        responseStructure.setData(leave);
+		// Adjust payroll if applicable
+		adjustPayrollForLeave(employee, payroll, leaveDays, leave.getLeaveStatus() == LeaveStatus.NOT_APPROVED);
+		return "Leave applied successfully";
+	}
 
-        return ResponseEntity.ok(responseStructure);
-    }
+	// Adjust Payroll Logic
+	private void adjustPayrollForLeave(Employee employee, Payroll payroll, long leaveDays, boolean isUnapprovedLeave) {
+		int lopDays = 0;
+
+		// LOP for excess leaves
+		if (leaveDays > 3) {
+			lopDays += (int) leaveDays - 3;
+		}
+
+		// Additional LOP for unapproved leaves
+		if (isUnapprovedLeave) {
+			lopDays += (int) leaveDays;
+		}
+
+		// Calculate daily salary
+		double dailySalary = payroll.getSalary() / 30; // Assuming 30 days in a month
+		double lopAmount = lopDays * dailySalary;
+
+		// Adjust salary
+		payroll.setGrossSalary(payroll.getGrossSalary() - lopAmount);
+		payrollRepository.save(payroll);
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<Leave>> changeLeaveStatus(Leave leave) {
+		// TODO Auto-generated method stub
+		Leave leave2 = leaveRepository.findById(leave.getLeaveId()).orElseThrow(() -> new RuntimeException());
+		leave2.setLeaveStatus(LeaveStatus.APPROVED);
+		ResponseStructure<Leave> responseStructure = new ResponseStructure<Leave>();
+		responseStructure.setData(leave2);
+		responseStructure.setMessage("The leave status changed to " + leave2.getLeaveStatus());
+
+		return ResponseEntity.ok(responseStructure);
+	}
+
 }

@@ -13,5 +13,7 @@ public interface PayrollRepo extends JpaRepository<Payroll, Integer>{
 	@Query("SELECT p FROM Payroll p WHERE p.employeeId = :employeeId")
 	Payroll findPayrollByEmployeeId(@Param("employeeId") String employeeId);
 
+	Payroll findByEmployeeId(String employeeId);
+
 
 }
