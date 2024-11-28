@@ -44,8 +44,7 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public Ticket updateTicket(Ticket ticket) {
-		
+	public ResponseEntity<ResponseStructure<Ticket>> updateTicket(Ticket ticket) {
 		
 		Ticket ticket2 = ticketRepo.findById(ticket.getTicketId())
 				.orElseThrow(() -> new RuntimeException("Invalid ticketID"));
@@ -56,7 +55,14 @@ public class TicketServiceImpl implements TicketService {
 		ticket2.setUpdatedAt(ticket.getUpdatedAt());
 		ticket2.setUpdatedBy(ticket.getUpdatedBy());
 
-		return ticketRepo.save(ticket2);
+		 ticketRepo.save(ticket2);
+		 
+		 ResponseStructure<Ticket> responseStructure = new ResponseStructure<Ticket>();
+		 responseStructure.setStatusCode(HttpStatus.OK.value());
+		 responseStructure.setMessage(" Ticket updated successfully.");
+		 responseStructure.setData(ticket);
+		 
+		 return new ResponseEntity<ResponseStructure<Ticket>>(responseStructure, HttpStatus.OK);
 	}
 
 }

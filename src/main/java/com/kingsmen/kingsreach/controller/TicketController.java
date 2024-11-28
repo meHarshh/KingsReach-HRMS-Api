@@ -25,7 +25,7 @@ public class TicketController {
 	}
 	
 	@PutMapping(value = "/editTicket")
-	private Ticket updateTicket(@RequestBody Ticket ticket) {
+	private ResponseEntity<ResponseStructure<Ticket>> updateTicket(@RequestBody Ticket ticket) {
 		return ticketService.updateTicket(ticket);
 	}
 }

@@ -2,6 +2,7 @@ package com.kingsmen.kingsreach.entity;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kingsmen.kingsreach.enums.ReimbursementStatus;
 
 import jakarta.persistence.Entity;
@@ -24,6 +25,7 @@ public class Reimbursement {
 	private double amount;
 	private ReimbursementStatus reimbursementStatus;
 	
+	@JsonIgnore
 	@ManyToOne
 	private Employee employee;
 

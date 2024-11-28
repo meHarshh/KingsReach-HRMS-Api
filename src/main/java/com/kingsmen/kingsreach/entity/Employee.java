@@ -2,11 +2,13 @@ package com.kingsmen.kingsreach.entity;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.enums.EmployeeRole;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -63,23 +65,20 @@ public class Employee implements Serializable {
 	@OneToMany(mappedBy = "employee")
 	private List<Asset> asset;
 
-	@OneToOne(mappedBy = "employee")
+	@OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
 	private Payroll payroll;
 
-	@ManyToOne
-	private Reimbursement reimbursement;
+	@OneToMany(mappedBy = "employee")
+	private List<Reimbursement> reimbursement =new ArrayList<Reimbursement>();
 
 	@ManyToOne
 	private Attendance attendance;
-	
+
+	@Column(length = 1000)
 	private Ticket ticket;
-	
-	
-	
+
 	// Getters and Setters
 
-	
-	
 	public int getId() {
 		return id;
 	}
@@ -92,11 +91,12 @@ public class Employee implements Serializable {
 		this.ticket = ticket;
 	}
 
-	public Reimbursement getReimbursement() {
+	
+	public List<Reimbursement> getReimbursement() {
 		return reimbursement;
 	}
 
-	public void setReimbursement(Reimbursement reimbursement) {
+	public void setReimbursement(List<Reimbursement> reimbursement) {
 		this.reimbursement = reimbursement;
 	}
 

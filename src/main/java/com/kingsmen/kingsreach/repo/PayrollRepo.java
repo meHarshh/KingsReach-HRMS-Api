@@ -1,4 +1,4 @@
-package com.kingsmen.kingsreach.repository;
+package com.kingsmen.kingsreach.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
