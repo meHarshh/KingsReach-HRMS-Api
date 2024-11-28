@@ -35,8 +35,8 @@ public class PayrollServiceImpl implements PayrollService {
 
 		ResponseStructure<Payroll> responseStructure = new ResponseStructure<Payroll>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage("The payroll of " + employee.getFirstName() + " from " + payroll.getDepartment()
-		+ " department has been updated");
+		responseStructure.setMessage("The payroll of " + employee.getFirstName() + " from " + payroll.getDepartment() + " department has been updated");
+
 		responseStructure.setData(payrollRepo.save(payroll));
 
 		return new ResponseEntity<ResponseStructure<Payroll>>(responseStructure, HttpStatus.OK);
@@ -173,6 +173,35 @@ public class PayrollServiceImpl implements PayrollService {
 		responseStructure.setData(payroll); 
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
+
+	}
+
+	public Payroll generateMonthlyPayroll(String employeeId) {
+		Payroll payroll = payrollRepo.findByEmployeeId(employeeId);
+
+		double grossSalary = payroll.getSalary();
+		double basicPay = payroll.getBasicPay();
+		double tax = calculateTax(grossSalary);
+		double pf = calculateProvidentFund(basicPay);
+
+		payroll.setTaxDeduction(tax);
+		payroll.setEmployeeProvidentFund(pf);
+		payroll.setGrossSalary(grossSalary - tax - pf);
+
+		payrollRepo.save(payroll);
+		return payroll;
+	}
+
+	private double calculateTax(double grossSalary) {
+		return 0.0; // 10% tax deduction
+	}
+
+	private double calculateProvidentFund(double basePay) {
+
+		if (basePay >= 15000) {
+			return 15000 * 0.12;
+		} else
+			return basePay * 0.12; // 12% PF deduction
 	}
 
 }

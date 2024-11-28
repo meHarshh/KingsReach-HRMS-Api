@@ -6,4 +6,6 @@ import com.kingsmen.kingsreach.entity.Payroll;
 
 public interface PayrollRepo extends JpaRepository<Payroll, Integer>{
 
+	Payroll findByEmployeeId(String employeeId);
+
 }

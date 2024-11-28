@@ -32,10 +32,21 @@ public class Payroll implements Serializable {
 	private double grossSalary;
 	private double otherAllowance;
 	private double employeeProvidentFund;
+	private double basicPay;
 
 	@JsonIgnore
 	@OneToOne
 	private Employee employee;
+
+	
+	
+	public double getBasicPay() {
+		return basicPay;
+	}
+
+	public void setBasicPay(double basicPay) {
+		this.basicPay = basicPay;
+	}
 
 	public double getEmployeeProvidentFund() {
 		return employeeProvidentFund;

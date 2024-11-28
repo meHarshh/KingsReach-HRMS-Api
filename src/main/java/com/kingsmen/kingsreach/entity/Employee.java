@@ -58,10 +58,6 @@ public class Employee implements Serializable {
 	private String permanentAddress;
 	private Long emergencyContact;
 
-	private double clBalance; // Casual Leave Balance
-	private double slBalance; // Sick Leave Balance
-	private double plBalance; // Paid Leave Balance
-
 	@OneToMany(mappedBy = "employee")
 	private List<Asset> asset;
 
@@ -77,10 +73,21 @@ public class Employee implements Serializable {
 	@Column(length = 1000)
 	private Ticket ticket;
 
+	@ManyToOne
+	private Leave leave;
+	
 	// Getters and Setters
 
 	public int getId() {
 		return id;
+	}
+
+	public Leave getLeave() {
+		return leave;
+	}
+
+	public void setLeave(Leave leave) {
+		this.leave = leave;
 	}
 
 	public Ticket getTicket() {
@@ -282,30 +289,6 @@ public class Employee implements Serializable {
 
 	public void setEmergencyContact(Long emergencyContact) {
 		this.emergencyContact = emergencyContact;
-	}
-
-	public double getClBalance() {
-		return clBalance;
-	}
-
-	public void setClBalance(double clBalance) {
-		this.clBalance = clBalance;
-	}
-
-	public double getSlBalance() {
-		return slBalance;
-	}
-
-	public void setSlBalance(double slBalance) {
-		this.slBalance = slBalance;
-	}
-
-	public double getPlBalance() {
-		return plBalance;
-	}
-
-	public void setPlBalance(double plBalance) {
-		this.plBalance = plBalance;
 	}
 
 	public Payroll getPayroll() {
