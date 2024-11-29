@@ -2,6 +2,7 @@ package com.kingsmen.kingsreach.entity;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kingsmen.kingsreach.enums.AssetStatus;
 
 import jakarta.persistence.Entity;
@@ -30,6 +31,7 @@ public class Asset {
 	@Transient
 	private String employeeId;
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "employee_id")
 	private Employee employee;

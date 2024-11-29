@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,19 @@ public class AssetServiceImpl implements AssetService {
 		} else {
 			throw new AssetNotFoundException("Asset with ID " + asset.getAssetId() + " not found");
 		}
+
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<List<Asset>>> findAllService() {
+		List<Asset> asset =assetRepo.findAll();
+
+		ResponseStructure<List<Asset>> responseStructure = new ResponseStructure<List<Asset>>();
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage("Asset Details Fetched successfully.");
+		responseStructure.setData(asset);
+
+		return new ResponseEntity<ResponseStructure<List<Asset>>>(responseStructure, HttpStatus.OK);
 
 	}
 }

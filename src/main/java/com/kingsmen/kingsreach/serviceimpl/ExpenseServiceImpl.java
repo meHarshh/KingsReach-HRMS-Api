@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
 	@Override
 	public ResponseEntity<ResponseStructure<Expense>> addExpense(Expense expense) {
-		
+
 		System.out.println(expense.getEmployeeName());
 
 		Optional<Employee> byEmployeeId = employeeRepo.findByEmployeeId(expense.getEmployeeId());
@@ -42,4 +43,18 @@ public class ExpenseServiceImpl implements ExpenseService {
 		return new ResponseEntity<ResponseStructure<Expense>>(responseStructure, HttpStatus.CREATED);
 	}
 
+	@Override
+	public ResponseEntity<ResponseStructure<List<Expense>>> findAllExpense() {
+		List<Expense> list =expenseRepo.findAll();
+
+		ResponseStructure<List<Expense>> responseStructure = new ResponseStructure<List<Expense>>();
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage("Expense Details Fetched successfully.");
+		responseStructure.setData(list);
+
+		return new ResponseEntity<ResponseStructure<List<Expense>>>(responseStructure, HttpStatus.OK);
+
+	}
 }
+
+
