@@ -76,7 +76,6 @@ public class PayrollServiceImpl implements PayrollService {
 	}
 
 	private double calculateProvidentFund(double basePay) {
-
 		if (basePay >= 15000) {
 			return 15000 * 0.12;
 		} else
