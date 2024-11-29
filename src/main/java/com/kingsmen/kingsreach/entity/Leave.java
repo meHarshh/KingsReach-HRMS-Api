@@ -2,6 +2,7 @@ package com.kingsmen.kingsreach.entity;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kingsmen.kingsreach.enums.LeaveStatus;
 import com.kingsmen.kingsreach.enums.LeaveType;
 
@@ -27,13 +28,12 @@ public class Leave {
 	private LeaveStatus leaveStatus;
 	private Employee approved;
 	private String employeeId;
-	private int casualLeaveBalance = 10;
-	private int sickLeaveBalance = 12;
-	private int paidLeaveBalance = 12;
+	private String employeeName;
 
+	@JsonIgnore
 	@ManyToOne
 	private Employee employee;
-	
+
 	@Transient
 	private String approvedBy;
 
@@ -101,30 +101,6 @@ public class Leave {
 		this.employeeId = employeeId;
 	}
 
-	public int getCasualLeaveBalance() {
-		return casualLeaveBalance;
-	}
-
-	public void setCasualLeaveBalance(int casualLeaveBalance) {
-		this.casualLeaveBalance = casualLeaveBalance;
-	}
-
-	public int getSickLeaveBalance() {
-		return sickLeaveBalance;
-	}
-
-	public void setSickLeaveBalance(int sickLeaveBalance) {
-		this.sickLeaveBalance = sickLeaveBalance;
-	}
-
-	public int getPaidLeaveBalance() {
-		return paidLeaveBalance;
-	}
-
-	public void setPaidLeaveBalance(int paidLeaveBalance) {
-		this.paidLeaveBalance = paidLeaveBalance;
-	}
-
 	public Employee getEmployee() {
 		return employee;
 	}
@@ -139,6 +115,14 @@ public class Leave {
 
 	public void setApprovedBy(String approvedBy) {
 		this.approvedBy = approvedBy;
+	}
+
+	public String getEmployeeName() {
+		return employeeName;
+	}
+
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
 	}
 
 }

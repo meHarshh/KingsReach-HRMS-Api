@@ -22,39 +22,44 @@ public class TerminationDetailServiceImpl implements TerminationDetailService {
 	@Override
 	public ResponseEntity<ResponseStructure<TerminationDetail>> terminationDetail(TerminationDetail detail) {
 
-		detail=detailRepo.save(detail);
+		detail = detailRepo.save(detail);
 
-		String message="Termination details of " + detail.getEmployeeName() + " added.";
+		String message = "Termination details of " + detail.getEmployeeName() + " added.";
 
-		ResponseStructure<TerminationDetail> responseStructure=new ResponseStructure<TerminationDetail>();
+		ResponseStructure<TerminationDetail> responseStructure = new ResponseStructure<TerminationDetail>();
 		responseStructure.setStatusCode(HttpStatus.CREATED.value());
 		responseStructure.setMessage(message);
 		responseStructure.setData(detail);
 
-		return new ResponseEntity<ResponseStructure<TerminationDetail>>(responseStructure,HttpStatus.CREATED);
+		return new ResponseEntity<ResponseStructure<TerminationDetail>>(responseStructure, HttpStatus.CREATED);
 	}
 
 	@Override
-	public ResponseEntity<ResponseStructure<TerminationDetail>> editTermination(TerminationDetail terminationDetail) {
+	public ResponseEntity<ResponseStructure<TerminationDetail>> editTermination(String employeeId,
+			TerminationDetail terminationDetail) {
 
-		Optional<TerminationDetail> byEmployeeName = detailRepo.findByEmployeeName(terminationDetail.getEmployeeName());
-		TerminationDetail employee = byEmployeeName.get();
+		int terminationDetailId = terminationDetail.getTerminationDetailId();
+
+		TerminationDetail employee = detailRepo.findById(terminationDetailId).orElseThrow(() -> new RuntimeException());
 
 		employee.setEmployeeId(terminationDetail.getEmployeeId());
 		employee.setNoticeDate(terminationDetail.getNoticeDate());
 		employee.setTerminationReason(terminationDetail.getTerminationReason());
-		employee.setDepartment(terminationDetail.getDepartment());
+		employee.setTerminationReason(terminationDetail.getTerminationReason());
 
-		TerminationDetail updatedDetail=detailRepo.save(employee);
+		// employee.setDepartment(terminationDetail.getDepartment());
 
-		String message="Termination ID: " + terminationDetail.getTerminationDetailId() +" of " +terminationDetail.getEmployeeName() + "updated successfully!!";
+		TerminationDetail updatedDetail = detailRepo.save(employee);
 
-		ResponseStructure<TerminationDetail> responseStructure=new ResponseStructure<TerminationDetail>();
+		String message = "Termination ID: " + terminationDetail.getTerminationDetailId() + " of "
+				+ terminationDetail.getEmployeeName() + " updated successfully!!";
+
+		ResponseStructure<TerminationDetail> responseStructure = new ResponseStructure<TerminationDetail>();
 		responseStructure.setStatusCode(HttpStatus.ACCEPTED.value());
 		responseStructure.setMessage(message);
 		responseStructure.setData(updatedDetail);
 
-		return new ResponseEntity<ResponseStructure<TerminationDetail>>(responseStructure,HttpStatus.ACCEPTED);
+		return new ResponseEntity<ResponseStructure<TerminationDetail>>(responseStructure, HttpStatus.ACCEPTED);
 	}
 
 	@Override
@@ -67,7 +72,8 @@ public class TerminationDetailServiceImpl implements TerminationDetailService {
 
 		ResponseStructure<TerminationDetail> responseStructure = new ResponseStructure<TerminationDetail>();
 
-		String message = "Termination details for Employee ID: " + employeeId  + " ( " + employee.getEmployeeName() + " ) deleted successfully.";
+		String message = "Termination details for Employee ID: " + employeeId + " ( " + employee.getEmployeeName()
+				+ " ) deleted successfully.";
 
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage(message);
@@ -81,14 +87,14 @@ public class TerminationDetailServiceImpl implements TerminationDetailService {
 	public ResponseEntity<ResponseStructure<List<TerminationDetail>>> findAllTerminations() {
 		List<TerminationDetail> terminationDetails = detailRepo.findAll();
 
-	    ResponseStructure<List<TerminationDetail>> responseStructure = new ResponseStructure<>();
-  
-	        responseStructure.setStatusCode(HttpStatus.OK.value());
-	        responseStructure.setMessage("Termination details retrieved successfully.");
-	        responseStructure.setData(terminationDetails);
+		ResponseStructure<List<TerminationDetail>> responseStructure = new ResponseStructure<>();
 
-	        return new ResponseEntity<ResponseStructure<List<TerminationDetail>>>(responseStructure, HttpStatus.OK);
-	
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage("Termination details retrieved successfully.");
+		responseStructure.setData(terminationDetails);
+
+		return new ResponseEntity<ResponseStructure<List<TerminationDetail>>>(responseStructure, HttpStatus.OK);
+
 	}
 
 }
