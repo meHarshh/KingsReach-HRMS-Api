@@ -1,5 +1,9 @@
 package com.kingsmen.kingsreach.entity;
 
+import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,14 +11,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 
+@SuppressWarnings("serial")
 @Entity
-public class Payroll {
+public class Payroll implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int payrollId;
 
-	// @Transient
 	@Column(name = "employee_id")
 	private String employeeId;
 
@@ -30,6 +34,7 @@ public class Payroll {
 	private double employeeProvidentFund;
 	private double basicPay;
 
+	@JsonIgnore
 	@OneToOne
 	private Employee employee;
 
@@ -145,6 +150,28 @@ public class Payroll {
 
 	public void setEmployee(Employee employee) {
 		this.employee = employee;
+	}
+
+	public Payroll(int payrollId, String employeeId, String department, double salary, double taxDeduction,
+			double specialAllowance, double employeeStateInsurance, double houseRentAllowance, double providentFund,
+			double grossSalary, double otherAllowance, double employeeProvidentFund, Employee employee) {
+		super();
+		this.payrollId = payrollId;
+		this.employeeId = employeeId;
+		this.department = department;
+		this.salary = salary;
+		this.taxDeduction = taxDeduction;
+		this.specialAllowance = specialAllowance;
+		this.employeeStateInsurance = employeeStateInsurance;
+		this.houseRentAllowance = houseRentAllowance;
+		this.providentFund = providentFund;
+		this.grossSalary = grossSalary;
+		this.otherAllowance = otherAllowance;
+		this.employeeProvidentFund = employeeProvidentFund;
+		this.employee = employee;
+	}
+
+	public Payroll() {
 	}
 
 }

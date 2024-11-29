@@ -1,5 +1,7 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,20 @@ public class OnsiteServiceImpl implements OnsiteService {
 		responseStructure.setData(onsite);
 
 		return new ResponseEntity<ResponseStructure<Onsite>>(responseStructure, HttpStatus.OK);
+	}
+
+
+	@Override
+	public ResponseEntity<ResponseStructure<List<Onsite>>> findOnsiteEmployees() {
+		List<Onsite> list = onsiteRepo.findAll();
+		
+		ResponseStructure<List<Onsite>> responseStructure=new ResponseStructure<List<Onsite>>();
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage("Onsite Employees Details Fetched Successfully.");
+		responseStructure.setData(list);
+
+		return new ResponseEntity<ResponseStructure<List<Onsite>>>(responseStructure, HttpStatus.OK);
+		
 	}
 
 }
