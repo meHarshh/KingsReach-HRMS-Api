@@ -13,4 +13,10 @@ public interface PayrollService {
 
 	ResponseEntity<ResponseStructure<List<Payroll>>> getEmployeesSalary();
 
+	ResponseEntity<ResponseStructure<Payroll>> deleteEmployeeSalary(String employeeId);
+
+	ResponseEntity<ResponseStructure<Payroll>> getEmployeeSalary(String employeeId);
+
+	ResponseEntity<ResponseStructure<Payroll>> editEmployeeSalary(String employeeId, Payroll payroll);
+
 }

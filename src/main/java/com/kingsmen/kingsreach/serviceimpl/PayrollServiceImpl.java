@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Payroll;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
-import com.kingsmen.kingsreach.repository.PayrollRepo;
+import com.kingsmen.kingsreach.repo.PayrollRepo;
 import com.kingsmen.kingsreach.service.PayrollService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
@@ -35,8 +35,8 @@ public class PayrollServiceImpl implements PayrollService {
 
 		ResponseStructure<Payroll> responseStructure = new ResponseStructure<Payroll>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage("The payroll of " + employee.getFirstName() + " from " + payroll.getDepartment()
-				+ " department has been updated");
+		responseStructure.setMessage("The payroll of " + employee.getFirstName() + " from " + payroll.getDepartment() + " department has been updated");
+
 		responseStructure.setData(payrollRepo.save(payroll));
 
 		return new ResponseEntity<ResponseStructure<Payroll>>(responseStructure, HttpStatus.OK);
@@ -52,7 +52,128 @@ public class PayrollServiceImpl implements PayrollService {
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("The employees payroll data is fetched");
 
-		return null;
+		return new ResponseEntity<ResponseStructure<List<Payroll>>>(responseStructure, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<Payroll>> getEmployeeSalary(String employeeId) {
+		
+		Optional<Employee> optionalEmployee = employeeRepo.findByEmployeeId(employeeId);
+		
+		if (optionalEmployee.isEmpty()) {
+			ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
+			responseStructure.setStatusCode(HttpStatus.NOT_FOUND.value());
+			responseStructure.setMessage("Employee not found with ID: " + employeeId);
+			responseStructure.setData(null);
+
+			return new ResponseEntity<>(responseStructure, HttpStatus.NOT_FOUND);
+		}
+
+		Employee employee = optionalEmployee.get();
+
+		Payroll payroll = employee.getPayroll(); 
+
+		if (payroll == null) {
+			ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
+			responseStructure.setStatusCode(HttpStatus.NOT_FOUND.value());
+			responseStructure.setMessage("No payroll record found for employee ID: " + employeeId);
+			responseStructure.setData(null);
+
+			return new ResponseEntity<>(responseStructure, HttpStatus.NOT_FOUND);
+		}
+
+		ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage("Salary details of employee " + payroll.getEmployeeId() + " fetched successfully.");
+		responseStructure.setData(payroll);
+
+		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
+	}
+
+
+	@Override
+	public ResponseEntity<ResponseStructure<Payroll>> editEmployeeSalary(String employeeId, Payroll payroll) {
+		Optional<Employee> optionalEmployee = employeeRepo.findByEmployeeId(employeeId);
+
+		if (optionalEmployee.isEmpty()) {
+			ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
+			responseStructure.setStatusCode(HttpStatus.NOT_FOUND.value());
+			responseStructure.setMessage("Employee not found with ID: " + employeeId);
+			responseStructure.setData(null);
+
+			return new ResponseEntity<>(responseStructure, HttpStatus.NOT_FOUND);
+		}
+
+		Employee employee = optionalEmployee.get();
+
+		Payroll existingPayroll = employee.getPayroll(); 
+
+		if (existingPayroll == null) {
+			ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
+			responseStructure.setStatusCode(HttpStatus.NOT_FOUND.value());
+			responseStructure.setMessage("No payroll record found for employee ID: " + employeeId);
+			responseStructure.setData(null);
+
+			return new ResponseEntity<>(responseStructure, HttpStatus.NOT_FOUND);
+		}
+
+		existingPayroll.setSalary(payroll.getSalary());
+		existingPayroll.setTaxDeduction(payroll.getTaxDeduction());
+		existingPayroll.setSpecialAllowance(payroll.getSpecialAllowance());
+		existingPayroll.setEmployeeStateInsurance(payroll.getEmployeeStateInsurance());
+		existingPayroll.setHouseRentAllowance(payroll.getHouseRentAllowance());
+		existingPayroll.setProvidentFund(payroll.getProvidentFund());
+		existingPayroll.setGrossSalary(payroll.getGrossSalary());
+		existingPayroll.setOtherAllowance(payroll.getOtherAllowance());
+		existingPayroll.setEmployeeProvidentFund(payroll.getEmployeeProvidentFund());
+
+		Payroll updatedPayroll = payrollRepo.save(existingPayroll);
+
+		ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage("Employee salary updated successfully");
+		responseStructure.setData(updatedPayroll);
+
+		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<Payroll>> deleteEmployeeSalary(String employeeId) {
+		Optional<Employee> optionalEmployee = employeeRepo.findByEmployeeId(employeeId);
+
+		if (optionalEmployee.isEmpty()) {
+			ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
+			responseStructure.setStatusCode(HttpStatus.NOT_FOUND.value());
+			responseStructure.setMessage("Employee not found with ID: " + employeeId);
+			responseStructure.setData(null);
+
+			return new ResponseEntity<>(responseStructure, HttpStatus.NOT_FOUND);
+		}
+
+		Employee employee = optionalEmployee.get();
+
+		Payroll payroll = employee.getPayroll(); 
+
+		if (payroll == null) {
+			ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
+			responseStructure.setStatusCode(HttpStatus.NOT_FOUND.value());
+			responseStructure.setMessage("No payroll record found for employee ID: " + employeeId);
+			responseStructure.setData(null);
+
+			return new ResponseEntity<>(responseStructure, HttpStatus.NOT_FOUND);
+		}
+
+		payroll.setEmployee(null);  
+
+		payrollRepo.delete(payroll);
+
+		ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage("Employee salary detail deleted successfully.");
+		responseStructure.setData(payroll); 
+
+		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
+
 	}
 
 	public Payroll generateMonthlyPayroll(String employeeId) {

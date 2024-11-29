@@ -11,7 +11,7 @@ import com.kingsmen.kingsreach.entity.Attendance;
 import com.kingsmen.kingsreach.service.AttendanceService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@CrossOrigin(value = "http://localhost:5173/" , allowCredentials = "true")
+@CrossOrigin(allowCredentials = "true", origins = "http://localhost:5173/")
 @RestController
 public class AttendanceController {
 

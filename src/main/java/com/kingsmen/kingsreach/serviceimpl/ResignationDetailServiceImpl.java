@@ -1,5 +1,7 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +29,20 @@ public class ResignationDetailServiceImpl implements ResignationDetailService {
 		responseStructure.setStatusCode(HttpStatus.CREATED.value());
 		responseStructure.setMessage(message);
 		responseStructure.setData(resignationDetail);
-		
+
 		return new ResponseEntity<ResponseStructure<ResignationDetail>>(responseStructure,HttpStatus.CREATED);
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<List<ResignationDetail>>> getResignationDetails() {
+		List<ResignationDetail> list = resignationDetailRepo.findAll();
+
+		ResponseStructure<List<ResignationDetail>> responseStructure=new ResponseStructure<List<ResignationDetail>>();
+		responseStructure.setStatusCode(HttpStatus.CREATED.value());
+		responseStructure.setMessage("Resignation Details fetched successfully.");
+		responseStructure.setData(list);
+
+		return new ResponseEntity<ResponseStructure<List<ResignationDetail>>>(responseStructure,HttpStatus.CREATED);
 	}
 
 }
