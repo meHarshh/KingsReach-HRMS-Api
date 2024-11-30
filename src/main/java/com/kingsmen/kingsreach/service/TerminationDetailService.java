@@ -11,7 +11,7 @@ public interface TerminationDetailService {
 
 	ResponseEntity<ResponseStructure<TerminationDetail>> terminationDetail(TerminationDetail detail);
 	
-	ResponseEntity<ResponseStructure<TerminationDetail>> editTermination(TerminationDetail terminationDetail);
+	ResponseEntity<ResponseStructure<TerminationDetail>> editTermination(String employeeId,TerminationDetail terminationDetail);
 
 	ResponseEntity<ResponseStructure<TerminationDetail>> deleteTermination(String employeeId);
 

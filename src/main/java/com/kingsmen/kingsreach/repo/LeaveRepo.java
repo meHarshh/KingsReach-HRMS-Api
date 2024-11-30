@@ -14,4 +14,5 @@ public interface LeaveRepo extends JpaRepository<Leave, Integer>{
 
 	List<Leave> findByEmployee(Employee employee);
 
+
 }
