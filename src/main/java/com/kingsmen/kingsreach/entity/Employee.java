@@ -65,17 +65,17 @@ public class Employee implements Serializable {
 	private Payroll payroll;
 
 	@OneToMany(mappedBy = "employee")
-	private List<Reimbursement> reimbursement =new ArrayList<Reimbursement>();
+	private List<Reimbursement> reimbursement = new ArrayList<Reimbursement>();
 
-	@ManyToOne
-	private Attendance attendance;
+	@OneToMany(mappedBy = "employee")
+	private List<Attendance> attendance = new ArrayList<Attendance>();
 
 	@Column(length = 1000)
 	private Ticket ticket;
 
 	@ManyToOne
 	private Leave leave;
-	
+
 	// Getters and Setters
 
 	public int getId() {
@@ -98,7 +98,6 @@ public class Employee implements Serializable {
 		this.ticket = ticket;
 	}
 
-	
 	public List<Reimbursement> getReimbursement() {
 		return reimbursement;
 	}
@@ -275,11 +274,11 @@ public class Employee implements Serializable {
 		this.permanentAddress = permanentAdress;
 	}
 
-	public Attendance getAttendance() {
+	public List<Attendance> getAttendance() {
 		return attendance;
 	}
 
-	public void setAttendance(Attendance attendance) {
+	public void setAttendance(List<Attendance> attendance) {
 		this.attendance = attendance;
 	}
 
