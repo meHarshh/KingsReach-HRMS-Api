@@ -15,6 +15,8 @@ import com.kingsmen.kingsreach.repo.PayrollRepo;
 import com.kingsmen.kingsreach.service.PayrollService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class PayrollServiceImpl implements PayrollService {
 
@@ -143,21 +145,25 @@ public class PayrollServiceImpl implements PayrollService {
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	}
 
+	@Transactional
 	@Override
 	public ResponseEntity<ResponseStructure<Payroll>> deleteEmployeeSalary(int payrollId) {
+	    System.out.println("Fetching payroll with ID: " + payrollId);
+	    
+	    Payroll payroll = payrollRepo.findById(payrollId).orElseThrow(() -> new RuntimeException("Payroll not found"));
 
-		Payroll payroll = payrollRepo.findById(payrollId).orElseThrow(() -> new RuntimeException());
+	    System.out.println("Deleting payroll with ID: " + payrollId);
+	    payrollRepo.deleteById(payrollId);
 
-		payrollRepo.deleteById(payrollId);
+	    ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
+	    responseStructure.setStatusCode(HttpStatus.OK.value());
+	    responseStructure.setMessage("Employee salary detail deleted successfully.");
+	    responseStructure.setData(payroll);
 
-		ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
-		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage("Employee salary detail deleted successfully.");
-		responseStructure.setData(payroll);
-
-		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
-
+	    System.out.println("Payroll deleted: " + payroll);
+	    return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	}
+
 
 	public Payroll generateMonthlyPayroll(String employeeId) {
 		Payroll payroll = payrollRepo.findByEmployeeId(employeeId);

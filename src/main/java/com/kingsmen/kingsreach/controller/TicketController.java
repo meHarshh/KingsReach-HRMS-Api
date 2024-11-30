@@ -17,7 +17,7 @@ import com.kingsmen.kingsreach.entity.Ticket;
 import com.kingsmen.kingsreach.service.TicketService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@CrossOrigin(value = "http://localhost:5173" , allowCredentials = "true")
+@CrossOrigin(value = "https://hrms.kingsmenrealty.com" , allowCredentials = "true")
 @RestController
 public class TicketController {
 
