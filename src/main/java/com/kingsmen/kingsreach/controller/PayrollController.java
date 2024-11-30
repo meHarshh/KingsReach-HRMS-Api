@@ -35,17 +35,17 @@ public class PayrollController {
 		return payrollService.getEmployeesSalary();
 	}
 	
-	@GetMapping(value = "/getSalary")
+	@GetMapping(value = "/getSalary/{employeeId}")
 	public ResponseEntity<ResponseStructure<Payroll>> getEmployeeSalary(@RequestParam  String employeeId){
 		return payrollService.getEmployeeSalary(employeeId);
 	}
 	
-	@PutMapping(value= "/editEmployeeSalary")
+	@PutMapping(value= "/editEmployeeSalary/{employeeId}")
 	public ResponseEntity<ResponseStructure<Payroll>> editEmployeeSalary(@RequestParam String employeeId, @RequestBody Payroll payroll){
 		return payrollService.editEmployeeSalary(employeeId, payroll);
 	}
 	
-	@DeleteMapping(value= "/deleteEmployeeSalary")
+	@DeleteMapping(value= "/deleteEmployeeSalary/{employeeId}")
 	public ResponseEntity<ResponseStructure<Payroll>> deleteEmployeeSalary(@RequestParam  String employeeId){
 		return payrollService.deleteEmployeeSalary(employeeId);
 	}
