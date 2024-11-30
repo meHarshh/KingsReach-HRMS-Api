@@ -16,7 +16,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
@@ -58,6 +57,10 @@ public class Employee implements Serializable {
 	private String permanentAddress;
 	private Long emergencyContact;
 
+	private int casualLeaveBalance = 10;
+	private int sickLeaveBalance = 12;
+	private int paidLeaveBalance = 12;
+
 	@OneToMany(mappedBy = "employee")
 	private List<Asset> asset;
 
@@ -65,21 +68,45 @@ public class Employee implements Serializable {
 	private Payroll payroll;
 
 	@OneToMany(mappedBy = "employee")
-	private List<Reimbursement> reimbursement =new ArrayList<Reimbursement>();
+	private List<Reimbursement> reimbursement = new ArrayList<Reimbursement>();
 
-	@ManyToOne
+	@OneToOne
 	private Attendance attendance;
 
 	@Column(length = 1000)
 	private Ticket ticket;
 
-	@ManyToOne
+	@OneToOne
 	private Leave leave;
-	
+
 	// Getters and Setters
 
 	public int getId() {
 		return id;
+	}
+
+	public int getCasualLeaveBalance() {
+		return casualLeaveBalance;
+	}
+
+	public void setCasualLeaveBalance(int casualLeaveBalance) {
+		this.casualLeaveBalance = casualLeaveBalance;
+	}
+
+	public int getSickLeaveBalance() {
+		return sickLeaveBalance;
+	}
+
+	public void setSickLeaveBalance(int sickLeaveBalance) {
+		this.sickLeaveBalance = sickLeaveBalance;
+	}
+
+	public int getPaidLeaveBalance() {
+		return paidLeaveBalance;
+	}
+
+	public void setPaidLeaveBalance(int paidLeaveBalance) {
+		this.paidLeaveBalance = paidLeaveBalance;
 	}
 
 	public Leave getLeave() {
@@ -98,7 +125,6 @@ public class Employee implements Serializable {
 		this.ticket = ticket;
 	}
 
-	
 	public List<Reimbursement> getReimbursement() {
 		return reimbursement;
 	}

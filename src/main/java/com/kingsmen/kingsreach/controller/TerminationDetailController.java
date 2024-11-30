@@ -30,8 +30,8 @@ public class TerminationDetailController {
 	}
 
 	@PutMapping(value = "/editTerminationDetail")
-	public ResponseEntity<ResponseStructure<TerminationDetail>> editTermination(@RequestBody TerminationDetail terminationdetail) {
-		return terminationDetailService.editTermination(terminationdetail);
+	public ResponseEntity<ResponseStructure<TerminationDetail>> editTermination(@RequestParam String employeeId,@RequestBody TerminationDetail terminationdetail) {
+		return terminationDetailService.editTermination(employeeId,terminationdetail);
 	}
 
 	@DeleteMapping(value = "/deleteTerminationDetail")
