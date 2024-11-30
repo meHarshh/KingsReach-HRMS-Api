@@ -2,7 +2,6 @@ package com.kingsmen.kingsreach.entity;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,10 +16,7 @@ public class Attendance {
 	private int attendanceId;
 
 	private int totalWorkMinutes;
-	@Column(columnDefinition = "TIMESTAMP")
 	private LocalDateTime firstPunchIn;
-
-	@Column(columnDefinition = "TIMESTAMP")
 	private LocalDateTime lastPunchOut;
 	private boolean isPresent;
 	private boolean isAbsent;
