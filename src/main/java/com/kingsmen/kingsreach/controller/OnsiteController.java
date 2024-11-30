@@ -14,7 +14,7 @@ import com.kingsmen.kingsreach.entity.Onsite;
 import com.kingsmen.kingsreach.service.OnsiteService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@CrossOrigin(allowCredentials = "true", origins = "http://hrms.kingsmenrealty.com")
+@CrossOrigin(allowCredentials = "true", origins = "http://localhost:5173")
 @RestController
 public class OnsiteController {
 
