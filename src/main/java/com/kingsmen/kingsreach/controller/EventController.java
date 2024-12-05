@@ -15,7 +15,7 @@ import com.kingsmen.kingsreach.entity.Event;
 import com.kingsmen.kingsreach.service.EventService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@CrossOrigin(allowCredentials = "true", origins = "http://localhost:5174")
+@CrossOrigin(allowCredentials = "true", origins = "http://localhost:5173")
 @RestController
 public class EventController {
 

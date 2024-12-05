@@ -32,8 +32,12 @@ public class LeaveServiceImpl implements LeaveService {
 	@Autowired
 	private EmployeeRepo employeeRepository;
 
+	@Override
 	// Apply Leave Logic
-	public ResponseEntity<ResponseStructure<Leave>> applyLeave(Leave leave) {
+	public ResponseEntity<ResponseStructure<Leave>> applyLeave(int leaveId) {
+		 Leave leave = leaveRepository.findById(leaveId)
+		            .orElseThrow(() -> new RuntimeException("Leave not found for ID: " + leaveId));	
+		
 		Employee employee = employeeRepository.findByEmployeeId(leave.getEmployeeId())
 				.orElseThrow(() -> new RuntimeException());
 
@@ -146,12 +150,12 @@ public class LeaveServiceImpl implements LeaveService {
 		responseStructure.setData(list);
 		responseStructure.setMessage("Leave details fetched Successfully.");
 
-		return ResponseEntity.ok(responseStructure);
+		return ResponseEntity.ok(responseStructure);  
 
 	}
 
 	@Override
-	public List<Leave> getEmployeeLeave(String employeeId) {
+	public ResponseEntity<ResponseStructure<List<Leave>>> getEmployeeLeave(String employeeId) {
 		List<Leave> all = leaveRepository.findAll();
 		ArrayList<Leave> leaves = new ArrayList<Leave>();
 		for (Leave leave : all) {
@@ -159,7 +163,13 @@ public class LeaveServiceImpl implements LeaveService {
 				leaves.add(leave);
 			}
 		}
-		return leaves;
+		
+		ResponseStructure<List<Leave>> responseStructure = new ResponseStructure<List<Leave>>();
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage("The Employees Leave Deatils Fetched Successfully.");
+		responseStructure.setData(leaves);
+		
+		return ResponseEntity.ok(responseStructure);
 	}
 
 }

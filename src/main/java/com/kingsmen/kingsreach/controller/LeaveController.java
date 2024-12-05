@@ -24,8 +24,8 @@ public class LeaveController {
 	private LeaveService leaveservice;
 
 	@PostMapping(value = "/applyLeave")
-	private ResponseEntity<ResponseStructure<Leave>> applyLeave(@RequestBody Leave leave) {
-		return leaveservice.applyLeave(leave);
+	private ResponseEntity<ResponseStructure<Leave>> applyLeave(@PathVariable   int leaveId) {
+		return leaveservice.applyLeave(leaveId);
 	}
 
 	@PutMapping(value = "/leaveStatus")
@@ -39,7 +39,7 @@ public class LeaveController {
 	}
 
 	@GetMapping(value = "/getEmployeeLeave/{employeeId}")
-	private List<Leave> getEmployeeLeave(@PathVariable String employeeId) {
+	private ResponseEntity<ResponseStructure<List<Leave>>> getEmployeeLeave(@PathVariable String employeeId) {
 		return leaveservice.getEmployeeLeave(employeeId);
 	}
 

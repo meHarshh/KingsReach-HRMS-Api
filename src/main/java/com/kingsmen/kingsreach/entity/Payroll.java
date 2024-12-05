@@ -3,6 +3,7 @@ package com.kingsmen.kingsreach.entity;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.kingsmen.kingsreach.enums.PayrollStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,6 +34,9 @@ public class Payroll implements Serializable {
 	private double otherAllowance;
 	private double employeeProvidentFund;
 	private double basicPay;
+	private String employeeName;
+	private String location = "Bengaluru";
+	private PayrollStatus payrollStatus;
 
 	@JsonIgnore
 	@OneToOne
@@ -152,9 +156,31 @@ public class Payroll implements Serializable {
 		this.employee = employee;
 	}
 
+	
+	public String getEmployeeName() {
+		return employeeName;
+	}
+
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public PayrollStatus getPayrollStatus() {
+		return payrollStatus;
+	}
+
+	public void setPayrollStatus(PayrollStatus payrollStatus) {
+		this.payrollStatus = payrollStatus;
+	}
+
 	public Payroll(int payrollId, String employeeId, String department, double salary, double taxDeduction,
 			double specialAllowance, double employeeStateInsurance, double houseRentAllowance, double providentFund,
-			double grossSalary, double otherAllowance, double employeeProvidentFund, Employee employee) {
+			double grossSalary, double otherAllowance, double employeeProvidentFund, double basicPay,
+			String employeeName, String location, PayrollStatus payrollStatus, Employee employee) {
 		super();
 		this.payrollId = payrollId;
 		this.employeeId = employeeId;
@@ -168,10 +194,15 @@ public class Payroll implements Serializable {
 		this.grossSalary = grossSalary;
 		this.otherAllowance = otherAllowance;
 		this.employeeProvidentFund = employeeProvidentFund;
+		this.basicPay = basicPay;
+		this.employeeName = employeeName;
+		this.location = location;
+		this.payrollStatus = payrollStatus;
 		this.employee = employee;
 	}
 
 	public Payroll() {
+	
 	}
-
+	
 }

@@ -28,9 +28,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public ResponseEntity<ResponseStructure<Employee>> addEmployee(Employee employee) {
-		String email = employee.getEmail();
+		String email = employee.getOfficialEmail();
 		String userName = employee.getUserName();
-		if (employeeRepo.existsByEmailAndUserName(email, userName)) {
+		if (employeeRepo.existsByofficialEmailAndUserName(email, userName)) {
 			throw new UserIdOrEmailAlreadyExistException(
 					"The user-Id or Email already exists please enter a new email and retry");
 		}
@@ -39,7 +39,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 					"The password doesnt match, the password and the confirm passwrd should match");
 		}
 
-		if (!employee.getEmail().contains("@") && !employee.getEmail().contains(".com")) {
+		if (!employee.getOfficialEmail().contains("@") && !employee.getOfficialEmail().contains(".com")) {
 			throw new InvalidEmailException("Please enter the valid email-id");
 		}
 		employee = employeeRepo.save(employee);
@@ -55,7 +55,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public ResponseEntity<ResponseStructure<List<Employee>>> login(Credentials credentials) {
-		Optional<Employee> employee = employeeRepo.findByEmailAndPassword(credentials.getEmail(),
+		Optional<Employee> employee = employeeRepo.findByofficialEmailAndPassword(credentials.getEmail(),
 				credentials.getPassword());
 
 		if (employee.isPresent()) {
@@ -111,7 +111,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee2.setEmployeeId(employee.getEmployeeId());
 		employee2.setFirstName(employee.getFirstName());
 		employee2.setLastName(employee.getLastName());
-		employee2.setEmail(employee.getEmail());
+		employee2.setOfficialEmail(employee.getOfficialEmail());
 		employee2.setUserName(employee.getUserName());
 		employee2.setPassword(employee.getPassword());
 		employee2.setConfirmPassword(employee.getConfirmPassword());

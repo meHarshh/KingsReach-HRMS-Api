@@ -1,7 +1,9 @@
 package com.kingsmen.kingsreach.entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kingsmen.kingsreach.enums.TicketPriority;
 import com.kingsmen.kingsreach.enums.TicketStatus;
 
@@ -28,9 +30,10 @@ public class Ticket implements Serializable{
 	private TicketStatus status;
 
 	private String updatedBy;
-	private String createdAt;
-	private String updatedAt;
+	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
 
+	@JsonIgnore
 	@ManyToOne
 	private Employee employee;
 
@@ -42,19 +45,19 @@ public class Ticket implements Serializable{
 		this.updatedBy = updatedBy;
 	}
 
-	public String getCreatedAt() {
+	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(String createdAt) {
+	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
 
-	public String getUpdatedAt() {
+	public LocalDateTime getUpdatedAt() {
 		return updatedAt;
 	}
 
-	public void setUpdatedAt(String updatedAt) {
+	public void setUpdatedAt(LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
 	}
 

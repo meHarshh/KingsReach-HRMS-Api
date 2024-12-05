@@ -45,4 +45,23 @@ public class ResignationDetailServiceImpl implements ResignationDetailService {
 		return new ResponseEntity<ResponseStructure<List<ResignationDetail>>>(responseStructure,HttpStatus.CREATED);
 	}
 
-}
+	@Override
+	public ResponseEntity<ResponseStructure<ResignationDetail>> changeResignationStatus(int resignationId,ResignationDetail resignationDetail) {
+	
+		
+		    ResignationDetail existingResignation = resignationDetailRepo.findById(resignationId)
+		            .orElseThrow(() -> new RuntimeException("Resignation with ID " + resignationId + " not found"));
+
+		   existingResignation.setResignationStatus(resignationDetail.getResignationStatus());
+
+		    ResponseStructure<ResignationDetail> responseStructure = new ResponseStructure<>();
+		    responseStructure.setStatusCode(HttpStatus.OK.value());
+		    responseStructure.setMessage("Resignation status updated successfully.");
+		    responseStructure.setData(existingResignation);
+
+		    return new ResponseEntity<>(responseStructure, HttpStatus.OK);
+		}
+
+		
+	}
+

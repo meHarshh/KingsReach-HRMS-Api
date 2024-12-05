@@ -57,9 +57,9 @@ public class PayrollServiceImpl implements PayrollService {
 
 	@Override
 	public ResponseEntity<ResponseStructure<Payroll>> getEmployeeSalary(String employeeId) {
-		
+
 		Optional<Employee> optionalEmployee = employeeRepo.findByEmployeeId(employeeId);
-		
+
 		if (optionalEmployee.isEmpty()) {
 			ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
 			responseStructure.setStatusCode(HttpStatus.NOT_FOUND.value());
@@ -203,4 +203,24 @@ public class PayrollServiceImpl implements PayrollService {
 			return basePay * 0.12; // 12% PF deduction
 	}
 
+	@Override
+	public ResponseEntity<ResponseStructure<Payroll>> approvedSalarySlip(Payroll payroll) {
+
+		Payroll payroll2 = payrollRepo.findById(payroll.getPayrollId())
+				.orElseThrow(() -> new RuntimeException("Payroll with the ID is not found."));
+
+		payroll2.setPayrollStatus(payroll.getPayrollStatus());
+
+		payrollRepo.save(payroll2);
+
+		ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage("Payroll status changed  successfully.");
+		responseStructure.setData(payroll2);
+
+		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
+	} 
+	
+	
 }
+

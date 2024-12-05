@@ -9,12 +9,12 @@ import com.kingsmen.kingsreach.util.ResponseStructure;
 
 public interface LeaveService {
 
-	ResponseEntity<ResponseStructure<Leave>> applyLeave(Leave leave);
+	ResponseEntity<ResponseStructure<Leave>> applyLeave(int leaveId);
 
 	ResponseEntity<ResponseStructure<Leave>> changeLeaveStatus(Leave leave);
 
 	ResponseEntity<ResponseStructure<List<Leave>>> getLeave();
 
-	List<Leave> getEmployeeLeave(String employeeId);
+	ResponseEntity<ResponseStructure<List<Leave>>> getEmployeeLeave(String employeeId);
 
 }
