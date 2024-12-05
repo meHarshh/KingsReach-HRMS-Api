@@ -7,17 +7,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kingsmen.kingsreach.entity.Payroll;
 import com.kingsmen.kingsreach.service.PayrollService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@CrossOrigin(allowCredentials = "true", origins = "http://localhost:5173/")
+@CrossOrigin(allowCredentials = "true", origins = "http://localhost:5173")
 @RestController
 public class PayrollController {
 	
@@ -35,19 +35,19 @@ public class PayrollController {
 		return payrollService.getEmployeesSalary();
 	}
 	
-	@GetMapping(value = "/getSalary")
-	public ResponseEntity<ResponseStructure<Payroll>> getEmployeeSalary(@RequestParam  String employeeId){
+	@GetMapping(value = "/getSalary/{employeeId}")
+	public ResponseEntity<ResponseStructure<Payroll>> getEmployeeSalary(@PathVariable String employeeId){
 		return payrollService.getEmployeeSalary(employeeId);
 	}
 	
 	@PutMapping(value= "/editEmployeeSalary")
-	public ResponseEntity<ResponseStructure<Payroll>> editEmployeeSalary(@RequestParam String employeeId, @RequestBody Payroll payroll){
-		return payrollService.editEmployeeSalary(employeeId, payroll);
+	public ResponseEntity<ResponseStructure<Payroll>> editEmployeeSalary(@RequestBody Payroll payroll){
+		return payrollService.editEmployeeSalary(payroll);
 	}
 	
-	@DeleteMapping(value= "/deleteEmployeeSalary")
-	public ResponseEntity<ResponseStructure<Payroll>> deleteEmployeeSalary(@RequestParam  String employeeId){
-		return payrollService.deleteEmployeeSalary(employeeId);
+	@DeleteMapping(value= "/deleteEmployeeSalary/{payrollId}")
+	public ResponseEntity<ResponseStructure<Payroll>> deleteEmployeeSalary(@PathVariable  int payrollId){
+		return payrollService.deleteEmployeeSalary(payrollId);
 	}
 	
 	@PutMapping(value ="/approvedSalarySlip")

@@ -16,7 +16,7 @@ import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.service.EmployeeService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@CrossOrigin(value = "http://localhost:5173" ,allowCredentials = "true")
+@CrossOrigin(allowCredentials = "true", origins = "http://localhost:5173")
 @RestController
 public class EmployeeController {
 

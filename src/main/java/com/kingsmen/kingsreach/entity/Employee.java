@@ -36,7 +36,7 @@ public class Employee implements Serializable {
 	private String firstName;
 	private String lastName;
 	private String userName;
-
+	private String name;
 	@Enumerated(EnumType.STRING)
 	private EmployeeRole role;
 	private String officialEmail;
@@ -60,6 +60,7 @@ public class Employee implements Serializable {
 	private Long motherNumber;
 	private String permanentAddress;
 	private Long emergencyContact;
+	
 	private Long officialNumber;
 	private String emergencyContactName;
 	private String emergencyContactRelation;
@@ -85,11 +86,14 @@ public class Employee implements Serializable {
 	@OneToMany(mappedBy = "employee")
 	private List<Reimbursement> reimbursement = new ArrayList<Reimbursement>();
 
-	@OneToOne
-	private Attendance attendance;
+	@OneToMany(mappedBy = "employee")
+	private List<Attendance> attendance = new ArrayList<Attendance>();
 
 	@Column(length = 1000)
 	private Ticket ticket;
+
+	@OneToOne
+	private Manager manager;
 
 	@OneToOne
 	private Leave leave;
@@ -100,28 +104,20 @@ public class Employee implements Serializable {
 		return id;
 	}
 
-	public int getCasualLeaveBalance() {
-		return casualLeaveBalance;
+	public Manager getManager() {
+		return manager;
 	}
 
-	public void setCasualLeaveBalance(int casualLeaveBalance) {
-		this.casualLeaveBalance = casualLeaveBalance;
+	public void setManager(Manager manager) {
+		this.manager = manager;
 	}
 
-	public int getSickLeaveBalance() {
-		return sickLeaveBalance;
+	public String getName() {
+		return name;
 	}
 
-	public void setSickLeaveBalance(int sickLeaveBalance) {
-		this.sickLeaveBalance = sickLeaveBalance;
-	}
-
-	public int getPaidLeaveBalance() {
-		return paidLeaveBalance;
-	}
-
-	public void setPaidLeaveBalance(int paidLeaveBalance) {
-		this.paidLeaveBalance = paidLeaveBalance;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public Leave getLeave() {
@@ -301,11 +297,11 @@ public class Employee implements Serializable {
 		this.permanentAddress = permanentAdress;
 	}
 
-	public Attendance getAttendance() {
+	public List<Attendance> getAttendance() {
 		return attendance;
 	}
 
-	public void setAttendance(Attendance attendance) {
+	public void setAttendance(List<Attendance> attendance) {
 		this.attendance = attendance;
 	}
 
@@ -437,5 +433,19 @@ public class Employee implements Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
+	public int getCasualLeaveBalance() {
+		return casualLeaveBalance;
+	}
+
+	public int getSickLeaveBalance() {
+		return sickLeaveBalance;
+	}
+
+	public int getPaidLeaveBalance() {
+		return paidLeaveBalance;
+	}
+	
+	
 	
 }

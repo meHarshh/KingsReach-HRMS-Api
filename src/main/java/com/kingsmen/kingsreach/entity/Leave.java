@@ -12,7 +12,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "`leave`")
@@ -26,16 +25,49 @@ public class Leave {
 	private LocalDate toDate;
 	private String reason;
 	private LeaveStatus leaveStatus;
-	private Employee approved;
 	private String employeeId;
-	private String employeeName;
+
+	private int casualLeaveBalance = 10;
+	private int sickLeaveBalance = 12;
+	private int paidLeaveBalance = 12;
 
 	@JsonIgnore
 	@ManyToOne
 	private Employee employee;
 
-	@Transient
-	private String approvedBy;
+	private Employee approvedBy;
+
+	public Employee getApprovedBy() {
+		return approvedBy;
+	}
+
+	public void setApprovedBy(Employee approvedBy) {
+		this.approvedBy = approvedBy;
+	}
+
+	public int getCasualLeaveBalance() {
+		return casualLeaveBalance;
+	}
+
+	public void setCasualLeaveBalance(int casualLeaveBalance) {
+		this.casualLeaveBalance = casualLeaveBalance;
+	}
+
+	public int getSickLeaveBalance() {
+		return sickLeaveBalance;
+	}
+
+	public void setSickLeaveBalance(int sickLeaveBalance) {
+		this.sickLeaveBalance = sickLeaveBalance;
+	}
+
+	public int getPaidLeaveBalance() {
+		return paidLeaveBalance;
+	}
+
+	public void setPaidLeaveBalance(int paidLeaveBalance) {
+		this.paidLeaveBalance = paidLeaveBalance;
+	}
 
 	public int getLeaveId() {
 		return leaveId;
@@ -85,14 +117,6 @@ public class Leave {
 		this.leaveStatus = leaveStatus;
 	}
 
-	public Employee getApproved() {
-		return approved;
-	}
-
-	public void setApproved(Employee approved) {
-		this.approved = approved;
-	}
-
 	public String getEmployeeId() {
 		return employeeId;
 	}
@@ -108,21 +132,4 @@ public class Leave {
 	public void setEmployee(Employee employee) {
 		this.employee = employee;
 	}
-
-	public String getApprovedBy() {
-		return approvedBy;
-	}
-
-	public void setApprovedBy(String approvedBy) {
-		this.approvedBy = approvedBy;
-	}
-
-	public String getEmployeeName() {
-		return employeeName;
-	}
-
-	public void setEmployeeName(String employeeName) {
-		this.employeeName = employeeName;
-	}
-
 }

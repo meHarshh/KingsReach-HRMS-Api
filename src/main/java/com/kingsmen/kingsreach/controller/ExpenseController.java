@@ -14,7 +14,7 @@ import com.kingsmen.kingsreach.entity.Expense;
 import com.kingsmen.kingsreach.service.ExpenseService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@CrossOrigin(allowCredentials = "true", origins = "http://localhost:5173/")
+@CrossOrigin(allowCredentials = "true", origins = "http://localhost:5173")
 @RestController
 public class ExpenseController {
 
