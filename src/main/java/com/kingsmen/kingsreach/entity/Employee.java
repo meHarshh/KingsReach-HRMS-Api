@@ -16,11 +16,14 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @SuppressWarnings("serial")
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Employee implements Serializable {
 
 	@Id
@@ -32,7 +35,7 @@ public class Employee implements Serializable {
 	private String firstName;
 	private String lastName;
 	private String userName;
-
+	private String name;
 	@Enumerated(EnumType.STRING)
 	private EmployeeRole role;
 	private String email;
@@ -57,10 +60,6 @@ public class Employee implements Serializable {
 	private String permanentAddress;
 	private Long emergencyContact;
 
-	private int casualLeaveBalance = 10;
-	private int sickLeaveBalance = 12;
-	private int paidLeaveBalance = 12;
-
 	@OneToMany(mappedBy = "employee")
 	private List<Asset> asset;
 
@@ -77,6 +76,9 @@ public class Employee implements Serializable {
 	private Ticket ticket;
 
 	@OneToOne
+	private Manager manager;
+
+	@OneToOne
 	private Leave leave;
 
 	// Getters and Setters
@@ -85,28 +87,20 @@ public class Employee implements Serializable {
 		return id;
 	}
 
-	public int getCasualLeaveBalance() {
-		return casualLeaveBalance;
+	public Manager getManager() {
+		return manager;
 	}
 
-	public void setCasualLeaveBalance(int casualLeaveBalance) {
-		this.casualLeaveBalance = casualLeaveBalance;
+	public void setManager(Manager manager) {
+		this.manager = manager;
 	}
 
-	public int getSickLeaveBalance() {
-		return sickLeaveBalance;
+	public String getName() {
+		return name;
 	}
 
-	public void setSickLeaveBalance(int sickLeaveBalance) {
-		this.sickLeaveBalance = sickLeaveBalance;
-	}
-
-	public int getPaidLeaveBalance() {
-		return paidLeaveBalance;
-	}
-
-	public void setPaidLeaveBalance(int paidLeaveBalance) {
-		this.paidLeaveBalance = paidLeaveBalance;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public Leave getLeave() {

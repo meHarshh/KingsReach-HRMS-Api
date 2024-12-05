@@ -33,13 +33,20 @@ public class Payroll implements Serializable {
 	private double otherAllowance;
 	private double employeeProvidentFund;
 	private double basicPay;
+	private double lopDays;
 
 	@JsonIgnore
 	@OneToOne
 	private Employee employee;
 
-	
-	
+	public double getLopDays() {
+		return lopDays;
+	}
+
+	public void setLopDays(double lopDays) {
+		this.lopDays = lopDays;
+	}
+
 	public double getBasicPay() {
 		return basicPay;
 	}

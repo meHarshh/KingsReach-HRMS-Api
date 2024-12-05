@@ -1,20 +1,19 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
+import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Leave;
 import com.kingsmen.kingsreach.entity.Payroll;
 import com.kingsmen.kingsreach.enums.LeaveStatus;
 import com.kingsmen.kingsreach.enums.LeaveType;
-import com.kingsmen.kingsreach.repo.EmployeeRepo;
 import com.kingsmen.kingsreach.repo.LeaveRepo;
 import com.kingsmen.kingsreach.repo.PayrollRepo;
 import com.kingsmen.kingsreach.service.LeaveService;
@@ -29,104 +28,117 @@ public class LeaveServiceImpl implements LeaveService {
 	@Autowired
 	private PayrollRepo payrollRepository;
 
-	@Autowired
-	private EmployeeRepo employeeRepository;
 
-	// Apply Leave Logic
+	// Reset LOP Days and Carry-Forward Leave Balances on the 1st of the Month
+	@Scheduled(cron = "0 0 0 1 * ?") // Runs at midnight on the 1st of each month
+	public void resetLopAndCarryForwardLeaves() {
+		List<Leave> leaves = leaveRepository.findAll();
+
+		for (Leave leave : leaves) {
+			// Carry forward unused leaves
+			if (leave.getCasualLeaveBalance() < 11) {
+				leave.setCasualLeaveBalance(Math.min(11, leave.getCasualLeaveBalance() + 1));
+			}
+
+			if (leave.getSickLeaveBalance() < 11) {
+				leave.setSickLeaveBalance(Math.min(11, leave.getSickLeaveBalance() + 1));
+			}
+
+			if (leave.getPaidLeaveBalance() < 8) {
+				leave.setPaidLeaveBalance(Math.min(8, leave.getPaidLeaveBalance() + 1));
+			}
+
+			leaveRepository.save(leave);
+		}
+
+		List<Payroll> payrolls = payrollRepository.findAll();
+		for (Payroll payroll : payrolls) {
+			// Reset LOP Days
+			payroll.setLopDays(0);
+			payrollRepository.save(payroll);
+		}
+	}
+
+	@Override
 	public ResponseEntity<ResponseStructure<Leave>> applyLeave(Leave leave) {
-		Employee employee = employeeRepository.findByEmployeeId(leave.getEmployeeId())
-				.orElseThrow(() -> new RuntimeException());
+		ResponseStructure<Leave> responseStructure = new ResponseStructure<>();
 
+		// Fetch the employee's leave record
+		Leave existingLeave = leaveRepository.findByEmployeeId(leave.getEmployeeId()).orElseThrow(
+				() -> new RuntimeException("Leave record not found for employee ID: " + leave.getEmployeeId()));
 		Payroll payroll = payrollRepository.findByEmployeeId(leave.getEmployeeId());
+		if (payroll == null) {
+			throw new RuntimeException("Payroll record not found for employee ID: " + leave.getEmployeeId());
+		}
 
-		// Calculate days of leave requested
+		// Calculate leave days
 		long leaveDays = ChronoUnit.DAYS.between(leave.getFromDate(), leave.getToDate()) + 1;
 
-		// Validate leave balance
+		// Get the current month
+		Month currentMonth = leave.getFromDate().getMonth();
+
+		// Define max leave limits for March and April
+		int maxCasualLeave = 1; // 1/month for all months
+		int maxSickLeave = 1; // 1/month for all months
+		int maxPaidLeave = (currentMonth == Month.MARCH || currentMonth == Month.APRIL) ? 0 : 1;
+
+		// Check leave type and update balances
 		switch (leave.getLeaveType()) {
 		case LeaveType.SICK:
-			if (employee.getSickLeaveBalance() < leaveDays) {
-				ResponseStructure<Leave> responseStructure = new ResponseStructure<Leave>();
-				responseStructure.setData(leave);
-				responseStructure.setMessage("Insufficient Sick leaves");
-
-				return ResponseEntity.ok(responseStructure);
+			if (existingLeave.getSickLeaveBalance() < leaveDays) {
+				responseStructure.setMessage("Insufficient sick leave balance");
+				return ResponseEntity.badRequest().body(responseStructure);
 			}
-			employee.setSickLeaveBalance(employee.getSickLeaveBalance() - (int) leaveDays);
+			if (leaveDays > maxSickLeave) {
+				int lopDays = (int) leaveDays - maxSickLeave;
+				payroll.setLopDays(payroll.getLopDays() + lopDays);
+			}
+			existingLeave.setSickLeaveBalance(existingLeave.getSickLeaveBalance() - (int) leaveDays);
 			break;
 
 		case LeaveType.CASUAL:
-			if (employee.getCasualLeaveBalance() < leaveDays) {
-
-				ResponseStructure<Leave> responseStructure = new ResponseStructure<Leave>();
-				responseStructure.setData(leave);
-				responseStructure.setMessage("Insufficient Casual leaves");
-
-				return ResponseEntity.ok(responseStructure);
+			if (existingLeave.getCasualLeaveBalance() < leaveDays) {
+				responseStructure.setMessage("Insufficient casual leave balance");
+				return ResponseEntity.badRequest().body(responseStructure);
 			}
-			employee.setCasualLeaveBalance(employee.getCasualLeaveBalance() - (int) leaveDays);
+			if (leaveDays > maxCasualLeave) {
+				int lopDays = (int) leaveDays - maxCasualLeave;
+				payroll.setLopDays(payroll.getLopDays() + lopDays);
+			}
+			existingLeave.setCasualLeaveBalance(existingLeave.getCasualLeaveBalance() - (int) leaveDays);
 			break;
 
 		case LeaveType.PAID:
-			if (employee.getPaidLeaveBalance() < leaveDays) {
-				ResponseStructure<Leave> responseStructure = new ResponseStructure<Leave>();
-				responseStructure.setData(leave);
-				responseStructure.setMessage("Insufficient Paid leaves");
-
-				return ResponseEntity.ok(responseStructure);
+			if (currentMonth == Month.MARCH || currentMonth == Month.APRIL) {
+				responseStructure.setMessage("Paid leave is not available in March and April");
+				return ResponseEntity.badRequest().body(responseStructure);
 			}
-			employee.setPaidLeaveBalance(employee.getPaidLeaveBalance() - (int) leaveDays);
+			if (existingLeave.getPaidLeaveBalance() < leaveDays) {
+				responseStructure.setMessage("Insufficient paid leave balance");
+				return ResponseEntity.badRequest().body(responseStructure);
+			}
+			if (leaveDays > maxPaidLeave) {
+				int lopDays = (int) leaveDays - maxPaidLeave;
+				payroll.setLopDays(payroll.getLopDays() + lopDays);
+			}
+			existingLeave.setPaidLeaveBalance(existingLeave.getPaidLeaveBalance() - (int) leaveDays);
 			break;
 
 		default:
-			ResponseStructure<Leave> responseStructure = new ResponseStructure<Leave>();
-			responseStructure.setMessage("Invalid Leave");
-
-			return ResponseEntity.ok(responseStructure);
+			responseStructure.setMessage("Invalid leave type");
+			return ResponseEntity.badRequest().body(responseStructure);
 		}
 
-		// leave.(LeaveStatus.APPROVED);
-		Leave leaves = leaveRepository.save(leave);
-
-		// Adjust payroll if applicable
-		if (employee.getPayroll() != null) {
-			adjustPayrollForLeave(employee, payroll, leaveDays, leave.getLeaveStatus() == LeaveStatus.NOT_APPROVED);
-		}
-
-		ResponseStructure<Leave> responseStructure = new ResponseStructure<Leave>();
-		responseStructure.setData(leaves);
-		responseStructure.setMessage("Leaves Applied Successfully.");
-		responseStructure.setStatusCode(HttpStatus.CREATED.value());
-
-		return new ResponseEntity<ResponseStructure<Leave>>(responseStructure, HttpStatus.CREATED);
-	}
-
-	// Adjust Payroll Logic
-	private void adjustPayrollForLeave(Employee employee, Payroll payroll, long leaveDays, boolean isUnapprovedLeave) {
-		int lopDays = 0;
-
-		// LOP for excess leaves
-		if (leaveDays > 3) {
-			lopDays += (int) leaveDays - 3;
-		}
-
-		// Additional LOP for unapproved leaves
-		if (isUnapprovedLeave) {
-			lopDays += (int) leaveDays;
-		}
-
-		// Calculate daily salary
-		double dailySalary = payroll.getSalary() / 30; // Assuming 30 days in a month
-		double lopAmount = lopDays * dailySalary;
-
-		// Adjust salary
-		payroll.setGrossSalary(payroll.getGrossSalary() - lopAmount);
+		leaveRepository.save(existingLeave);
 		payrollRepository.save(payroll);
+
+		responseStructure.setData(existingLeave);
+		responseStructure.setMessage("Leave applied successfully");
+		return ResponseEntity.ok(responseStructure);
 	}
 
 	@Override
 	public ResponseEntity<ResponseStructure<Leave>> changeLeaveStatus(Leave leave) {
-		// TODO Auto-generated method stub
 		Leave leave2 = leaveRepository.findById(leave.getLeaveId()).orElseThrow(() -> new RuntimeException());
 
 		leave2.setLeaveStatus(LeaveStatus.APPROVED);
@@ -147,7 +159,6 @@ public class LeaveServiceImpl implements LeaveService {
 		responseStructure.setMessage("Leave details fetched Successfully.");
 
 		return ResponseEntity.ok(responseStructure);
-
 	}
 
 	@Override
