@@ -11,12 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Leave;
 import com.kingsmen.kingsreach.entity.Payroll;
 import com.kingsmen.kingsreach.enums.LeaveStatus;
 import com.kingsmen.kingsreach.enums.LeaveType;
-import com.kingsmen.kingsreach.repo.EmployeeRepo;
 import com.kingsmen.kingsreach.repo.LeaveRepo;
 import com.kingsmen.kingsreach.repo.PayrollRepo;
 import com.kingsmen.kingsreach.service.LeaveService;
@@ -37,7 +35,14 @@ public class LeaveServiceImpl implements LeaveService {
 	public ResponseEntity<ResponseStructure<Leave>> applyLeave(int leaveId) {
 		 Leave leave = leaveRepository.findById(leaveId)
 		            .orElseThrow(() -> new RuntimeException("Leave not found for ID: " + leaveId));
-		
+		 
+		 ResponseStructure<Leave> responseStructure = new ResponseStructure<Leave>();
+		 responseStructure.setStatusCode(HttpStatus.OK.value());
+		 responseStructure.setData(leave);
+		 
+		 return ResponseEntity.ok(responseStructure);
+	}
+	
 //		Employee employee = employeeRepo.findByEmployeeId(leave.getEmployeeId())
 //				.orElseThrow(() -> new RuntimeException("Employee not found for ID:"));
 
@@ -70,6 +75,7 @@ public class LeaveServiceImpl implements LeaveService {
 			payrollRepository.save(payroll);
 		}
 	}
+	
 
 	public ResponseEntity<ResponseStructure<Leave>> applyLeave(Leave leave) {
 		ResponseStructure<Leave> responseStructure = new ResponseStructure<>();
@@ -147,6 +153,7 @@ public class LeaveServiceImpl implements LeaveService {
 		responseStructure.setMessage("Leave applied successfully");
 		return ResponseEntity.ok(responseStructure);
 	}
+ 
 
 	@Override
 	public ResponseEntity<ResponseStructure<Leave>> changeLeaveStatus(Leave leave) {
