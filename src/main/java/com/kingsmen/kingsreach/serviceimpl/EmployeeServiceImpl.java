@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import com.kingsmen.kingsreach.entity.Admin;
 import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Manager;
-import com.kingsmen.kingsreach.enums.EmployeeRole;
 import com.kingsmen.kingsreach.exception.InvalidRoleException;
 import com.kingsmen.kingsreach.exceptions.InvalidEmailException;
 import com.kingsmen.kingsreach.exceptions.PasswordMismatchException;
@@ -96,32 +95,45 @@ public class EmployeeServiceImpl implements EmployeeService {
 		if (employee.isPresent()) {
 			Employee employee2 = employee.get();
 
-			if (employee2.getRole() == EmployeeRole.ADMIN) {
-				List<Employee> updatedEmployee = employeeRepo.findAll();
+			List<Employee> employees = new ArrayList<Employee>();
+			employees.add(employee2);
 
-				String message = "Employee ID :" + employee2.getEmployeeId() + " LoggedIn Successfully!!";
+			String message = "Employee ID :" + employee2.getEmployeeId() + " LoggedIn Successfully!!";
 
-				ResponseStructure<List<Employee>> responseStructure = new ResponseStructure<List<Employee>>();
-				responseStructure.setStatusCode(HttpStatus.OK.value());
-				responseStructure.setMessage(message);
-				responseStructure.setData(updatedEmployee);
+			ResponseStructure<List<Employee>> responseStructure = new ResponseStructure<List<Employee>>();
+			responseStructure.setStatusCode(HttpStatus.OK.value());
+			responseStructure.setMessage(message);
+			responseStructure.setData(employees);
 
-				return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.OK);
-
-			} else {
-				List<Employee> employees = new ArrayList<>();
-				employees.add(employee2);
-
-				String message = "Employee ID :" + employee2.getEmployeeId() + " LoggedIn Successfully!!";
-
-				ResponseStructure<List<Employee>> responseStructure = new ResponseStructure<List<Employee>>();
-				responseStructure.setStatusCode(HttpStatus.OK.value());
-				responseStructure.setMessage(message);
-				responseStructure.setData(employees);
-
-				return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.OK);
-			}
-		} else {
+			return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.OK);
+		}
+		//			if (employee2.getRole() == EmployeeRole.ADMIN) {
+		//				List<Employee> updatedEmployee = employeeRepo.findAll();
+		//
+		//				String message = "Employee ID :" + employee2.getEmployeeId() + " LoggedIn Successfully!!";
+		//
+		//				ResponseStructure<List<Employee>> responseStructure = new ResponseStructure<List<Employee>>();
+		//				responseStructure.setStatusCode(HttpStatus.OK.value());
+		//				responseStructure.setMessage(message);
+		//				responseStructure.setData(updatedEmployee);
+		//
+		//				return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.OK);
+		//
+		//			} else {
+		//				List<Employee> employees = new ArrayList<>();
+		//				employees.add(employee2);
+		//
+		//				String message = "Employee ID :" + employee2.getEmployeeId() + " LoggedIn Successfully!!";
+		//
+		//				ResponseStructure<List<Employee>> responseStructure = new ResponseStructure<List<Employee>>();
+		//				responseStructure.setStatusCode(HttpStatus.OK.value());
+		//				responseStructure.setMessage(message);
+		//				responseStructure.setData(employees);
+		//
+		//				return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.OK);
+		//			}
+		//		} 
+		else {
 			String errorMessage = "Invalid credentials: Employee not found.";
 
 			ResponseStructure<List<Employee>> errorResponse = new ResponseStructure<List<Employee>>();
@@ -136,7 +148,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public ResponseEntity<ResponseStructure<List<Employee>>> getEmployees() {
 		List<Employee> list = employeeRepo.findAll();
-		
+
 		ResponseStructure<List<Employee>> responseStructure = new ResponseStructure<List<Employee>>();
 		responseStructure.setStatusCode(HttpStatus.FOUND.value());
 		responseStructure.setMessage("Emloyee Details Fetched Successfully.");
@@ -144,8 +156,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.FOUND);
 	}
-	
-	
+
+
 
 	@Override
 	public ResponseEntity<ResponseStructure<Employee>> editEmployee(Employee employee) {
@@ -176,7 +188,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee2.setFatherContactNumber(employee.getFatherContactNumber());
 
 		Employee employee3 = employeeRepo.save(employee2);
-		
+
 		ResponseStructure<Employee> responseStructure = new ResponseStructure<Employee>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Employee Data updated Successfully.");
