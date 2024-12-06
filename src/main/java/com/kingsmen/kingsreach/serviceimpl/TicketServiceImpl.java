@@ -29,8 +29,10 @@ public class TicketServiceImpl implements TicketService {
 	public ResponseEntity<ResponseStructure<Ticket>> raisedTicket(Ticket ticket) {
 
 		Optional<Employee> byEmployeeId = employeeRepo.findByEmployeeId(ticket.getEmployeeId());
+		Optional<Employee> byEmployeeName = employeeRepo.findByName(ticket.getEmployeeName());
 				
 		ticket.setEmployee(byEmployeeId.get());
+		//ticket.setEmployee(byEmployeeName.get());
 
 		ticket.setStatus(TicketStatus.NEW);
 

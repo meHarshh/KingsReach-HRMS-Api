@@ -12,7 +12,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Transient;
 
 @SuppressWarnings("serial")
 @Entity
@@ -25,8 +24,8 @@ public class Ticket implements Serializable{
 	private TicketPriority priority;
 	private String description;
 
-	@Transient
 	private String employeeId;
+	private String employeeName;
 	private TicketStatus status;
 
 	private String updatedBy;
@@ -115,6 +114,14 @@ public class Ticket implements Serializable{
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getEmployeeName() {
+		return employeeName;
+	}
+
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
 	}
 
 }

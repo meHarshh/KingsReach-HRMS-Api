@@ -11,10 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Leave;
 import com.kingsmen.kingsreach.entity.Payroll;
 import com.kingsmen.kingsreach.enums.LeaveStatus;
 import com.kingsmen.kingsreach.enums.LeaveType;
+import com.kingsmen.kingsreach.repo.EmployeeRepo;
 import com.kingsmen.kingsreach.repo.LeaveRepo;
 import com.kingsmen.kingsreach.repo.PayrollRepo;
 import com.kingsmen.kingsreach.service.LeaveService;
@@ -28,6 +30,9 @@ public class LeaveServiceImpl implements LeaveService {
 
 	@Autowired
 	private PayrollRepo payrollRepository;
+	
+	@Autowired
+	private EmployeeRepo employeeRepo;
 
 
 	@Override
@@ -36,15 +41,15 @@ public class LeaveServiceImpl implements LeaveService {
 		 Leave leave = leaveRepository.findById(leaveId)
 		            .orElseThrow(() -> new RuntimeException("Leave not found for ID: " + leaveId));
 		 
+		 Employee employee = employeeRepo.findByEmployeeId(leave.getEmployeeId())
+				.orElseThrow(() -> new RuntimeException("Employee not found for ID:"));
+		 
 		 ResponseStructure<Leave> responseStructure = new ResponseStructure<Leave>();
 		 responseStructure.setStatusCode(HttpStatus.OK.value());
 		 responseStructure.setData(leave);
 		 
 		 return ResponseEntity.ok(responseStructure);
 	}
-	
-//		Employee employee = employeeRepo.findByEmployeeId(leave.getEmployeeId())
-//				.orElseThrow(() -> new RuntimeException("Employee not found for ID:"));
 
 	// Reset LOP Days and Carry-Forward Leave Balances on the 1st of the Month
 	@Scheduled(cron = "0 0 0 1 * ?") // Runs at midnight on the 1st of each month
