@@ -71,15 +71,16 @@ public class Attendance {
 		this.firstPunchIn = firstPunchIn;
 		updateAttendanceStatus();
 	}
-	 private void updateAttendanceStatus() {
-	 if (this.firstPunchIn != null ) {
-	 this.isPresent = true;
-	 this.isAbsent = false;
-	 } else {
-	 this.isPresent = false;
-	 this.isAbsent = true;
-	 }
-	 }
+
+	private void updateAttendanceStatus() {
+		if (this.firstPunchIn != null) {
+			this.isPresent = true;
+			this.isAbsent = false;
+		} else {
+			this.isPresent = false;
+			this.isAbsent = true;
+		}
+	}
 
 	public LocalDateTime getLastPunchOut() {
 		return lastPunchOut;
