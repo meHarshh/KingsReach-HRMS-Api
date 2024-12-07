@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
@@ -20,11 +21,27 @@ public class Attendance {
 	private LocalDateTime lastPunchOut;
 	private boolean isPresent;
 	private boolean isAbsent;
-
+	private LocalDate attendanceDate;
 	private String employeeId;
 
 	@ManyToOne
 	private Employee employee;
+
+	public LocalDate getAttendanceDate() {
+		return attendanceDate;
+	}
+
+	public void setAttendanceDate(LocalDate attendanceDate) {
+		this.attendanceDate = attendanceDate;
+	}
+
+	public void setPresent(boolean isPresent) {
+		this.isPresent = isPresent;
+	}
+
+	public void setAbsent(boolean isAbsent) {
+		this.isAbsent = isAbsent;
+	}
 
 	public String getEmployeeId() {
 		return employeeId;
