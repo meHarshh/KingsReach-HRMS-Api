@@ -159,11 +159,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 		List<Employee> list = employeeRepo.findAll();
 
 		ResponseStructure<List<Employee>> responseStructure = new ResponseStructure<List<Employee>>();
-		responseStructure.setStatusCode(HttpStatus.FOUND.value());
+		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Emloyee Details Fetched Successfully.");
 		responseStructure.setData(list);
 
-		return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.FOUND);
+		return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.OK);
 	}
 
 	@Override
