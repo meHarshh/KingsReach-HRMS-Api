@@ -17,6 +17,8 @@ public interface EmployeeService {
 
 	ResponseEntity<ResponseStructure<Employee>> editEmployee(Employee employee);
 
+	ResponseEntity<ResponseStructure<List<Employee>>> getManager();
+
 	
 
 }
