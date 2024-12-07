@@ -19,4 +19,6 @@ public interface PayrollService {
 
 	ResponseEntity<ResponseStructure<Payroll>> editEmployeeSalary(Payroll payroll);
 
+	ResponseEntity<ResponseStructure<Payroll>> approvedSalarySlip(Payroll payroll);
+
 }

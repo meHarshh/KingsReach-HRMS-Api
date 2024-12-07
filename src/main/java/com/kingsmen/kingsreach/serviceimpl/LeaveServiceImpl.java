@@ -6,14 +6,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Leave;
 import com.kingsmen.kingsreach.entity.Payroll;
 import com.kingsmen.kingsreach.enums.LeaveStatus;
 import com.kingsmen.kingsreach.enums.LeaveType;
+import com.kingsmen.kingsreach.repo.EmployeeRepo;
 import com.kingsmen.kingsreach.repo.LeaveRepo;
 import com.kingsmen.kingsreach.repo.PayrollRepo;
 import com.kingsmen.kingsreach.service.LeaveService;
@@ -27,7 +30,27 @@ public class LeaveServiceImpl implements LeaveService {
 
 	@Autowired
 	private PayrollRepo payrollRepository;
+	
+	@Autowired
+	private EmployeeRepo employeeRepo;
 
+
+	@Override
+	// Apply Leave Logic
+	public ResponseEntity<ResponseStructure<Leave>> applyLeave(int leaveId) {
+		 Leave leave = leaveRepository.findById(leaveId)
+		            .orElseThrow(() -> new RuntimeException("Leave not found for ID: " + leaveId));
+		 
+		 @SuppressWarnings("unused")
+		Employee employee = employeeRepo.findByEmployeeId(leave.getEmployeeId())
+				.orElseThrow(() -> new RuntimeException("Employee not found for ID:"));
+		 
+		 ResponseStructure<Leave> responseStructure = new ResponseStructure<Leave>();
+		 responseStructure.setStatusCode(HttpStatus.OK.value());
+		 responseStructure.setData(leave);
+		 
+		 return ResponseEntity.ok(responseStructure);
+	}
 
 	// Reset LOP Days and Carry-Forward Leave Balances on the 1st of the Month
 	@Scheduled(cron = "0 0 0 1 * ?") // Runs at midnight on the 1st of each month
@@ -58,8 +81,8 @@ public class LeaveServiceImpl implements LeaveService {
 			payrollRepository.save(payroll);
 		}
 	}
+	
 
-	@Override
 	public ResponseEntity<ResponseStructure<Leave>> applyLeave(Leave leave) {
 		ResponseStructure<Leave> responseStructure = new ResponseStructure<>();
 
@@ -136,6 +159,7 @@ public class LeaveServiceImpl implements LeaveService {
 		responseStructure.setMessage("Leave applied successfully");
 		return ResponseEntity.ok(responseStructure);
 	}
+ 
 
 	@Override
 	public ResponseEntity<ResponseStructure<Leave>> changeLeaveStatus(Leave leave) {
@@ -158,11 +182,11 @@ public class LeaveServiceImpl implements LeaveService {
 		responseStructure.setData(list);
 		responseStructure.setMessage("Leave details fetched Successfully.");
 
-		return ResponseEntity.ok(responseStructure);
+		return ResponseEntity.ok(responseStructure);  
 	}
 
 	@Override
-	public List<Leave> getEmployeeLeave(String employeeId) {
+	public ResponseEntity<ResponseStructure<List<Leave>>> getEmployeeLeave(String employeeId) {
 		List<Leave> all = leaveRepository.findAll();
 		ArrayList<Leave> leaves = new ArrayList<Leave>();
 		for (Leave leave : all) {
@@ -170,7 +194,13 @@ public class LeaveServiceImpl implements LeaveService {
 				leaves.add(leave);
 			}
 		}
-		return leaves;
+		
+		ResponseStructure<List<Leave>> responseStructure = new ResponseStructure<List<Leave>>();
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage("The Employees Leave Deatils Fetched Successfully.");
+		responseStructure.setData(leaves);
+		
+		return ResponseEntity.ok(responseStructure);
 	}
 
 }

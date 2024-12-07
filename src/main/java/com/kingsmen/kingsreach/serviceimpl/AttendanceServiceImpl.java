@@ -26,10 +26,11 @@ public class AttendanceServiceImpl implements AttendanceService {
 	@Override
 	public ResponseEntity<ResponseStructure<Attendance>> addAttendance(Attendance attendance) {
 
-		Optional<Employee> byEmployeeId = employeeRepo.findByEmployeeId(attendance.getEmployeeId());
+		Optional<Employee> byEmployeeId = Optional.of(employeeRepo.findByEmployeeId(attendance.getEmployeeId())
+				.orElseThrow(() -> new RuntimeException("No value present.")));
 
 		Employee employee = byEmployeeId.get();
-		// attendance.setEmployee(employee);
+		//attendance.setEmployee(employee);
 		attendance.setFirstPunchIn(attendance.getFirstPunchIn());
 
 		attendance.setEmployee(employee);

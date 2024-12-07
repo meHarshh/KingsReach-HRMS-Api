@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.enums.EmployeeRole;
+import com.kingsmen.kingsreach.enums.GenderType;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -38,7 +39,7 @@ public class Employee implements Serializable {
 	private String name;
 	@Enumerated(EnumType.STRING)
 	private EmployeeRole role;
-	private String email;
+	private String officialEmail;
 	private String password;
 	private String confirmPassword;
 	private LocalDate joiningDate;
@@ -56,9 +57,25 @@ public class Employee implements Serializable {
 	private String fatherName;
 	private String motherName;
 	private Long fatherContactNumber;
-	private Long motherContactNumber;
+	private Long motherNumber;
 	private String permanentAddress;
 	private Long emergencyContact;
+	
+	private Long officialNumber;
+	private String emergencyContactName;
+	private String emergencyContactRelation;
+	private String localAddress;
+	private String bankName;
+	private String branchName;
+	private Long accountNumber;
+	private String ifscCode;
+	private String email;
+	private GenderType gender;
+	
+	private int casualLeaveBalance = 10;
+	private int sickLeaveBalance = 12;
+	private int paidLeaveBalance = 12;
+	private int emergencyDeathLeave=7;
 
 	@OneToMany(mappedBy = "employee")
 	private List<Asset> asset;
@@ -175,14 +192,6 @@ public class Employee implements Serializable {
 		this.role = role;
 	}
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
 	public String getPassword() {
 		return password;
 	}
@@ -279,13 +288,6 @@ public class Employee implements Serializable {
 		this.fatherContactNumber = fatherContactNumber;
 	}
 
-	public Long getMotherContactNumber() {
-		return motherContactNumber;
-	}
-
-	public void setMotherContactNumber(Long motherContactNumber) {
-		this.motherContactNumber = motherContactNumber;
-	}
 
 	public String getPermanentAddress() {
 		return permanentAddress;
@@ -327,4 +329,123 @@ public class Employee implements Serializable {
 		this.asset = asset;
 	}
 
+	public Long getOfficialNumber() {
+		return officialNumber;
+	}
+
+	public void setOfficialNumber(Long officialNumber) {
+		this.officialNumber = officialNumber;
+	}
+
+	public String getEmergencyContactName() {
+		return emergencyContactName;
+	}
+
+	public void setEmergencyContactName(String emergencyContactName) {
+		this.emergencyContactName = emergencyContactName;
+	}
+
+	public String getEmergencyContactRelation() {
+		return emergencyContactRelation;
+	}
+
+	public void setEmergencyContactRelation(String emergencyContactRelation) {
+		this.emergencyContactRelation = emergencyContactRelation;
+	}
+
+	public String getLocalAddress() {
+		return localAddress;
+	}
+
+	public void setLocalAddress(String localAddress) {
+		this.localAddress = localAddress;
+	}
+
+	public String getBankName() {
+		return bankName;
+	}
+
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
+	}
+
+	public String getBranchName() {
+		return branchName;
+	}
+
+	public void setBranchName(String branchName) {
+		this.branchName = branchName;
+	}
+
+	public Long getAccountNumber() {
+		return accountNumber;
+	}
+
+	public void setAccountNumber(Long accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+
+	public String getIfscCode() {
+		return ifscCode;
+	}
+
+	public void setIfscCode(String ifscCode) {
+		this.ifscCode = ifscCode;
+	}
+
+	public String getOfficialEmail() {
+		return officialEmail;
+	}
+
+	public void setOfficialEmail(String officialEmail) {
+		this.officialEmail = officialEmail;
+	}
+
+
+	public GenderType getGender() {
+		return gender;
+	}
+
+	public void setGender(GenderType gender) {
+		this.gender = gender;
+	}
+
+	public int getEmergencyDeathLeave() {
+		return emergencyDeathLeave;
+	}
+
+	public void setEmergencyDeathLeave(int emergencyDeathLeave) {
+		this.emergencyDeathLeave = emergencyDeathLeave;
+	}
+
+	public Long getMotherNumber() {
+		return motherNumber;
+	}
+
+	public void setMotherNumber(Long motherNumber) {
+		this.motherNumber = motherNumber;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public int getCasualLeaveBalance() {
+		return casualLeaveBalance;
+	}
+
+	public int getSickLeaveBalance() {
+		return sickLeaveBalance;
+	}
+
+	public int getPaidLeaveBalance() {
+		return paidLeaveBalance;
+	}
+	
+	
+	
 }

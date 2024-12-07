@@ -49,5 +49,10 @@ public class PayrollController {
 	public ResponseEntity<ResponseStructure<Payroll>> deleteEmployeeSalary(@PathVariable  int payrollId){
 		return payrollService.deleteEmployeeSalary(payrollId);
 	}
+	
+	@PutMapping(value ="/approvedSalarySlip")
+	public ResponseEntity<ResponseStructure<Payroll>>  approvedSalarySlip(@RequestBody Payroll payroll){
+		return payrollService.approvedSalarySlip(payroll);
+	}
 
 }
