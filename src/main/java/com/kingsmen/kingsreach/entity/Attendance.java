@@ -3,6 +3,8 @@ package com.kingsmen.kingsreach.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,8 +24,12 @@ public class Attendance {
 	private boolean isPresent;
 	private boolean isAbsent;
 	private LocalDate attendanceDate;
+	private String location;
+	private int totalBreakTime;
+
 	private String employeeId;
 
+	@JsonIgnore
 	@ManyToOne
 	private Employee employee;
 
@@ -33,14 +39,6 @@ public class Attendance {
 
 	public void setAttendanceDate(LocalDate attendanceDate) {
 		this.attendanceDate = attendanceDate;
-	}
-
-	public void setPresent(boolean isPresent) {
-		this.isPresent = isPresent;
-	}
-
-	public void setAbsent(boolean isAbsent) {
-		this.isAbsent = isAbsent;
 	}
 
 	public String getEmployeeId() {
@@ -81,17 +79,18 @@ public class Attendance {
 
 	public void setFirstPunchIn(LocalDateTime firstPunchIn) {
 		this.firstPunchIn = firstPunchIn;
-		// updateAttendanceStatus();
+		updateAttendanceStatus();
 	}
-	// private void updateAttendanceStatus() {
-	// if (this.firstPunchIn != null && !this.firstPunchIn.isEmpty()) {
-	// this.isPresent = true;
-	// this.isAbsent = false;
-	// } else {
-	// this.isPresent = false;
-	// this.isAbsent = true;
-	// }
-	// }
+
+	private void updateAttendanceStatus() {
+		if (this.firstPunchIn != null) {
+			this.isPresent = true;
+			this.isAbsent = false;
+		} else {
+			this.isPresent = false;
+			this.isAbsent = true;
+		}
+	}
 
 	public LocalDateTime getLastPunchOut() {
 		return lastPunchOut;
@@ -115,6 +114,30 @@ public class Attendance {
 
 	public void setIsAbsent(boolean isAbsent) {
 		this.isAbsent = isAbsent;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public void setPresent(boolean isPresent) {
+		this.isPresent = isPresent;
+	}
+
+	public void setAbsent(boolean isAbsent) {
+		this.isAbsent = isAbsent;
+	}
+
+	public int getTotalBreakTime() {
+		return totalBreakTime;
+	}
+
+	public void setTotalBreakTime(int totalBreakTime) {
+		this.totalBreakTime = totalBreakTime;
 	}
 
 }

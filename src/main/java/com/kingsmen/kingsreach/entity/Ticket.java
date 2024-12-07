@@ -1,7 +1,9 @@
 package com.kingsmen.kingsreach.entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kingsmen.kingsreach.enums.TicketPriority;
 import com.kingsmen.kingsreach.enums.TicketStatus;
 
@@ -10,7 +12,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Transient;
 
 @SuppressWarnings("serial")
 @Entity
@@ -23,14 +24,15 @@ public class Ticket implements Serializable{
 	private TicketPriority priority;
 	private String description;
 
-	@Transient
 	private String employeeId;
+	private String employeeName;
 	private TicketStatus status;
 
 	private String updatedBy;
-	private String createdAt;
-	private String updatedAt;
+	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
 
+	@JsonIgnore
 	@ManyToOne
 	private Employee employee;
 
@@ -42,19 +44,19 @@ public class Ticket implements Serializable{
 		this.updatedBy = updatedBy;
 	}
 
-	public String getCreatedAt() {
+	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(String createdAt) {
+	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
 
-	public String getUpdatedAt() {
+	public LocalDateTime getUpdatedAt() {
 		return updatedAt;
 	}
 
-	public void setUpdatedAt(String updatedAt) {
+	public void setUpdatedAt(LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
 	}
 
@@ -112,6 +114,14 @@ public class Ticket implements Serializable{
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getEmployeeName() {
+		return employeeName;
+	}
+
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
 	}
 
 }

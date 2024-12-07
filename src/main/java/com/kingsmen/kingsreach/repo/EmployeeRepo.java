@@ -8,14 +8,16 @@ import com.kingsmen.kingsreach.entity.Employee;
 
 public interface EmployeeRepo extends JpaRepository<Employee, Integer> {
 
-	boolean existsByEmailAndPassword(String email, String password);
+	boolean existsByofficialEmailAndPassword(String officialEmail, String password);
 
-	boolean existsByEmailAndUserName(String email, String userName);
+	boolean existsByofficialEmailAndUserName(String officialEmail, String userName);
 
-	public Optional<Employee> findByEmailAndPassword(String email, String password);
+	public Optional<Employee> findByofficialEmailAndPassword(String officialEmail, String password);
 
 	public Optional<Employee> findByFirstName(String firstName);
 
 	public Optional<Employee> findByEmployeeId(String employeeId);
+
+	public Optional<Employee> findByName(String employeeName);
 
 }

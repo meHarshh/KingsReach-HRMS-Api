@@ -6,4 +6,6 @@ import com.kingsmen.kingsreach.entity.ResignationDetail;
 
 public interface ResignationDetailRepo extends JpaRepository<ResignationDetail, Integer>{
 
+	
+
 }

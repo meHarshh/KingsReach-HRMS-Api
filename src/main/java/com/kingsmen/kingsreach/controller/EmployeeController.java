@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kingsmen.kingsreach.dto.Credentials;
 import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.service.EmployeeService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
@@ -28,18 +28,20 @@ public class EmployeeController {
 		return employeeService.addEmployee(employee);
 	}
 
-	@GetMapping("/login")
-	public ResponseEntity<ResponseStructure<List<Employee>>> login(@RequestBody Credentials credentials) {
-		return employeeService.login(credentials);
+	@PostMapping("/login")
+	public ResponseEntity<ResponseStructure<List<Employee>>> login(@RequestParam String officialEmail, @RequestParam String password) {
+		return employeeService.login(officialEmail, password);
 	}
 	
 	@GetMapping("/fetchAllEmployees")
-	public List<Employee> getEmployees(){
+	public ResponseEntity<ResponseStructure<List<Employee>>> getEmployees(){
 		return employeeService.getEmployees();
 	}
 	
 	@PutMapping("/editEmployee")
-	public Employee editEmployee(@RequestBody Employee employee) {
+	public ResponseEntity<ResponseStructure<Employee>> editEmployee(@RequestBody Employee employee) {
 		return employeeService.editEmployee(employee);
 	}
+	
+
 }

@@ -13,4 +13,5 @@ public interface ResignationDetailService {
 
 	ResponseEntity<ResponseStructure<List<ResignationDetail>>> getResignationDetails();
 
+	ResponseEntity<ResponseStructure<ResignationDetail>> changeResignationStatus(int resignationId,ResignationDetail resignationDetail);
 }

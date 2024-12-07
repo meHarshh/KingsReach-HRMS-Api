@@ -2,6 +2,8 @@ package com.kingsmen.kingsreach.entity;
 
 import java.time.LocalDate;
 
+import com.kingsmen.kingsreach.enums.ResignationStatus;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,13 +14,22 @@ public class ResignationDetail {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private int resignationId;
 	private String name;
 	private String email;
 	private long contactNumber;
 	private String employeeId;
 	private String resignationReason;
 	private LocalDate dateOfResignation;
+	private ResignationStatus resignationStatus;
+	
+	public int getResignationId() {
+		return resignationId;
+	}
+	public void setResignationId(int resignationId) {
+		this.resignationId = resignationId;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -55,6 +66,11 @@ public class ResignationDetail {
 	public void setDateOfResignation(LocalDate dateOfResignation) {
 		this.dateOfResignation = dateOfResignation;
 	}
-	
+	public ResignationStatus getResignationStatus() {
+		return resignationStatus;
+	}
+	public void setResignationStatus(ResignationStatus resignationStatus) {
+		this.resignationStatus = resignationStatus;
+	}
 	
 }
