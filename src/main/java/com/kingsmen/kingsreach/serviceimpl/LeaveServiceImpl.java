@@ -41,7 +41,8 @@ public class LeaveServiceImpl implements LeaveService {
 		 Leave leave = leaveRepository.findById(leaveId)
 		            .orElseThrow(() -> new RuntimeException("Leave not found for ID: " + leaveId));
 		 
-		 Employee employee = employeeRepo.findByEmployeeId(leave.getEmployeeId())
+		 @SuppressWarnings("unused")
+		Employee employee = employeeRepo.findByEmployeeId(leave.getEmployeeId())
 				.orElseThrow(() -> new RuntimeException("Employee not found for ID:"));
 		 
 		 ResponseStructure<Leave> responseStructure = new ResponseStructure<Leave>();

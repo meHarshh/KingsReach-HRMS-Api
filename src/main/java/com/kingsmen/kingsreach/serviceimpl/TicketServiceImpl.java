@@ -29,10 +29,11 @@ public class TicketServiceImpl implements TicketService {
 	public ResponseEntity<ResponseStructure<Ticket>> raisedTicket(Ticket ticket) {
 
 		Optional<Employee> byEmployeeId = employeeRepo.findByEmployeeId(ticket.getEmployeeId());
+		@SuppressWarnings("unused")
 		Optional<Employee> byEmployeeName = employeeRepo.findByName(ticket.getEmployeeName());
-				
+
 		ticket.setEmployee(byEmployeeId.get());
-		//ticket.setEmployee(byEmployeeName.get());
+		// ticket.setEmployee(byEmployeeName.get());
 
 		ticket.setStatus(TicketStatus.NEW);
 
@@ -70,7 +71,7 @@ public class TicketServiceImpl implements TicketService {
 
 	@Override
 	public ResponseEntity<ResponseStructure<List<Ticket>>> findAllTicket() {
-		List<Ticket> list =	ticketRepo.findAll();
+		List<Ticket> list = ticketRepo.findAll();
 
 		ResponseStructure<List<Ticket>> responseStructure = new ResponseStructure<List<Ticket>>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
@@ -83,9 +84,9 @@ public class TicketServiceImpl implements TicketService {
 
 	@Override
 	public ResponseEntity<ResponseStructure<Ticket>> deleteTicket(int ticketId) {
-	 ticketRepo.deleteById(ticketId);
-		
-	 ResponseStructure<Ticket> responseStructure = new ResponseStructure<Ticket>();
+		ticketRepo.deleteById(ticketId);
+
+		ResponseStructure<Ticket> responseStructure = new ResponseStructure<Ticket>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage(" Ticket deleted successfully.");
 		responseStructure.setData(null);
