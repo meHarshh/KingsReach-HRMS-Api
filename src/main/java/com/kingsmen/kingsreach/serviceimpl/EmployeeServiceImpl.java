@@ -54,6 +54,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			throw new InvalidEmailException("Please enter the valid email-id");
 		}
 
+		employee.setName(employee.getFirstName() + " " + employee.getLastName());
 		switch (employee.getRole()) {
 		case MANAGER:
 			// Manager manager = (Manager) employee;
@@ -153,16 +154,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 	}
 
-	ArrayList<Employee> employees = new ArrayList<Employee>();
-
 	@Override
 	public ResponseEntity<ResponseStructure<List<Employee>>> getEmployees() {
 		List<Employee> list = employeeRepo.findAll();
-		for (Employee employee : list) {
-			if (employee.getRole() == EmployeeRole.MANAGER) {
-				employees.add(employee);
-			}
-		}
 
 		ResponseStructure<List<Employee>> responseStructure = new ResponseStructure<List<Employee>>();
 		responseStructure.setStatusCode(HttpStatus.FOUND.value());
@@ -212,6 +206,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public ResponseEntity<ResponseStructure<List<Employee>>> getManager() {
 		// TODO Auto-generated method stub
+		List<Employee> all = employeeRepo.findAll();
+
+		ArrayList<Employee> employees = new ArrayList<Employee>();
+		for (Employee employee : all) {
+			if (employee.getRole() == EmployeeRole.MANAGER) {
+				employees.add(employee);
+			}
+		}
+
 		ResponseStructure<List<Employee>> responseStructure = new ResponseStructure<List<Employee>>();
 		responseStructure.setData(employees);
 		responseStructure.setMessage("The list of the manager is here in the below list");

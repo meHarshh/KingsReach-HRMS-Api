@@ -43,7 +43,7 @@ public class EmployeeController {
 		return employeeService.editEmployee(employee);
 	}
 	
-	@GetMapping
+	@GetMapping("/getManager")
 	private ResponseEntity<ResponseStructure<List<Employee>>> getManager(){
 		return employeeService.getManager();
 	}
