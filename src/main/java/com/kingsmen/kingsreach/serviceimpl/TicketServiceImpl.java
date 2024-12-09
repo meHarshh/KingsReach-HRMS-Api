@@ -43,7 +43,7 @@ public class TicketServiceImpl implements TicketService {
 		}
 
 		ticket.setStatus(TicketStatus.NEW);
-
+		
 		Ticket savedTicket = ticketRepo.save(ticket);
 
 		ResponseStructure<Ticket> responseStructure = new ResponseStructure<>();
