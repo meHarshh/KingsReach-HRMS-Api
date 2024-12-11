@@ -22,6 +22,8 @@ import com.kingsmen.kingsreach.repo.PayrollRepo;
 import com.kingsmen.kingsreach.service.LeaveService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class LeaveServiceImpl implements LeaveService {
 
@@ -159,6 +161,7 @@ public class LeaveServiceImpl implements LeaveService {
 	}
 
 	@Override
+	@Transactional
 	public ResponseEntity<ResponseStructure<Leave>> changeLeaveStatus(Leave leave) {
 		Leave leave2 = leaveRepository.findById(leave.getLeaveId()).orElseThrow(() -> new RuntimeException());
 
@@ -168,8 +171,8 @@ public class LeaveServiceImpl implements LeaveService {
 		ResponseStructure<Leave> responseStructure = new ResponseStructure<Leave>();
 		responseStructure.setData(leave2);
 		responseStructure.setMessage("The leave status changed to " + leave2.getLeaveStatus());
-
-		return ResponseEntity.ok(responseStructure);
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		return new ResponseEntity<ResponseStructure<Leave>>(responseStructure, HttpStatus.OK);
 	}
 
 	@Override
