@@ -29,7 +29,7 @@ public class LeaveController {
 
 	private ResponseEntity<ResponseStructure<Leave>> applyLeave(@RequestBody Leave leave) {
 		return leaveservice.applyLeave(leave);
-
+	}
 
 	@PutMapping(value = "/leaveStatus")
 	private ResponseEntity<ResponseStructure<Leave>> changeLeaveStatus(@RequestBody Leave leave) {
