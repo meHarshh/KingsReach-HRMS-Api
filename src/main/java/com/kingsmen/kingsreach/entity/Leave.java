@@ -27,17 +27,25 @@ public class Leave {
 	private String reason;
 	private LeaveStatus leaveStatus;
 	private String employeeId;
-
+	private String employeeName;
 	private int casualLeaveBalance = 10;
 	private int sickLeaveBalance = 12;
 	private int paidLeaveBalance = 12;
-	private int emergencyLeaveBalance=7;
+	private int emergencyLeaveBalance = 7;
 
 	@JsonIgnore
 	@ManyToOne
 	private Employee employee;
 
 	private ApprovedBy approvedBy;
+
+	public String getEmployeeName() {
+		return employeeName;
+	}
+
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
+	}
 
 	public ApprovedBy getApprovedBy() {
 		return approvedBy;
