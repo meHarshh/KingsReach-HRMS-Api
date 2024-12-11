@@ -17,6 +17,9 @@ public interface LeaveService {
 
 	ResponseEntity<ResponseStructure<List<Leave>>> getEmployeeLeave(String employeeId);
 
-	ResponseEntity<ResponseStructure<Leave>> getLeavesTaken(String employeeId);
+	ResponseEntity<ResponseStructure<List<Leave>>> findAbsentEmployees();
+
+	ResponseEntity<ResponseStructure<int[]>> getRemainingLeave(String employeeId);
+
 
 }

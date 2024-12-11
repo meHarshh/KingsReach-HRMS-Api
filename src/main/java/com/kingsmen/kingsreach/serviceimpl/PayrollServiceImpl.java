@@ -34,6 +34,18 @@ public class PayrollServiceImpl implements PayrollService {
 		Employee employee = byEmployeeId.get();
 
 		payroll.setEmployee(employee);
+		
+		double lopDays = payroll.getLopDays(); 
+
+	    double salary = payroll.getSalary(); 
+
+	    double finalSalary = calculateLopDeduction(salary, lopDays);
+
+	 	 double pfDeduction = finalSalary * 0.12;
+	    finalSalary = finalSalary - pfDeduction;
+
+	    payroll.setSalary(finalSalary);
+	    payroll.setProvidentFund(pfDeduction);
 
 		ResponseStructure<Payroll> responseStructure = new ResponseStructure<Payroll>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
@@ -45,6 +57,17 @@ public class PayrollServiceImpl implements PayrollService {
 		return new ResponseEntity<ResponseStructure<Payroll>>(responseStructure, HttpStatus.OK);
 
 	}
+
+	public double calculateLopDeduction(double salary, double lopDays) {
+	 
+	    double lopPerDay = salary / 30;
+	    double totalLopDeduction = lopPerDay * lopDays;
+
+	    double finalSalary = salary - totalLopDeduction;
+
+	    return finalSalary;
+	}
+
 
 	@Override
 	public ResponseEntity<ResponseStructure<List<Payroll>>> getEmployeesSalary() {

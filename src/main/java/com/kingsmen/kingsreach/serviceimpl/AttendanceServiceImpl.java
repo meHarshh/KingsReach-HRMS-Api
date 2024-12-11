@@ -47,8 +47,16 @@ public class AttendanceServiceImpl implements AttendanceService {
 	}
 
 	@Override
-	public Attendance getAttendance(String employeeId) {
-		return attendanceRepo.findByEmployeeId(employeeId).orElseThrow(()-> new RuntimeException());
+	public ResponseEntity<ResponseStructure<Attendance>> getAttendance(String employeeId) {
+		Attendance attendance = attendanceRepo.findByEmployeeId(employeeId).orElseThrow(()-> new RuntimeException());
+		
+		ResponseStructure<Attendance> responseStructure = new ResponseStructure<Attendance>();
+
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage("Attendence detail fetched successfully.");
+		responseStructure.setData(attendance);
+
+		return new ResponseEntity<ResponseStructure<Attendance>>(responseStructure, HttpStatus.OK);
 	}
 
 	
