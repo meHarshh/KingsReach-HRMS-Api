@@ -79,7 +79,7 @@ public class LeaveServiceImpl implements LeaveService {
 		existingLeave.setLeaveType(leave.getLeaveType());
 		existingLeave.setApprovedBy(leave.getApprovedBy());
 		existingLeave.setReason(leave.getReason());
-
+		existingLeave.setLeaveStatus(LeaveStatus.PENDING);
 		// Calculate leave days
 		long leaveDays = ChronoUnit.DAYS.between(leave.getFromDate(), leave.getToDate()) + 1;
 
