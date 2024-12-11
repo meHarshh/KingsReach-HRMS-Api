@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Ticket;
+import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.enums.TicketStatus;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
 import com.kingsmen.kingsreach.repo.TicketRepo;
@@ -43,7 +45,7 @@ public class TicketServiceImpl implements TicketService {
 		}
 
 		ticket.setStatus(TicketStatus.NEW);
-		
+
 		Ticket savedTicket = ticketRepo.save(ticket);
 
 		ResponseStructure<Ticket> responseStructure = new ResponseStructure<>();
@@ -99,6 +101,45 @@ public class TicketServiceImpl implements TicketService {
 		responseStructure.setData(null);
 
 		return new ResponseEntity<ResponseStructure<Ticket>>(responseStructure, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<List<Ticket>>> getTicketByEmployee(String employeeId) {
+
+		List<Ticket> all = ticketRepo.findAll();
+		ArrayList<Ticket> tickets = new ArrayList<Ticket>();
+
+		for (Ticket ticket : all) {
+			if (ticket.getEmployeeId().equals(employeeId))
+				tickets.add(ticket);
+		}
+
+		ResponseStructure<List<Ticket>> responseStructure = new ResponseStructure<List<Ticket>>();
+		responseStructure.setData(tickets);
+		responseStructure.setMessage("All the tickets are fetched raised by employee having Employee Id" + employeeId);
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+
+		return new ResponseEntity<ResponseStructure<List<Ticket>>>(responseStructure, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<List<Ticket>>> getTicketByDepartment(Department department) {
+
+		List<Ticket> list = ticketRepo.findAll();
+		ArrayList<Ticket> tickets = new ArrayList<Ticket>();
+
+		for (Ticket ticket : list) {
+			Department department2 = ticket.getEmployee().getDepartment();
+			if (department == department2)
+				tickets.add(ticket);
+		}
+
+		ResponseStructure<List<Ticket>> responseStructure = new ResponseStructure<List<Ticket>>();
+		responseStructure.setData(tickets);
+		responseStructure.setMessage("All the tickets are fetched based on department");
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+
+		return new ResponseEntity<ResponseStructure<List<Ticket>>>(responseStructure, HttpStatus.OK);
 	}
 
 }

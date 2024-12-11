@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kingsmen.kingsreach.entity.Ticket;
+import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.service.TicketService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
@@ -38,6 +39,16 @@ public class TicketController {
 	private ResponseEntity<ResponseStructure<List<Ticket>>> findAllTicket(){
 		return ticketService.findAllTicket();
 	}
+	
+	@GetMapping(value = "/getTicketByEmployeeId")
+	private ResponseEntity<ResponseStructure<List<Ticket>>> getTicketByEmployee(@RequestParam String employeeId){
+		return ticketService.getTicketByEmployee(employeeId);
+	}
+	
+	@GetMapping(value = "/getTicketByDepartment")
+	private ResponseEntity<ResponseStructure<List<Ticket>>> getTicketByDepartment(@RequestParam Department department){
+		return ticketService.getTicketByDepartment(department);
+	} 
 	
 	@DeleteMapping(value = "/deleteTicket")
 	private ResponseEntity<ResponseStructure<Ticket>> deleteTicket(@RequestParam int ticketId){
