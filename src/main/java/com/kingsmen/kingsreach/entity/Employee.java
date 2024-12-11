@@ -2,6 +2,7 @@ package com.kingsmen.kingsreach.entity;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class Employee implements Serializable {
 	private Long motherNumber;
 	private String permanentAddress;
 	private Long emergencyContact;
-	
+
 	private Long officialNumber;
 	private String emergencyContactName;
 	private String emergencyContactRelation;
@@ -71,11 +72,39 @@ public class Employee implements Serializable {
 	private String ifscCode;
 	private String email;
 	private GenderType gender;
-	
+
 	private int casualLeaveBalance = 10;
 	private int sickLeaveBalance = 12;
 	private int paidLeaveBalance = 12;
-	private int emergencyDeathLeave=7;
+	private int emergencyDeathLeave = 7;
+
+	private int experience;
+	private LocalDateTime updatedAt;
+	private LocalDateTime createdAt;
+
+	public int getExperience() {
+		return experience;
+	}
+
+	public void setExperience(int experience) {
+		this.experience = experience;
+	}
+
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
 
 	@OneToMany(mappedBy = "employee")
 	private List<Asset> asset;
@@ -288,7 +317,6 @@ public class Employee implements Serializable {
 		this.fatherContactNumber = fatherContactNumber;
 	}
 
-
 	public String getPermanentAddress() {
 		return permanentAddress;
 	}
@@ -401,7 +429,6 @@ public class Employee implements Serializable {
 		this.officialEmail = officialEmail;
 	}
 
-
 	public GenderType getGender() {
 		return gender;
 	}
@@ -445,7 +472,5 @@ public class Employee implements Serializable {
 	public int getPaidLeaveBalance() {
 		return paidLeaveBalance;
 	}
-	
-	
-	
+
 }

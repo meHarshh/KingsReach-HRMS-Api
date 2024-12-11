@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -22,6 +23,7 @@ public class Attendance {
 	private LocalDateTime lastPunchOut;
 	private boolean isPresent;
 	private boolean isAbsent;
+	private LocalDate attendanceDate;
 	private String location;
 	private int totalBreakTime;
 
@@ -30,6 +32,14 @@ public class Attendance {
 	@JsonIgnore
 	@ManyToOne
 	private Employee employee;
+
+	public LocalDate getAttendanceDate() {
+		return attendanceDate;
+	}
+
+	public void setAttendanceDate(LocalDate attendanceDate) {
+		this.attendanceDate = attendanceDate;
+	}
 
 	public String getEmployeeId() {
 		return employeeId;

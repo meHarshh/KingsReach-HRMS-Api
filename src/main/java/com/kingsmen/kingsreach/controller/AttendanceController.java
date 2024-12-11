@@ -19,16 +19,14 @@ public class AttendanceController {
 
 	@Autowired
 	private AttendanceService attendanceService;
-	
+
 	@PostMapping(value = "/attendanceCalculator")
 	private ResponseEntity<ResponseStructure<Attendance>> addAttendance(@RequestBody Attendance attendance) {
 		return attendanceService.addAttendance(attendance);
 	}
-	
+
 	@GetMapping(value = "/getEmployeeAttendance/{employeeId}")
 	private Attendance getAttendance(@PathVariable String employeeId) {
 		return attendanceService.getAttendance(employeeId);
 	}
-	
-	
 }

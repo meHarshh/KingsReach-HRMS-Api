@@ -16,6 +16,8 @@ import com.kingsmen.kingsreach.repo.TicketRepo;
 import com.kingsmen.kingsreach.service.TicketService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class TicketServiceImpl implements TicketService {
 
@@ -25,26 +27,31 @@ public class TicketServiceImpl implements TicketService {
 	@Autowired
 	private TicketRepo ticketRepo;
 
+	@Transactional
 	@Override
 	public ResponseEntity<ResponseStructure<Ticket>> raisedTicket(Ticket ticket) {
-
 		Optional<Employee> byEmployeeId = employeeRepo.findByEmployeeId(ticket.getEmployeeId());
-		@SuppressWarnings("unused")
-		Optional<Employee> byEmployeeName = employeeRepo.findByName(ticket.getEmployeeName());
 
-		ticket.setEmployee(byEmployeeId.get());
-		// ticket.setEmployee(byEmployeeName.get());
+		if (byEmployeeId.isPresent()) {
+			ticket.setEmployee(byEmployeeId.get());
+		} else {
+			ResponseStructure<Ticket> responseStructure = new ResponseStructure<Ticket>();
+			responseStructure.setStatusCode(HttpStatus.BAD_REQUEST.value());
+			responseStructure.setMessage("Employee not found.");
+			responseStructure.setData(null);
+			return new ResponseEntity<>(responseStructure, HttpStatus.BAD_REQUEST);
+		}
 
 		ticket.setStatus(TicketStatus.NEW);
+		
+		Ticket savedTicket = ticketRepo.save(ticket);
 
-		ticketRepo.save(ticket);
-
-		ResponseStructure<Ticket> responseStructure = new ResponseStructure<Ticket>();
+		ResponseStructure<Ticket> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage(" Ticket Raised successfully.");
-		responseStructure.setData(ticket);
+		responseStructure.setMessage("Ticket raised successfully.");
+		responseStructure.setData(savedTicket); // Use the saved ticket
 
-		return new ResponseEntity<ResponseStructure<Ticket>>(responseStructure, HttpStatus.OK);
+		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	}
 
 	@Override

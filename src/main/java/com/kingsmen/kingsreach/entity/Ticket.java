@@ -36,6 +36,8 @@ public class Ticket implements Serializable{
 	@ManyToOne
 	private Employee employee;
 
+	
+	
 	public String getUpdatedBy() {
 		return updatedBy;
 	}
