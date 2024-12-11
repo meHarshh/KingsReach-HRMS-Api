@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,16 @@ public class AttendanceServiceImpl implements AttendanceService {
 		responseStructure.setData(attendance);
 
 		return new ResponseEntity<ResponseStructure<Attendance>>(responseStructure, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceForMonth() {
+		ResponseStructure<List<Attendance>> responseStructure= new ResponseStructure<List<Attendance>>();
+		responseStructure.setData(attendanceRepo.findAll());
+		responseStructure.setMessage("All leaves fetched");
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		
+		return new ResponseEntity<ResponseStructure<List<Attendance>>>(responseStructure, HttpStatus.OK);
 	}
 
 	
