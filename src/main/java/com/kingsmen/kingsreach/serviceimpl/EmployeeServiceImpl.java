@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -53,7 +54,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		if (!employee.getOfficialEmail().contains("@") && !employee.getOfficialEmail().contains(".com")) {
 			throw new InvalidEmailException("Please enter the valid email-id");
 		}
-
+		employee.setCreatedAt(LocalDateTime.now());
 		employee.setName(employee.getFirstName() + " " + employee.getLastName());
 		switch (employee.getRole()) {
 		case MANAGER:
@@ -108,40 +109,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 			return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.OK);
 		}
-		// if (employee2.getRole() == EmployeeRole.ADMIN) {
-		// List<Employee> updatedEmployee = employeeRepo.findAll();
-		//
-		// String message = "Employee ID :" + employee2.getEmployeeId() + " LoggedIn
-		// Successfully!!";
-		//
-		// ResponseStructure<List<Employee>> responseStructure = new
-		// ResponseStructure<List<Employee>>();
-		// responseStructure.setStatusCode(HttpStatus.OK.value());
-		// responseStructure.setMessage(message);
-		// responseStructure.setData(updatedEmployee);
-		//
-		// return new
-		// ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure,
-		// HttpStatus.OK);
-		//
-		// } else {
-		// List<Employee> employees = new ArrayList<>();
-		// employees.add(employee2);
-		//
-		// String message = "Employee ID :" + employee2.getEmployeeId() + " LoggedIn
-		// Successfully!!";
-		//
-		// ResponseStructure<List<Employee>> responseStructure = new
-		// ResponseStructure<List<Employee>>();
-		// responseStructure.setStatusCode(HttpStatus.OK.value());
-		// responseStructure.setMessage(message);
-		// responseStructure.setData(employees);
-		//
-		// return new
-		// ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure,
-		// HttpStatus.OK);
-		// }
-		// }
 		else {
 			String errorMessage = "Invalid credentials: Employee not found.";
 
@@ -193,6 +160,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee2.setAttendance(employee.getAttendance());
 
 		employee2.setFatherContactNumber(employee.getFatherContactNumber());
+
+		employee2.setUpdatedAt(LocalDateTime.now());
 
 		Employee employee3 = employeeRepo.save(employee2);
 

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kingsmen.kingsreach.entity.Leave;
 import com.kingsmen.kingsreach.service.LeaveService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @CrossOrigin(allowCredentials = "true", origins = "http://localhost:5173")
 @RestController
@@ -42,5 +44,10 @@ public class LeaveController {
 	private ResponseEntity<ResponseStructure<List<Leave>>> getEmployeeLeave(@PathVariable String employeeId) {
 		return leaveservice.getEmployeeLeave(employeeId);
 	}
-
+	
+	@GetMapping("/employeePendingLeave")
+	public ResponseEntity<ResponseStructure<Leave>> getLeavesTaken(@RequestParam String employeeId) {
+		return leaveservice.getLeavesTaken(employeeId);
+	}
+	
 }
