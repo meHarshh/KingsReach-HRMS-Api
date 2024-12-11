@@ -8,12 +8,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.kingsmen.kingsreach.entity.Leave;
 import com.kingsmen.kingsreach.entity.Payroll;
+import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.enums.LeaveStatus;
 import com.kingsmen.kingsreach.enums.LeaveType;
 import com.kingsmen.kingsreach.repo.LeaveRepo;
@@ -229,6 +231,24 @@ public class LeaveServiceImpl implements LeaveService {
 
 		return new ResponseEntity<ResponseStructure<int[]>>(responseStructure, HttpStatus.OK);
 
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<List<Leave>>> findAbsentEmployees(Department department) {
+		// TODO Auto-generated method stub
+		List<Leave> all = leaveRepository.findAll();
+
+		ArrayList<Leave> leaves = new ArrayList<Leave>();
+		for (Leave leave : all) {
+			if (leave.getEmployee().getDepartment() == department)
+				leaves.add(leave);
+		}
+		ResponseStructure<List<Leave>> responseStructure = new ResponseStructure<List<Leave>>();
+		responseStructure.setData(leaves);
+		responseStructure.setMessage("The people on leave based on department are below");
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+
+		return new ResponseEntity<ResponseStructure<List<Leave>>>(responseStructure, HttpStatus.OK);
 	}
 
 }

@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kingsmen.kingsreach.entity.Leave;
+import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.service.LeaveService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 import org.springframework.web.bind.annotation.RequestParam;
-
 
 @CrossOrigin(allowCredentials = "true", origins = "http://localhost:5173")
 @RestController
@@ -45,15 +45,20 @@ public class LeaveController {
 	private ResponseEntity<ResponseStructure<List<Leave>>> getEmployeeLeave(@PathVariable String employeeId) {
 		return leaveservice.getEmployeeLeave(employeeId);
 	}
-	
+
 	@GetMapping("/employeePendingLeave")
 	public ResponseEntity<ResponseStructure<int[]>> getRemainingLeave(@RequestParam String employeeId) {
 		return leaveservice.getRemainingLeave(employeeId);
 	}
-	
+
 	@GetMapping(value = "/findAbsentEmployees")
-	private ResponseEntity<ResponseStructure<List<Leave>>>  findAbsentEmployees(){
+	private ResponseEntity<ResponseStructure<List<Leave>>> findAbsentEmployees() {
 		return leaveservice.findAbsentEmployees();
 	}
-	
+
+	@GetMapping(value = "/fetchLeaveBasedOnDepartment")
+	private ResponseEntity<ResponseStructure<List<Leave>>> fetchLeaveBasedOnDepartment(
+			@RequestParam Department department) {
+		return leaveservice.findAbsentEmployees(department);
+	}
 }
