@@ -162,7 +162,8 @@ public class LeaveServiceImpl implements LeaveService {
 	public ResponseEntity<ResponseStructure<Leave>> changeLeaveStatus(Leave leave) {
 		Leave leave2 = leaveRepository.findById(leave.getLeaveId()).orElseThrow(() -> new RuntimeException());
 
-		leave2.setLeaveStatus(LeaveStatus.APPROVED);
+		leave2.setLeaveStatus(leave.getLeaveStatus());
+		leave2 = leaveRepository.findById(leave2.getLeaveId()).orElseThrow(() -> new RuntimeException());
 
 		ResponseStructure<Leave> responseStructure = new ResponseStructure<Leave>();
 		responseStructure.setData(leave2);
