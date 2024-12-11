@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
+import java.time.LocalDate;
 import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -11,13 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Leave;
 import com.kingsmen.kingsreach.entity.Payroll;
 import com.kingsmen.kingsreach.enums.LeaveStatus;
 import com.kingsmen.kingsreach.enums.LeaveType;
-import com.kingsmen.kingsreach.exceptions.InvalidEmployeeIdException;
-import com.kingsmen.kingsreach.repo.EmployeeRepo;
 import com.kingsmen.kingsreach.repo.LeaveRepo;
 import com.kingsmen.kingsreach.repo.PayrollRepo;
 import com.kingsmen.kingsreach.service.LeaveService;
@@ -31,11 +29,6 @@ public class LeaveServiceImpl implements LeaveService {
 
 	@Autowired
 	private PayrollRepo payrollRepository;
-
-	@Autowired
-	private EmployeeRepo employeeRepo;
-
-
 
 	// Reset LOP Days and Carry-Forward Leave Balances on the 1st of the Month
 	@Scheduled(cron = "0 0 0 1 * ?") // Runs at midnight on the 1st of each month
@@ -70,13 +63,20 @@ public class LeaveServiceImpl implements LeaveService {
 	public ResponseEntity<ResponseStructure<Leave>> applyLeave(Leave leave) {
 		ResponseStructure<Leave> responseStructure = new ResponseStructure<>();
 
-		// Fetch the employee's leave record
-		Leave existingLeave = leaveRepository.findByEmployeeId(leave.getEmployeeId()).orElseThrow(
-				() -> new RuntimeException("Leave record not found for employee ID: " + leave.getEmployeeId()));
 		Payroll payroll = payrollRepository.findByEmployeeId(leave.getEmployeeId());
 		if (payroll == null) {
 			throw new RuntimeException("Payroll record not found for employee ID: " + leave.getEmployeeId());
 		}
+
+		// Fetch the employee's leave record
+		Leave existingLeave = leaveRepository.findByEmployeeId(leave.getEmployeeId()).orElse(new Leave());
+
+		existingLeave.setEmployeeId(leave.getEmployeeId());
+		existingLeave.setFromDate(leave.getFromDate());
+		existingLeave.setToDate(leave.getToDate());
+		existingLeave.setLeaveType(leave.getLeaveType());
+		existingLeave.setApprovedBy(leave.getApprovedBy());
+		existingLeave.setReason(leave.getReason());
 
 		// Calculate leave days
 		long leaveDays = ChronoUnit.DAYS.between(leave.getFromDate(), leave.getToDate()) + 1;
@@ -129,6 +129,18 @@ public class LeaveServiceImpl implements LeaveService {
 				payroll.setLopDays(payroll.getLopDays() + lopDays);
 			}
 			existingLeave.setPaidLeaveBalance(existingLeave.getPaidLeaveBalance() - (int) leaveDays);
+			break;
+
+		case LeaveType.EMERGENCY:
+			if (existingLeave.getEmergencyLeaveBalance() < leaveDays) {
+				responseStructure.setMessage("Insufficient Emergency leave balance");
+				return ResponseEntity.badRequest().body(responseStructure);
+			}
+			if (leaveDays > existingLeave.getEmergencyLeaveBalance()) {
+				int lopDays = (int) leaveDays - existingLeave.getEmergencyLeaveBalance();
+				payroll.setLopDays(payroll.getLopDays() + lopDays);
+			}
+			existingLeave.setEmergencyLeaveBalance(existingLeave.getEmergencyLeaveBalance() - (int) leaveDays);
 			break;
 
 		default:
@@ -187,17 +199,36 @@ public class LeaveServiceImpl implements LeaveService {
 	}
 
 	@Override
-	public ResponseEntity<ResponseStructure<Leave>> getLeavesTaken(String employeeId) {
-		Employee employee = employeeRepo.findByEmployeeId(employeeId).orElseThrow(()-> new InvalidEmployeeIdException("No employee "
-				+ "found by the employee ID"));
-		
-		Leave leave = employee.getLeave();
-		
-		ResponseStructure<Leave> responseStructure = new ResponseStructure<Leave>();
-		responseStructure.setData(leave);
-		responseStructure.setMessage(employeeId);
-		
-		return null ;
+	public ResponseEntity<ResponseStructure<List<Leave>>> findAbsentEmployees() {
+		List<Leave> list = leaveRepository.findByFromDate(LocalDate.now());
+
+		ResponseStructure<List<Leave>> responseStructure = new ResponseStructure<List<Leave>>();
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage("Absent Employees Leave Deatils Fetched Successfully.");
+		responseStructure.setData(list);
+
+		return ResponseEntity.ok(responseStructure);
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<int[]>> getRemainingLeave(String employeeId) {
+		// TODO Auto-generated method stub
+
+		Leave orElseThrow = leaveRepository.findByEmployeeId(employeeId).orElseThrow(() -> new RuntimeException());
+
+		int casualLeaveBalance = orElseThrow.getCasualLeaveBalance();
+		int paidLeaveBalance = orElseThrow.getPaidLeaveBalance();
+		int sickLeaveBalance = orElseThrow.getSickLeaveBalance();
+
+		int[] pending = { casualLeaveBalance, paidLeaveBalance, sickLeaveBalance };
+
+		ResponseStructure<int[]> responseStructure = new ResponseStructure<int[]>();
+		responseStructure.setData(pending);
+		responseStructure.setMessage("The response is having the causal , paid and sick leave in the array");
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+
+		return new ResponseEntity<ResponseStructure<int[]>>(responseStructure, HttpStatus.OK);
+
 	}
 
 }

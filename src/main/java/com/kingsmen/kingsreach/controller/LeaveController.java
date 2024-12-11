@@ -29,7 +29,7 @@ public class LeaveController {
 
 	private ResponseEntity<ResponseStructure<Leave>> applyLeave(@RequestBody Leave leave) {
 		return leaveservice.applyLeave(leave);
-
+	}
 
 	@PutMapping(value = "/leaveStatus")
 	private ResponseEntity<ResponseStructure<Leave>> changeLeaveStatus(@RequestBody Leave leave) {
@@ -47,8 +47,13 @@ public class LeaveController {
 	}
 	
 	@GetMapping("/employeePendingLeave")
-	public ResponseEntity<ResponseStructure<Leave>> getLeavesTaken(@RequestParam String employeeId) {
-		return leaveservice.getLeavesTaken(employeeId);
+	public ResponseEntity<ResponseStructure<int[]>> getRemainingLeave(@RequestParam String employeeId) {
+		return leaveservice.getRemainingLeave(employeeId);
+	}
+	
+	@GetMapping(value = "/findAbsentEmployees")
+	private ResponseEntity<ResponseStructure<List<Leave>>>  findAbsentEmployees(){
+		return leaveservice.findAbsentEmployees();
 	}
 	
 }

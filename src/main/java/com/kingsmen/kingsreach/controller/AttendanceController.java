@@ -26,7 +26,8 @@ public class AttendanceController {
 	}
 
 	@GetMapping(value = "/getEmployeeAttendance/{employeeId}")
-	private Attendance getAttendance(@PathVariable String employeeId) {
+	private ResponseEntity<ResponseStructure<Attendance>> getAttendance(@PathVariable String employeeId) {
 		return attendanceService.getAttendance(employeeId);
 	}
+	
 }

@@ -3,6 +3,7 @@ package com.kingsmen.kingsreach.entity;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.kingsmen.kingsreach.enums.ApprovedBy;
 import com.kingsmen.kingsreach.enums.LeaveStatus;
 import com.kingsmen.kingsreach.enums.LeaveType;
 
@@ -30,18 +31,19 @@ public class Leave {
 	private int casualLeaveBalance = 10;
 	private int sickLeaveBalance = 12;
 	private int paidLeaveBalance = 12;
+	private int emergencyLeaveBalance=7;
 
 	@JsonIgnore
 	@ManyToOne
 	private Employee employee;
 
-	private Employee approvedBy;
+	private ApprovedBy approvedBy;
 
-	public Employee getApprovedBy() {
+	public ApprovedBy getApprovedBy() {
 		return approvedBy;
 	}
 
-	public void setApprovedBy(Employee approvedBy) {
+	public void setApprovedBy(ApprovedBy approvedBy) {
 		this.approvedBy = approvedBy;
 	}
 
@@ -131,5 +133,13 @@ public class Leave {
 
 	public void setEmployee(Employee employee) {
 		this.employee = employee;
+	}
+
+	public int getEmergencyLeaveBalance() {
+		return emergencyLeaveBalance;
+	}
+
+	public void setEmergencyLeaveBalance(int emergencyLeaveBalance) {
+		this.emergencyLeaveBalance = emergencyLeaveBalance;
 	}
 }
