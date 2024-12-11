@@ -35,23 +35,6 @@ public class LeaveServiceImpl implements LeaveService {
 	private EmployeeRepo employeeRepo;
 
 
-	@Override
-	// Apply Leave Logic
-	public ResponseEntity<ResponseStructure<Leave>> applyLeave(int leaveId) {
-		 Leave leave = leaveRepository.findById(leaveId)
-		            .orElseThrow(() -> new RuntimeException("Leave not found for ID: " + leaveId));
-		 
-		 @SuppressWarnings("unused")
-		Employee employee = employeeRepo.findByEmployeeId(leave.getEmployeeId())
-				.orElseThrow(() -> new RuntimeException("Employee not found for ID:"));
-		 
-		 ResponseStructure<Leave> responseStructure = new ResponseStructure<Leave>();
-		 responseStructure.setStatusCode(HttpStatus.OK.value());
-		 responseStructure.setData(leave);
-		 
-		 return ResponseEntity.ok(responseStructure);
-	}
-
 	// Reset LOP Days and Carry-Forward Leave Balances on the 1st of the Month
 	@Scheduled(cron = "0 0 0 1 * ?") // Runs at midnight on the 1st of each month
 	public void resetLopAndCarryForwardLeaves() {

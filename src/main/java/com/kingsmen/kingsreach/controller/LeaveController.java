@@ -24,8 +24,8 @@ public class LeaveController {
 	private LeaveService leaveservice;
 
 	@PostMapping(value = "/applyLeave")
-	private ResponseEntity<ResponseStructure<Leave>> applyLeave(@PathVariable   int leaveId) {
-		return leaveservice.applyLeave(leaveId);
+	private ResponseEntity<ResponseStructure<Leave>> applyLeave(@RequestBody Leave leave) {
+		return leaveservice.applyLeave(leave);
 	}
 
 	@PutMapping(value = "/leaveStatus")
