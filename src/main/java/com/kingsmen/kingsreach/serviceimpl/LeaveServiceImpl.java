@@ -94,7 +94,7 @@ public class LeaveServiceImpl implements LeaveService {
 		// Check leave type and update balances
 		switch (leave.getLeaveType()) {
 		case LeaveType.SICK:
-			if (existingLeave.getSickLeaveBalance() < leaveDays) {
+			if (existingLeave.getSickLeaveBalance() <= leaveDays) {
 				responseStructure.setMessage("Insufficient sick leave balance");
 				return ResponseEntity.badRequest().body(responseStructure);
 			}
@@ -106,7 +106,7 @@ public class LeaveServiceImpl implements LeaveService {
 			break;
 
 		case LeaveType.CASUAL:
-			if (existingLeave.getCasualLeaveBalance() < leaveDays) {
+			if (existingLeave.getCasualLeaveBalance() <= leaveDays) {
 				responseStructure.setMessage("Insufficient casual leave balance");
 				return ResponseEntity.badRequest().body(responseStructure);
 			}
@@ -134,7 +134,7 @@ public class LeaveServiceImpl implements LeaveService {
 			break;
 
 		case LeaveType.EMERGENCY:
-			if (existingLeave.getEmergencyLeaveBalance() < leaveDays) {
+			if (existingLeave.getEmergencyLeaveBalance() <= leaveDays) {
 				responseStructure.setMessage("Insufficient Emergency leave balance");
 				return ResponseEntity.badRequest().body(responseStructure);
 			}
