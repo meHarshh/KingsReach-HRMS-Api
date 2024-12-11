@@ -20,4 +20,6 @@ public interface EmployeeRepo extends JpaRepository<Employee, Integer> {
 
 	public Optional<Employee> findByName(String employeeName);
 
+	boolean existsByEmployeeId(String employeeId);
+
 }

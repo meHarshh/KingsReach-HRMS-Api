@@ -68,7 +68,6 @@ public class LeaveServiceImpl implements LeaveService {
 		if (payroll == null) {
 			throw new RuntimeException("Payroll record not found for employee ID: " + leave.getEmployeeId());
 		}
-
 		// Fetch the employee's leave record
 		Leave existingLeave = leaveRepository.findByEmployeeId(leave.getEmployeeId()).orElse(new Leave());
 

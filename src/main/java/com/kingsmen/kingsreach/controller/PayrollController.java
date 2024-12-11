@@ -26,8 +26,7 @@ public class PayrollController {
 	
 	@PostMapping(value= "/paysalary")
 	public ResponseEntity<ResponseStructure<Payroll>> paySalary(@RequestBody Payroll payroll){
-		return payrollService.paySalary(payroll);
-		
+		return payrollService.paySalary(payroll);	
 	}
 	
 	@GetMapping(value = "/getEmployeesSalary")
