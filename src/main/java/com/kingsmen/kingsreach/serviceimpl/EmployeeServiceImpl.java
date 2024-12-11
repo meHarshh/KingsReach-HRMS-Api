@@ -42,6 +42,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public ResponseEntity<ResponseStructure<Employee>> addEmployee(Employee employee) {
 		String email = employee.getOfficialEmail();
 		String userName = employee.getUserName();
+		String employeeId = employee.getEmployeeId();
+
+		if (employeeRepo.existsByEmployeeId(employeeId)) {
+			throw new RuntimeException();
+		}
+
 		if (employeeRepo.existsByofficialEmailAndUserName(email, userName)) {
 			throw new UserIdOrEmailAlreadyExistException(
 					"The user-Id or Email already exists please enter a new email and retry");
@@ -108,8 +114,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			responseStructure.setData(employees);
 
 			return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.OK);
-		}
-		else {
+		} else {
 			String errorMessage = "Invalid credentials: Employee not found.";
 
 			ResponseStructure<List<Employee>> errorResponse = new ResponseStructure<List<Employee>>();
