@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 
 import com.kingsmen.kingsreach.entity.Employee;
+import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
 public interface EmployeeService {
@@ -19,8 +20,10 @@ public interface EmployeeService {
 
 	ResponseEntity<ResponseStructure<List<Employee>>> getManager();
 
+
 	ResponseEntity<ResponseStructure<Object>> employeesStrength();
 
-	
+	ResponseEntity<ResponseStructure<List<Employee>>> getManagerEmployee(Department department);
+
 
 }

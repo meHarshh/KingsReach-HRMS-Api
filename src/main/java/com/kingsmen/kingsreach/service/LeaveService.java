@@ -24,5 +24,7 @@ public interface LeaveService {
 
 	ResponseEntity<ResponseStructure<List<Leave>>> findAbsentEmployees(Department department);
 
+	ResponseEntity<ResponseStructure<List<Leave>>> fetchLeaveBasedOnManagerEmployee(String employeeId);
+
 
 }

@@ -1,5 +1,7 @@
 package com.kingsmen.kingsreach.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kingsmen.kingsreach.entity.Attendance;
 import com.kingsmen.kingsreach.service.AttendanceService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
+
 
 @CrossOrigin(allowCredentials = "true", origins = "http://localhost:5173")
 @RestController
@@ -29,5 +32,11 @@ public class AttendanceController {
 	private ResponseEntity<ResponseStructure<Attendance>> getAttendance(@PathVariable String employeeId) {
 		return attendanceService.getAttendance(employeeId);
 	}
+	
+	@GetMapping(value = "/getAttendanceForMonth")
+	public ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceForMonth() {
+		return attendanceService.getAttendanceForMonth();
+	}
+	
 	
 }

@@ -22,6 +22,7 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Transient;
 
 @SuppressWarnings("serial")
 @Entity
@@ -83,6 +84,38 @@ public class Employee implements Serializable {
 	private LocalDateTime updatedAt;
 	private LocalDateTime createdAt;
 
+	@OneToMany(mappedBy = "employee")
+	private List<Asset> asset;
+
+	@OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
+	private Payroll payroll;
+
+	@OneToMany(mappedBy = "employee")
+	private List<Reimbursement> reimbursement = new ArrayList<Reimbursement>();
+
+	@OneToMany(mappedBy = "employee")
+	private List<Attendance> attendance = new ArrayList<Attendance>();
+
+	@Column(length = 1000)
+	private Ticket ticket;
+
+	@Transient
+	private String managerId;
+
+	@OneToOne
+	private Manager manager;
+
+	@OneToOne
+	private Leave leave;
+
+	public String getManagerId() {
+		return managerId;
+	}
+
+	public void setManagerId(String managerId) {
+		this.managerId = managerId;
+	}
+
 	public int getExperience() {
 		return experience;
 	}
@@ -106,27 +139,6 @@ public class Employee implements Serializable {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
-
-	@OneToMany(mappedBy = "employee")
-	private List<Asset> asset;
-
-	@OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
-	private Payroll payroll;
-
-	@OneToMany(mappedBy = "employee")
-	private List<Reimbursement> reimbursement = new ArrayList<Reimbursement>();
-
-	@OneToMany(mappedBy = "employee")
-	private List<Attendance> attendance = new ArrayList<Attendance>();
-
-	@Column(length = 1000)
-	private Ticket ticket;
-
-	@OneToOne
-	private Manager manager;
-
-	@OneToOne
-	private Leave leave;
 
 	// Getters and Setters
 
