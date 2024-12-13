@@ -74,13 +74,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 //		Setting the manager for the employee by down-casting the Manager entity
 		String managerId = employee.getManagerId();
 		Employee orElseThrow = employeeRepo.findByEmployeeId(managerId).orElseThrow(() -> new RuntimeException());
-		employee.setManager((Manager) orElseThrow);
+		
 
 		switch (employee.getRole()) {
 		case MANAGER:
 			// Manager manager = (Manager) employee;
 			Manager manager = new Manager();
 			BeanUtils.copyProperties(employee, manager);
+			employee.setManager((Manager) orElseThrow);
 			manager = managerRepo.save(manager);
 			employee = manager;
 			break;
@@ -94,6 +95,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			break;
 
 		case EMPLOYEE:
+			employee.setManager((Manager) orElseThrow);
 			employee = employeeRepo.save(employee);
 			break;
 
