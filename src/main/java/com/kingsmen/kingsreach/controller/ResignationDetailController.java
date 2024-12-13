@@ -1,6 +1,7 @@
 package com.kingsmen.kingsreach.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -36,5 +37,11 @@ public class ResignationDetailController {
 	@PutMapping(value = "/editResignationStatus/{resignationId}")
 	private ResponseEntity<ResponseStructure<ResignationDetail>> changeResignationStatus(@PathVariable int resignationId, @RequestBody ResignationDetail resignationDetail){
 		return resignationDetailService.changeResignationStatus(resignationId , resignationDetail);
+	}
+	
+	@GetMapping(value = "/getAllDetails")
+	private ResponseEntity<ResponseStructure<Map<String, Object>>> getAllDetails(){
+		return resignationDetailService.getAllDetails();
+		
 	}
 }

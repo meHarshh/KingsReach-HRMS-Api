@@ -1,11 +1,11 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.kingsmen.kingsreach.entity.Admin;
 import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Manager;
+import com.kingsmen.kingsreach.entity.Onsite;
 import com.kingsmen.kingsreach.enums.EmployeeRole;
 import com.kingsmen.kingsreach.exception.InvalidRoleException;
 import com.kingsmen.kingsreach.exceptions.InvalidEmailException;
@@ -23,6 +24,7 @@ import com.kingsmen.kingsreach.exceptions.UserIdOrEmailAlreadyExistException;
 import com.kingsmen.kingsreach.repo.AdminRepo;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
 import com.kingsmen.kingsreach.repo.ManagerRepo;
+import com.kingsmen.kingsreach.repo.OnsiteRepo;
 import com.kingsmen.kingsreach.service.EmployeeService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
@@ -37,6 +39,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	private AdminRepo adminRepo;
+
+	@Autowired
+	private OnsiteRepo onsiteRepo;
 
 	@Override
 	public ResponseEntity<ResponseStructure<Employee>> addEmployee(Employee employee) {
@@ -179,7 +184,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public ResponseEntity<ResponseStructure<List<Employee>>> getManager() {
-		// TODO Auto-generated method stub
 		List<Employee> all = employeeRepo.findAll();
 
 		ArrayList<Employee> employees = new ArrayList<Employee>();
@@ -196,5 +200,36 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.OK);
 	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<Object>> employeesStrength() {
+
+		List<Onsite> onsiteList = fetchAllTheOnsiteEmployee(LocalDate.now());
+
+		List<Employee> totalEmployees = fetchAllEmployees(LocalDate.now());
+
+		int inOffice = totalEmployees.size() - onsiteList.size();
+
+		int[] count = { inOffice, onsiteList.size() };
+
+		ResponseStructure<Object> responseStructure = new ResponseStructure<>();
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage("Employee strength details fetched successfully");
+		responseStructure.setData(count);
+
+		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
+
+	}
+
+	private List<Employee> fetchAllEmployees(LocalDate date) {
+		return employeeRepo.findEmployeesByDate(LocalDate.now());
+
+	}
+
+	private List<Onsite> fetchAllTheOnsiteEmployee(LocalDate date) {
+		return onsiteRepo.findByDate(LocalDate.now());
+
+	}
+
 
 }

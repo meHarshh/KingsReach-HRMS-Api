@@ -40,6 +40,7 @@ public class Payroll implements Serializable {
 	private PayrollStatus payrollStatus;
 
 	private double lopDays;
+	private double lopDeduction;
 
 	@JsonIgnore
 	@OneToOne
@@ -186,10 +187,19 @@ public class Payroll implements Serializable {
 		this.payrollStatus = payrollStatus;
 	}
 
+	public double getLopDeduction() {
+		return lopDeduction;
+	}
+
+	public void setLopDeduction(double lopDeduction) {
+		this.lopDeduction = lopDeduction;
+	}
+
 	public Payroll(int payrollId, String employeeId, String department, double salary, double taxDeduction,
 			double specialAllowance, double employeeStateInsurance, double houseRentAllowance, double providentFund,
 			double grossSalary, double otherAllowance, double employeeProvidentFund, double basicPay,
-			String employeeName, String location, PayrollStatus payrollStatus, Employee employee) {
+			String employeeName, String location, PayrollStatus payrollStatus, double lopDays, double lopDeduction,
+			Employee employee) {
 		super();
 		this.payrollId = payrollId;
 		this.employeeId = employeeId;
@@ -207,11 +217,13 @@ public class Payroll implements Serializable {
 		this.employeeName = employeeName;
 		this.location = location;
 		this.payrollStatus = payrollStatus;
+		this.lopDays = lopDays;
+		this.lopDeduction = lopDeduction;
 		this.employee = employee;
 	}
 
 	public Payroll() {
-	
+		
 	}
 	
 }

@@ -1,6 +1,7 @@
 package com.kingsmen.kingsreach.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 
@@ -13,5 +14,7 @@ public interface ResignationDetailService {
 
 	ResponseEntity<ResponseStructure<List<ResignationDetail>>> getResignationDetails();
 
-	ResponseEntity<ResponseStructure<ResignationDetail>> changeResignationStatus(int resignationId,ResignationDetail resignationDetail);
+	ResponseEntity<ResponseStructure<ResignationDetail>> changeResignationStatus(int resignationId,ResignationDetail resignationDetail);
+
+	ResponseEntity<ResponseStructure<Map<String, Object>>> getAllDetails();
 }

@@ -57,8 +57,7 @@ public class LeaveController {
 	}
 
 	@GetMapping(value = "/fetchLeaveBasedOnDepartment")
-	private ResponseEntity<ResponseStructure<List<Leave>>> fetchLeaveBasedOnDepartment(
-			@RequestParam Department department) {
+	private ResponseEntity<ResponseStructure<List<Leave>>> fetchLeaveBasedOnDepartment(@RequestParam Department department) {
 		return leaveservice.findAbsentEmployees(department);
 	}
 }

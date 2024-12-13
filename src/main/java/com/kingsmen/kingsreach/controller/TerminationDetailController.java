@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,22 +26,24 @@ public class TerminationDetailController {
 	private TerminationDetailService terminationDetailService;
 
 	@PostMapping(value = "/terminationDetail")
-	private ResponseEntity<ResponseStructure<TerminationDetail>> terminationDetail(@RequestBody TerminationDetail detail) {
+	private ResponseEntity<ResponseStructure<TerminationDetail>> terminationDetail(
+			@RequestBody TerminationDetail detail) {
 		return terminationDetailService.terminationDetail(detail);
 	}
 
 	@PutMapping(value = "/editTerminationDetail")
-	public ResponseEntity<ResponseStructure<TerminationDetail>> editTermination(@RequestParam String employeeId,@RequestBody TerminationDetail terminationdetail) {
-		return terminationDetailService.editTermination(employeeId,terminationdetail);
+	public ResponseEntity<ResponseStructure<TerminationDetail>> editTermination(@RequestParam int terminationDetailId,
+			@RequestBody TerminationDetail terminationdetail) {
+		return terminationDetailService.editTermination(terminationDetailId, terminationdetail);
 	}
 
-	@DeleteMapping(value = "/deleteTerminationDetail")
-	public ResponseEntity<ResponseStructure<TerminationDetail>> deleteTermination(@RequestParam String employeeId){
-		return terminationDetailService.deleteTermination(employeeId);
+	@DeleteMapping(value = "/deleteTerminationDetail/{terminationDetailId}")
+	public ResponseEntity<ResponseStructure<TerminationDetail>> deleteTermination(@PathVariable int terminationDetailId) {
+		return terminationDetailService.deleteTermination(terminationDetailId);
 	}
-	
+
 	@GetMapping(value = "/findAllTermination")
-	public ResponseEntity<ResponseStructure<List<TerminationDetail>>> findAllTerminations(){
+	public ResponseEntity<ResponseStructure<List<TerminationDetail>>> findAllTerminations() {
 		return terminationDetailService.findAllTerminations();
 	}
 

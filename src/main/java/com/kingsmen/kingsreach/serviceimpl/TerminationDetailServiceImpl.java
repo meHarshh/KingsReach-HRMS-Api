@@ -1,8 +1,6 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,17 +33,15 @@ public class TerminationDetailServiceImpl implements TerminationDetailService {
 	}
 
 	@Override
-	public ResponseEntity<ResponseStructure<TerminationDetail>> editTermination(String employeeId,
-			TerminationDetail terminationDetail) {
+	public ResponseEntity<ResponseStructure<TerminationDetail>> editTermination(int terminationDetailId, TerminationDetail terminationDetail) {
 
-		int terminationDetailId = terminationDetail.getTerminationDetailId();
-
-		TerminationDetail employee = detailRepo.findById(terminationDetailId).orElseThrow(() -> new RuntimeException());
+		TerminationDetail employee = detailRepo.findById(terminationDetailId)
+				.orElseThrow(() -> new RuntimeException("No details found for TerminationDetail ID: " + terminationDetailId));
 
 		employee.setEmployeeId(terminationDetail.getEmployeeId());
 		employee.setNoticeDate(terminationDetail.getNoticeDate());
 		employee.setTerminationReason(terminationDetail.getTerminationReason());
-		employee.setTerminationReason(terminationDetail.getTerminationReason());
+		//	employee.setTerminationReason(terminationDetail.getTerminationReason());
 
 		// employee.setDepartment(terminationDetail.getDepartment());
 
@@ -63,17 +59,16 @@ public class TerminationDetailServiceImpl implements TerminationDetailService {
 	}
 
 	@Override
-	public ResponseEntity<ResponseStructure<TerminationDetail>> deleteTermination(String employeeId) {
-		Optional<TerminationDetail> byEmployeeName = detailRepo.findByEmployeeId(employeeId);
-
-		TerminationDetail employee = byEmployeeName.get();
+	public ResponseEntity<ResponseStructure<TerminationDetail>> deleteTermination(int terminationDetailId) {
+		
+		TerminationDetail employee = detailRepo.findById(terminationDetailId)
+				.orElseThrow(() -> new RuntimeException("No details found for TerminationDetail ID: " + terminationDetailId));
 
 		detailRepo.delete(employee);
 
 		ResponseStructure<TerminationDetail> responseStructure = new ResponseStructure<TerminationDetail>();
 
-		String message = "Termination details for Employee ID: " + employeeId + " ( " + employee.getEmployeeName()
-				+ " ) deleted successfully.";
+		String message = "Termination details for  ID: " + terminationDetailId + " deleted successfully.";
 
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage(message);

@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class OnsiteServiceImpl implements OnsiteService {
 
 	@Override
 	public ResponseEntity<ResponseStructure<Onsite>> onsiteEmployee(Onsite onsite) {
-
+		onsite.setDate(LocalDate.now());
 		onsite=onsiteRepo.save(onsite);
 
 		String message=onsite.getEmpName() + " went to onsite to meet the client " + onsite.getClientName();
