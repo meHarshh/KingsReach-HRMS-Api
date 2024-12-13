@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kingsmen.kingsreach.entity.Payroll;
@@ -34,8 +35,8 @@ public class PayrollController {
 		return payrollService.getEmployeesSalary();
 	}
 	
-	@GetMapping(value = "/getSalary/{employeeId}")
-	public ResponseEntity<ResponseStructure<Payroll>> getEmployeeSalary(@PathVariable String employeeId){
+	@GetMapping(value = "/getSalary")
+	public ResponseEntity<ResponseStructure<Payroll>> getEmployeeSalary(@RequestParam String employeeId){
 		return payrollService.getEmployeeSalary(employeeId);
 	}
 	
@@ -52,6 +53,11 @@ public class PayrollController {
 	@PutMapping(value ="/approvedSalarySlip")
 	public ResponseEntity<ResponseStructure<Payroll>>  approvedSalarySlip(@RequestBody Payroll payroll){
 		return payrollService.approvedSalarySlip(payroll);
+	}
+	
+	@GetMapping(value ="/getPayrollDetails")
+	private ResponseEntity<ResponseStructure<List<Object>>>  getPayrollDetails(@RequestParam String employeeId){
+		return payrollService.getPayrollDetails(employeeId);
 	}
 
 }

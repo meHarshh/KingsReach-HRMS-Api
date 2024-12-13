@@ -1,5 +1,7 @@
 package com.kingsmen.kingsreach.repo;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,5 +23,7 @@ public interface EmployeeRepo extends JpaRepository<Employee, Integer> {
 	public Optional<Employee> findByName(String employeeName);
 
 	boolean existsByEmployeeId(String employeeId);
+
+	List<Employee> findEmployeesByDate(LocalDate now);
 
 }

@@ -1,5 +1,7 @@
 package com.kingsmen.kingsreach.entity;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,6 +19,7 @@ public class Onsite {
 	private String projectName;
 	private long empContactNo;
 	private String location;
+	private LocalDate date;
 
 	public int getOnsiteId() {
 		return onsiteId;
@@ -72,6 +75,14 @@ public class Onsite {
 
 	public void setLocation(String location) {
 		this.location = location;
+	}
+
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDate date) {
+		this.date = date;
 	}
 
 }

@@ -55,6 +55,28 @@ public class ExpenseServiceImpl implements ExpenseService {
 		return new ResponseEntity<ResponseStructure<List<Expense>>>(responseStructure, HttpStatus.OK);
 
 	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<Expense>> editExpense(int expenseId, Expense expense) {
+	Expense existingExpense = expenseRepo.findById(expenseId)
+			.orElseThrow(() -> new RuntimeException("No details found for TerminationDetail ID: " + expenseId));
+	
+	existingExpense.setAmount(expense.getAmount());
+	existingExpense.setDate(expense.getDate());
+	existingExpense.setExpenseName(expense.getExpenseName());
+	existingExpense.setReason(expense.getReason());
+	existingExpense.setEmployeeName(expense.getEmployeeName());
+	
+	existingExpense = expenseRepo.save(existingExpense);
+	
+	ResponseStructure<Expense> responseStructure = new ResponseStructure<Expense>();
+	responseStructure.setStatusCode(HttpStatus.OK.value());
+	responseStructure.setMessage(expense.getEmployeeName() + " expenses are updated");
+	responseStructure.setData(existingExpense);
+
+	return new ResponseEntity<ResponseStructure<Expense>>(responseStructure, HttpStatus.OK);
+	
+	}
 }
 
 

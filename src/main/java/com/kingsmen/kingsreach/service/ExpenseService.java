@@ -13,4 +13,6 @@ public interface ExpenseService {
 
 	ResponseEntity<ResponseStructure<List<Expense>>> findAllExpense();
 
+	ResponseEntity<ResponseStructure<Expense>> editExpense(int expenseId, Expense expense);
+
 }

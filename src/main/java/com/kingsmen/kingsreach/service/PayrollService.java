@@ -21,4 +21,6 @@ public interface PayrollService {
 
 	ResponseEntity<ResponseStructure<Payroll>> approvedSalarySlip(Payroll payroll);
 
+	ResponseEntity<ResponseStructure<List<Object>>> getPayrollDetails(String employeeId);
+
 }

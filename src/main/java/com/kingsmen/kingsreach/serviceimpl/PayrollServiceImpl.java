@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,8 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.kingsmen.kingsreach.entity.Employee;
+import com.kingsmen.kingsreach.entity.Leave;
 import com.kingsmen.kingsreach.entity.Payroll;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
+import com.kingsmen.kingsreach.repo.LeaveRepo;
 import com.kingsmen.kingsreach.repo.PayrollRepo;
 import com.kingsmen.kingsreach.service.PayrollService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
@@ -26,6 +29,9 @@ public class PayrollServiceImpl implements PayrollService {
 	@Autowired
 	private PayrollRepo payrollRepo;
 
+	@Autowired
+	private LeaveRepo leaveRepo;
+
 	@Override
 	public ResponseEntity<ResponseStructure<Payroll>> paySalary(Payroll payroll) {
 
@@ -34,23 +40,27 @@ public class PayrollServiceImpl implements PayrollService {
 		Employee employee = byEmployeeId.get();
 
 		payroll.setEmployee(employee);
-		
+
 		double lopDays = payroll.getLopDays(); 
 
-	    double salary = payroll.getSalary(); 
+		double salary = payroll.getSalary(); 
 
-	    double finalSalary = calculateLopDeduction(salary, lopDays);
+		double finalSalary = calculateLopDeduction(salary, lopDays);
+		double lopDeduction = calculateLop(salary, lopDays);
 
-	 	 double pfDeduction = finalSalary * 0.12;
-	    finalSalary = finalSalary - pfDeduction;
+		double pfDeduction = finalSalary * 0.12;
+		finalSalary = finalSalary - pfDeduction;
 
-	    payroll.setSalary(finalSalary);
-	    payroll.setProvidentFund(pfDeduction);
+		payroll.setSalary(finalSalary);
+		
+		payroll.setLopDeduction(lopDeduction);
+		
+		payroll.setProvidentFund(pfDeduction);
 
 		ResponseStructure<Payroll> responseStructure = new ResponseStructure<Payroll>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("The payroll of " + employee.getFirstName() + " from " + payroll.getDepartment()
-				+ " department has been updated");
+		+ " department has been updated");
 
 		responseStructure.setData(payrollRepo.save(payroll));
 
@@ -58,14 +68,21 @@ public class PayrollServiceImpl implements PayrollService {
 
 	}
 
+	private double calculateLop(double salary,double lopDays) {
+		double lopPerDay = salary / 30;
+		double totalLopDeduction = lopPerDay * lopDays;
+		
+		return totalLopDeduction;
+	}
+
 	public double calculateLopDeduction(double salary, double lopDays) {
-	 
-	    double lopPerDay = salary / 30;
-	    double totalLopDeduction = lopPerDay * lopDays;
 
-	    double finalSalary = salary - totalLopDeduction;
+		double lopPerDay = salary / 30;
+		double totalLopDeduction = lopPerDay * lopDays;
 
-	    return finalSalary;
+		double finalSalary = salary - totalLopDeduction;
+
+		return finalSalary;
 	}
 
 
@@ -111,7 +128,7 @@ public class PayrollServiceImpl implements PayrollService {
 		ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure
-				.setMessage("Salary details of employee " + payroll.getEmployeeId() + " fetched successfully.");
+		.setMessage("Salary details of employee " + payroll.getEmployeeId() + " fetched successfully.");
 		responseStructure.setData(payroll);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
@@ -157,6 +174,7 @@ public class PayrollServiceImpl implements PayrollService {
 		existingPayroll.setGrossSalary(payroll.getGrossSalary());
 		existingPayroll.setOtherAllowance(payroll.getOtherAllowance());
 		existingPayroll.setEmployeeProvidentFund(payroll.getEmployeeProvidentFund());
+		existingPayroll.setLopDays(payroll.getLopDays());
 
 		Payroll updatedPayroll = payrollRepo.save(existingPayroll);
 
@@ -171,20 +189,20 @@ public class PayrollServiceImpl implements PayrollService {
 	@Transactional
 	@Override
 	public ResponseEntity<ResponseStructure<Payroll>> deleteEmployeeSalary(int payrollId) {
-	    System.out.println("Fetching payroll with ID: " + payrollId);
-	    
-	    Payroll payroll = payrollRepo.findById(payrollId).orElseThrow(() -> new RuntimeException("Payroll not found"));
+		System.out.println("Fetching payroll with ID: " + payrollId);
 
-	    System.out.println("Deleting payroll with ID: " + payrollId);
-	    payrollRepo.deleteById(payrollId);
+		Payroll payroll = payrollRepo.findById(payrollId).orElseThrow(() -> new RuntimeException("Payroll not found"));
 
-	    ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
-	    responseStructure.setStatusCode(HttpStatus.OK.value());
-	    responseStructure.setMessage("Employee salary detail deleted successfully.");
-	    responseStructure.setData(payroll);
+		System.out.println("Deleting payroll with ID: " + payrollId);
+		payrollRepo.deleteById(payrollId);
 
-	    System.out.println("Payroll deleted: " + payroll);
-	    return new ResponseEntity<>(responseStructure, HttpStatus.OK);
+		ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage("Employee salary detail deleted successfully.");
+		responseStructure.setData(payroll);
+
+		System.out.println("Payroll deleted: " + payroll);
+		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	}
 
 
@@ -231,8 +249,27 @@ public class PayrollServiceImpl implements PayrollService {
 		responseStructure.setData(payroll2);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<List<Object>>> getPayrollDetails(String employeeId) {
+		Optional<Employee> employees = employeeRepo.findByEmployeeId(employeeId);
+		Payroll payrolls = payrollRepo.findByEmployeeId(employeeId);
+		Optional<Leave> leaves = leaveRepo.findByEmployeeId(employeeId);
+
+		List<Object> list = new ArrayList<Object>();
+		list.add(leaves);
+		list.add(employees);
+		list.add(payrolls);
+
+		ResponseStructure<List<Object>> responseStructure = new ResponseStructure<List<Object>>();
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage("All Payroll Details fetched Successfully.");
+		responseStructure.setData(list);
+
+		return new ResponseEntity<ResponseStructure<List<Object>>>(responseStructure,HttpStatus.OK);
 	} 
-	
-	
+
+
 }
 

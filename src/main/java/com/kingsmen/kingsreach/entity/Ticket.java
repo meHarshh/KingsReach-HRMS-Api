@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.kingsmen.kingsreach.enums.Department;
+import com.kingsmen.kingsreach.enums.EmployeeRole;
 import com.kingsmen.kingsreach.enums.TicketPriority;
 import com.kingsmen.kingsreach.enums.TicketStatus;
 
@@ -31,13 +33,13 @@ public class Ticket implements Serializable{
 	private String updatedBy;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
+	private Department department;
+	private EmployeeRole role;
 
 	@JsonIgnore
 	@ManyToOne
 	private Employee employee;
 
-	
-	
 	public String getUpdatedBy() {
 		return updatedBy;
 	}
@@ -124,6 +126,22 @@ public class Ticket implements Serializable{
 
 	public void setEmployeeName(String employeeName) {
 		this.employeeName = employeeName;
+	}
+
+	public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
+	}
+
+	public EmployeeRole getRole() {
+		return role;
+	}
+
+	public void setRole(EmployeeRole role) {
+		this.role = role;
 	}
 
 }
