@@ -30,6 +30,8 @@ public class Attendance {
 	private String employeeName;
 	private String employeeId;
 
+	
+	
 	@JsonIgnore
 	@ManyToOne
 	private Employee employee;

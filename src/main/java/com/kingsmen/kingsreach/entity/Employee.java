@@ -81,6 +81,27 @@ public class Employee implements Serializable {
 	private int experience;
 	private LocalDateTime updatedAt;
 	private LocalDateTime createdAt;
+	
+	@OneToMany(mappedBy = "employee")
+	private List<Asset> asset;
+
+	@OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
+	private Payroll payroll;
+
+	@OneToMany(mappedBy = "employee")
+	private List<Reimbursement> reimbursement = new ArrayList<Reimbursement>();
+
+	@OneToMany(mappedBy = "employee")
+	private List<Attendance> attendance = new ArrayList<Attendance>();
+
+	@Column(length = 1000)
+	private Ticket ticket;
+
+	@OneToOne
+	private Manager manager;
+
+	@OneToOne
+	private Leave leave;
 
 	public int getExperience() {
 		return experience;
@@ -106,26 +127,7 @@ public class Employee implements Serializable {
 		this.createdAt = createdAt;
 	}
 
-	@OneToMany(mappedBy = "employee")
-	private List<Asset> asset;
-
-	@OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
-	private Payroll payroll;
-
-	@OneToMany(mappedBy = "employee")
-	private List<Reimbursement> reimbursement = new ArrayList<Reimbursement>();
-
-	@OneToMany(mappedBy = "employee")
-	private List<Attendance> attendance = new ArrayList<Attendance>();
-
-	@Column(length = 1000)
-	private Ticket ticket;
-
-	@OneToOne
-	private Manager manager;
-
-	@OneToOne
-	private Leave leave;
+	
 
 	// Getters and Setters
 

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kingsmen.kingsreach.entity.Employee;
+import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.service.EmployeeService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
@@ -46,5 +47,10 @@ public class EmployeeController {
 	@GetMapping("/getManager")
 	private ResponseEntity<ResponseStructure<List<Employee>>> getManager(){
 		return employeeService.getManager();
+	}
+	
+	@GetMapping("/getManagerEmployee")
+	private ResponseEntity<ResponseStructure<List<Employee>>> getManagerEmployee(@RequestParam Department department){
+		return employeeService.getManagerEmployee(department);
 	}
 }

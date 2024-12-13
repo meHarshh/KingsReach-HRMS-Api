@@ -64,7 +64,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 	public ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceForMonth() {
 		ResponseStructure<List<Attendance>> responseStructure= new ResponseStructure<List<Attendance>>();
 		responseStructure.setData(attendanceRepo.findAll());
-		responseStructure.setMessage("All leaves fetched");
+		responseStructure.setMessage("All attendance fetched");
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		
 		return new ResponseEntity<ResponseStructure<List<Attendance>>>(responseStructure, HttpStatus.OK);

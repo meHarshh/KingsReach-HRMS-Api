@@ -255,4 +255,22 @@ public class LeaveServiceImpl implements LeaveService {
 		return new ResponseEntity<ResponseStructure<List<Leave>>>(responseStructure, HttpStatus.OK);
 	}
 
+	@Override
+	public ResponseEntity<ResponseStructure<List<Leave>>> fetchLeaveBasedOnManagerEmployee(String employeeId) {
+		List<Leave> all = leaveRepository.findAll();
+
+		ArrayList<Leave> leaves = new ArrayList<Leave>();
+		for (Leave leave : all) {
+			if (leave.getEmployee().getManager().getEmployeeId().equals(employeeId)) {
+				leaves.add(leave);
+			}
+		}
+		ResponseStructure<List<Leave>> responseStructure = new ResponseStructure<List<Leave>>();
+		responseStructure.setData(leaves);
+		responseStructure.setMessage("The people on leave based on manager are below");
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+
+		return new ResponseEntity<ResponseStructure<List<Leave>>>(responseStructure, HttpStatus.OK);
+	}
+
 }
