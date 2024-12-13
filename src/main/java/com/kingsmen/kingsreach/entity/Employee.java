@@ -22,6 +22,7 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Transient;
 
 @SuppressWarnings("serial")
 @Entity
@@ -81,7 +82,7 @@ public class Employee implements Serializable {
 	private int experience;
 	private LocalDateTime updatedAt;
 	private LocalDateTime createdAt;
-	
+
 	@OneToMany(mappedBy = "employee")
 	private List<Asset> asset;
 
@@ -97,11 +98,22 @@ public class Employee implements Serializable {
 	@Column(length = 1000)
 	private Ticket ticket;
 
+	@Transient
+	private int managerId;
+
 	@OneToOne
 	private Manager manager;
 
 	@OneToOne
 	private Leave leave;
+
+	public int getManagerId() {
+		return managerId;
+	}
+
+	public void setManagerId(int managerId) {
+		this.managerId = managerId;
+	}
 
 	public int getExperience() {
 		return experience;
@@ -126,8 +138,6 @@ public class Employee implements Serializable {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
-
-	
 
 	// Getters and Setters
 

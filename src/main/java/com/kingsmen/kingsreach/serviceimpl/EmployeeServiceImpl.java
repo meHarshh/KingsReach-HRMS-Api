@@ -66,7 +66,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		
 		
 //		Setting the manager for the employee by down-casting the Manager entity
-		int id = employee.getManager().getId();
+		int id = employee.getManagerId();
 		Employee mgr = employeeRepo.findById(id).orElseThrow(() -> new RuntimeException());
 		employee.setManager((Manager) mgr);
 
