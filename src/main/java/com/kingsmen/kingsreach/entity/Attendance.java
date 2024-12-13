@@ -27,11 +27,22 @@ public class Attendance {
 	private String location;
 	private int totalBreakTime;
 
+	private String employeeName;
 	private String employeeId;
 
+	
+	
 	@JsonIgnore
 	@ManyToOne
 	private Employee employee;
+
+	public String getEmployeeName() {
+		return employeeName;
+	}
+
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
+	}
 
 	public LocalDate getAttendanceDate() {
 		return attendanceDate;

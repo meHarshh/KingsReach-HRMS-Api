@@ -16,6 +16,7 @@ import com.kingsmen.kingsreach.entity.Admin;
 import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Manager;
 import com.kingsmen.kingsreach.entity.Onsite;
+import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.enums.EmployeeRole;
 import com.kingsmen.kingsreach.exception.InvalidRoleException;
 import com.kingsmen.kingsreach.exceptions.InvalidEmailException;
@@ -67,6 +68,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 		employee.setCreatedAt(LocalDateTime.now());
 		employee.setName(employee.getFirstName() + " " + employee.getLastName());
+
+//		Setting the manager for the employee by down-casting the Manager entity
+		String managerId = employee.getManagerId();
+		Employee orElseThrow = employeeRepo.findByEmployeeId(managerId).orElseThrow(() -> new RuntimeException());
+		employee.setManager((Manager) orElseThrow);
+
 		switch (employee.getRole()) {
 		case MANAGER:
 			// Manager manager = (Manager) employee;
@@ -231,5 +238,27 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	}
 
+	public ResponseEntity<ResponseStructure<List<Employee>>> getManagerEmployee(Department department) {
+		// TODO Auto-generated method stub
+
+		List<Employee> all = employeeRepo.findAll();
+		ArrayList<Employee> employees = new ArrayList<Employee>();
+
+		for (Employee employee : all) {
+
+			if (employee.getDepartment() == department && employee.getRole() != EmployeeRole.MANAGER
+					&& employee.getRole() != EmployeeRole.ADMIN) {
+				employees.add(employee);
+			}
+		}
+
+		ResponseStructure<List<Employee>> responseStructure = new ResponseStructure<List<Employee>>();
+		responseStructure.setData(employees);
+		responseStructure.setMessage("The list of the manager is here in the below list");
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+
+		return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.OK);
+
+	}
 
 }

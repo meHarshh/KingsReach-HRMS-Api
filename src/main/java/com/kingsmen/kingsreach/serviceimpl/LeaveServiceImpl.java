@@ -22,6 +22,8 @@ import com.kingsmen.kingsreach.repo.PayrollRepo;
 import com.kingsmen.kingsreach.service.LeaveService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class LeaveServiceImpl implements LeaveService {
 
@@ -159,16 +161,18 @@ public class LeaveServiceImpl implements LeaveService {
 	}
 
 	@Override
+	@Transactional
 	public ResponseEntity<ResponseStructure<Leave>> changeLeaveStatus(Leave leave) {
 		Leave leave2 = leaveRepository.findById(leave.getLeaveId()).orElseThrow(() -> new RuntimeException());
 
-		leave2.setLeaveStatus(LeaveStatus.APPROVED);
+		leave2.setLeaveStatus(leave.getLeaveStatus());
+		leave2 = leaveRepository.findById(leave2.getLeaveId()).orElseThrow(() -> new RuntimeException());
 
 		ResponseStructure<Leave> responseStructure = new ResponseStructure<Leave>();
 		responseStructure.setData(leave2);
 		responseStructure.setMessage("The leave status changed to " + leave2.getLeaveStatus());
-
-		return ResponseEntity.ok(responseStructure);
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		return new ResponseEntity<ResponseStructure<Leave>>(responseStructure, HttpStatus.OK);
 	}
 
 	@Override
@@ -246,6 +250,24 @@ public class LeaveServiceImpl implements LeaveService {
 		ResponseStructure<List<Leave>> responseStructure = new ResponseStructure<List<Leave>>();
 		responseStructure.setData(leaves);
 		responseStructure.setMessage("The people on leave based on department are below");
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+
+		return new ResponseEntity<ResponseStructure<List<Leave>>>(responseStructure, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<List<Leave>>> fetchLeaveBasedOnManagerEmployee(String employeeId) {
+		List<Leave> all = leaveRepository.findAll();
+
+		ArrayList<Leave> leaves = new ArrayList<Leave>();
+		for (Leave leave : all) {
+			if (leave.getEmployee().getManager().getEmployeeId().equals(employeeId)) {
+				leaves.add(leave);
+			}
+		}
+		ResponseStructure<List<Leave>> responseStructure = new ResponseStructure<List<Leave>>();
+		responseStructure.setData(leaves);
+		responseStructure.setMessage("The people on leave based on manager are below");
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 
 		return new ResponseEntity<ResponseStructure<List<Leave>>>(responseStructure, HttpStatus.OK);
