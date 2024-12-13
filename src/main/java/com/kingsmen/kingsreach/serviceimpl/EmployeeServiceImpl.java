@@ -63,12 +63,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 		employee.setCreatedAt(LocalDateTime.now());
 		employee.setName(employee.getFirstName() + " " + employee.getLastName());
-		
-		
+
 //		Setting the manager for the employee by down-casting the Manager entity
-		int id = employee.getManagerId();
-		Manager mgr = managerRepo.findById(id).orElseThrow(() -> new RuntimeException());
-		employee.setManager(mgr);
+		String managerId = employee.getManagerId();
+		Employee orElseThrow = employeeRepo.findByEmployeeId(managerId).orElseThrow(() -> new RuntimeException());
+		employee.setManager((Manager) orElseThrow);
 
 		switch (employee.getRole()) {
 		case MANAGER:

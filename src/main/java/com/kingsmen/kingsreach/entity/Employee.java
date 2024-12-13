@@ -99,7 +99,7 @@ public class Employee implements Serializable {
 	private Ticket ticket;
 
 	@Transient
-	private int managerId;
+	private String managerId;
 
 	@OneToOne
 	private Manager manager;
@@ -107,11 +107,11 @@ public class Employee implements Serializable {
 	@OneToOne
 	private Leave leave;
 
-	public int getManagerId() {
+	public String getManagerId() {
 		return managerId;
 	}
 
-	public void setManagerId(int managerId) {
+	public void setManagerId(String managerId) {
 		this.managerId = managerId;
 	}
 
