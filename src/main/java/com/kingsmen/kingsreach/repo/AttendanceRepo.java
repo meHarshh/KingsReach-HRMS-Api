@@ -11,6 +11,9 @@ public interface AttendanceRepo extends JpaRepository<Attendance, Integer> {
 	Optional<Attendance> findByEmployeeId(String employeeId);
 
 
+//	void findByEmployeeIdAndDate(String employeeId, LocalDate date);
+
+
 
 
 }

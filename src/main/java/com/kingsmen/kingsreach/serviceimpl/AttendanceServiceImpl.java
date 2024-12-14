@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,6 +70,12 @@ public class AttendanceServiceImpl implements AttendanceService {
 		
 		return new ResponseEntity<ResponseStructure<List<Attendance>>>(responseStructure, HttpStatus.OK);
 	}
+
+//	@Override
+//	public ResponseEntity<ResponseStructure<Attendance>> getAttendenceForDate(String employeeId, LocalDate date) {
+//		attendanceRepo.findByEmployeeIdAndDate(employeeId,date);
+//		return null;
+//	}
 
 	
 }

@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kingsmen.kingsreach.enums.ApprovedBy;
+import com.kingsmen.kingsreach.enums.LeaveStatus;
+import com.kingsmen.kingsreach.enums.LeaveType;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,7 +24,10 @@ public class LeaveRecord {
 	private LocalDate toDate;
 	private ApprovedBy approvedBy;
 	private int noOfDays;
-
+	private LeaveStatus status;
+	private LeaveType leaveType;
+	private String reason;
+	
 	@JsonIgnore
 	@ManyToOne
 	private Employee employee;
@@ -89,6 +94,30 @@ public class LeaveRecord {
 
 	public void setNoOfDays(int noOfDays) {
 		this.noOfDays = noOfDays;
+	}
+
+	public LeaveStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(LeaveStatus status) {
+		this.status = status;
+	}
+
+	public LeaveType getLeaveType() {
+		return leaveType;
+	}
+
+	public void setLeaveType(LeaveType leaveType) {
+		this.leaveType = leaveType;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 
 }

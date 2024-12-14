@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,11 @@ public class AttendanceController {
 	public ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceForMonth() {
 		return attendanceService.getAttendanceForMonth();
 	}
+	
+//	@GetMapping(value = "/getAttendenceOfSpecificDate")
+//	private ResponseEntity<ResponseStructure<Attendance>> getAttendenceForDate(String employeeId, LocalDate date){
+//		return attendanceService.getAttendenceForDate(employeeId, date);
+//	}
 	
 	
 }

@@ -213,17 +213,24 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public ResponseEntity<ResponseStructure<Object>> employeesStrength() {
 
 		List<Onsite> onsiteList = fetchAllTheOnsiteEmployee(LocalDate.now());
+		ArrayList<Onsite> arrayList = new ArrayList<Onsite>();
+
+		for (Onsite onsite : onsiteList) {
+			if (onsite.getDate() == LocalDate.now()) {
+				arrayList.add(onsite);
+			}
+		}
 
 		List<Employee> totalEmployees = fetchAllEmployees(LocalDate.now());
 
-		int inOffice = totalEmployees.size() - onsiteList.size();
+		int inOffice = totalEmployees.size() - arrayList.size();
 
 		int[] count = { inOffice, onsiteList.size() };
 
 		ResponseStructure<Object> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Employee strength details fetched successfully");
-		responseStructure.setData(count);
+		responseStructure.setData("inOffice " + count[0] + " onsite " + count[1]);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 
@@ -240,7 +247,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	public ResponseEntity<ResponseStructure<List<Employee>>> getManagerEmployee(Department department) {
-		// TODO Auto-generated method stub
 
 		List<Employee> all = employeeRepo.findAll();
 		ArrayList<Employee> employees = new ArrayList<Employee>();

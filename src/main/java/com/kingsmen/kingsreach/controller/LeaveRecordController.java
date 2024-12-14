@@ -4,17 +4,19 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.kingsmen.kingsreach.entity.LeaveRecord;
 import com.kingsmen.kingsreach.service.LeaveRecordService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@Controller
+@CrossOrigin(allowCredentials = "true", origins = "http://localhost:5173")
+@RestController
 public class LeaveRecordController {
 	@Autowired
 	private LeaveRecordService leaveRecordService;
@@ -30,7 +32,7 @@ public class LeaveRecordController {
 	}
 	
 	@GetMapping(value = "/getEmployeeLeaveRecord")
-	private ResponseEntity<ResponseStructure<LeaveRecord>>  getEmployeeLeaveRecord(@RequestParam String employeeId){
+	private ResponseEntity<ResponseStructure<List<LeaveRecord>>>  getEmployeeLeaveRecord(@RequestParam String employeeId){
 		return leaveRecordService.getEmployeeLeaveRecord(employeeId);
 	}
 

@@ -13,7 +13,7 @@ public interface LeaveRecordService {
 
 	ResponseEntity<ResponseStructure<List<LeaveRecord>>> getEmployeesLeaveRecords();
 
-	ResponseEntity<ResponseStructure<LeaveRecord>> getEmployeeLeaveRecord(String employeeId);
+	ResponseEntity<ResponseStructure<List<LeaveRecord>>> getEmployeeLeaveRecord(String employeeId);
 	
 
 }

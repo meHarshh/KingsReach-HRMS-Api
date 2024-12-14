@@ -1,6 +1,7 @@
 package com.kingsmen.kingsreach.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 
@@ -20,7 +21,7 @@ public interface LeaveService {
 
 	ResponseEntity<ResponseStructure<List<Leave>>> findAbsentEmployees();
 
-	ResponseEntity<ResponseStructure<int[]>> getRemainingLeave(String employeeId);
+	ResponseEntity<ResponseStructure<Map<String, Integer>>> getRemainingLeave(String employeeId);
 
 	ResponseEntity<ResponseStructure<List<Leave>>> findAbsentEmployees(Department department);
 

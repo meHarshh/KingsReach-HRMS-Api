@@ -1,6 +1,7 @@
 package com.kingsmen.kingsreach.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +48,7 @@ public class LeaveController {
 	}
 
 	@GetMapping("/employeePendingLeave")
-	public ResponseEntity<ResponseStructure<int[]>> getRemainingLeave(@RequestParam String employeeId) {
+	public ResponseEntity<ResponseStructure<Map<String, Integer>>> getRemainingLeave(@RequestParam String employeeId) {
 		return leaveservice.getRemainingLeave(employeeId);
 	}
 
