@@ -20,7 +20,6 @@ public interface EmployeeService {
 
 	ResponseEntity<ResponseStructure<List<Employee>>> getManager();
 
-
 	ResponseEntity<ResponseStructure<Object>> employeesStrength();
 
 	ResponseEntity<ResponseStructure<List<Employee>>> getManagerEmployee(Department department);

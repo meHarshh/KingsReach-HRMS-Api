@@ -15,10 +15,8 @@ import org.springframework.stereotype.Service;
 import com.kingsmen.kingsreach.entity.Admin;
 import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Manager;
-
 import com.kingsmen.kingsreach.entity.Onsite;
 import com.kingsmen.kingsreach.enums.Department;
-
 import com.kingsmen.kingsreach.enums.EmployeeRole;
 import com.kingsmen.kingsreach.exception.InvalidRoleException;
 import com.kingsmen.kingsreach.exceptions.InvalidEmailException;
@@ -212,7 +210,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-
 	public ResponseEntity<ResponseStructure<Object>> employeesStrength() {
 
 		List<Onsite> onsiteList = fetchAllTheOnsiteEmployee(LocalDate.now());
