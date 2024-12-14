@@ -5,7 +5,6 @@ import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +12,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.kingsmen.kingsreach.entity.Leave;
+import com.kingsmen.kingsreach.entity.LeaveRecord;
 import com.kingsmen.kingsreach.entity.Payroll;
 import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.enums.LeaveStatus;
 import com.kingsmen.kingsreach.enums.LeaveType;
+import com.kingsmen.kingsreach.repo.LeaveRecordRepo;
 import com.kingsmen.kingsreach.repo.LeaveRepo;
 import com.kingsmen.kingsreach.repo.PayrollRepo;
 import com.kingsmen.kingsreach.service.LeaveService;
@@ -32,6 +33,9 @@ public class LeaveServiceImpl implements LeaveService {
 
 	@Autowired
 	private PayrollRepo payrollRepository;
+	
+	@Autowired
+	private LeaveRecordRepo leaveRecordRepo;
 
 	// Reset LOP Days and Carry-Forward Leave Balances on the 1st of the Month
 	@Scheduled(cron = "0 0 0 1 * ?") // Runs at midnight on the 1st of each month
@@ -71,6 +75,7 @@ public class LeaveServiceImpl implements LeaveService {
 			throw new RuntimeException("Payroll record not found for employee ID: " + leave.getEmployeeId());
 		}
 		// Fetch the employee's leave record
+		saveLeaveRecord(leave);
 		Leave existingLeave = leaveRepository.findByEmployeeId(leave.getEmployeeId()).orElse(new Leave());
 
 		existingLeave.setEmployeeName(leave.getEmployeeName());
@@ -158,6 +163,18 @@ public class LeaveServiceImpl implements LeaveService {
 		responseStructure.setData(existingLeave);
 		responseStructure.setMessage("Leave applied successfully");
 		return ResponseEntity.ok(responseStructure);
+	}
+
+	private void saveLeaveRecord(Leave leave) {
+		LeaveRecord leaveRecord = new LeaveRecord();
+		leaveRecord.setEmployee(leave.getEmployee());
+		leaveRecord.setEmployeeId(leave.getEmployeeId());
+		leaveRecord.setEmployeeName(leave.getEmployeeName());
+		leaveRecord.setApprovedBy(leave.getApprovedBy());
+		leaveRecord.setFromDate(leave.getFromDate());
+		leaveRecord.setToDate(leave.getToDate());
+		
+		leaveRecordRepo.save(leaveRecord);
 	}
 
 	@Override
