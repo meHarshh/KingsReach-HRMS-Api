@@ -5,13 +5,13 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kingsmen.kingsreach.enums.AssetStatus;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Transient;
 
 @Entity
 public class Asset {
@@ -28,7 +28,7 @@ public class Asset {
 	private double assetValue;
 	private AssetStatus status;
 	
-	@Transient
+	@Column(name = "emp_id")
 	private String employeeId;
 
 	@JsonIgnore
