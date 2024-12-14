@@ -48,16 +48,15 @@ public class EmployeeController {
 	private ResponseEntity<ResponseStructure<List<Employee>>> getManager(){
 		return employeeService.getManager();
 	}
-	
 
 	@GetMapping(value = "/getEmployeeStrength")
 	private ResponseEntity<ResponseStructure<Object>> employeesStrength(){
 		return employeeService.employeesStrength();	
 	}
 
-
 	@GetMapping("/getManagerEmployee")
 	private ResponseEntity<ResponseStructure<List<Employee>>> getManagerEmployee(@RequestParam Department department){
 		return employeeService.getManagerEmployee(department);
 	}
+
 }
