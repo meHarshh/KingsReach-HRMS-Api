@@ -2,6 +2,7 @@ package com.kingsmen.kingsreach.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,6 +13,7 @@ import com.kingsmen.kingsreach.entity.PolicyDetail;
 import com.kingsmen.kingsreach.service.PolicyDetailService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
+@CrossOrigin(allowCredentials = "true", origins = "http://hrms.kingsmenrealty.com/")
 @RestController
 public class PolicyDetailController {
 
