@@ -2,6 +2,7 @@ package com.kingsmen.kingsreach.serviceimpl;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,14 +64,17 @@ public class LeaveRecordServiceImpl implements LeaveRecordService {
 	}
 
 	@Override
-	public ResponseEntity<ResponseStructure<LeaveRecord>> getEmployeeLeaveRecord(String employeeId) {
-		Optional<LeaveRecord> optional = leaveRecordRepo.findByEmployeeId(employeeId);
-		LeaveRecord employeeLeaveRecord = optional.get();
+	public ResponseEntity<ResponseStructure<List<LeaveRecord>>> getEmployeeLeaveRecord(String employeeId) {
+		List<LeaveRecord> optional = leaveRecordRepo.findByEmployeeId(employeeId);
+		List<LeaveRecord> list = new ArrayList<LeaveRecord>();
+		for(LeaveRecord lists : optional) {
+			list.add(lists);
+		}
 
-		ResponseStructure<LeaveRecord> responseStructure = new ResponseStructure<>();
+		ResponseStructure<List<LeaveRecord>> responseStructure = new ResponseStructure<>();
 		responseStructure.setMessage("Leave record retrieved successfully");
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setData(employeeLeaveRecord);
+		responseStructure.setData(list);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	}

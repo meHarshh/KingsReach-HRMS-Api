@@ -19,6 +19,7 @@ import com.kingsmen.kingsreach.entity.Onsite;
 import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.enums.EmployeeRole;
 import com.kingsmen.kingsreach.exception.InvalidRoleException;
+import com.kingsmen.kingsreach.exceptions.EmployeeIdNotExistsException;
 import com.kingsmen.kingsreach.exceptions.InvalidEmailException;
 import com.kingsmen.kingsreach.exceptions.PasswordMismatchException;
 import com.kingsmen.kingsreach.exceptions.UserIdOrEmailAlreadyExistException;
@@ -51,7 +52,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		String employeeId = employee.getEmployeeId();
 
 		if (employeeRepo.existsByEmployeeId(employeeId)) {
-			throw new RuntimeException();
+			throw new EmployeeIdNotExistsException("The Employee with given Id is not Exist, Enter valid ID");
 		}
 
 		if (employeeRepo.existsByofficialEmailAndUserName(email, userName)) {
@@ -72,7 +73,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 //		Setting the manager for the employee by down-casting the Manager entity
 		if (employee.getRole() != EmployeeRole.ADMIN && employee.getRole() != EmployeeRole.MANAGER) {
 			String managerId = employee.getManagerId();
-			Employee orElseThrow = employeeRepo.findByEmployeeId(managerId).orElseThrow(() -> new RuntimeException());
+			Employee orElseThrow = employeeRepo.findByEmployeeId(managerId).orElseThrow(() -> new EmployeeIdNotExistsException(
+					"The Employee with given Id is not Exist, Enter valid ID"));
 			employee.setManager((Manager) orElseThrow);
 		}
 		switch (employee.getRole()) {
@@ -213,17 +215,24 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public ResponseEntity<ResponseStructure<Object>> employeesStrength() {
 
 		List<Onsite> onsiteList = fetchAllTheOnsiteEmployee(LocalDate.now());
+		ArrayList<Onsite> arrayList = new ArrayList<Onsite>();
+
+		for (Onsite onsite : onsiteList) {
+			if (onsite.getDate() == LocalDate.now()) {
+				arrayList.add(onsite);
+			}
+		}
 
 		List<Employee> totalEmployees = fetchAllEmployees(LocalDate.now());
 
-		int inOffice = totalEmployees.size() - onsiteList.size();
+		int inOffice = totalEmployees.size() - arrayList.size();
 
 		int[] count = { inOffice, onsiteList.size() };
 
 		ResponseStructure<Object> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Employee strength details fetched successfully");
-		responseStructure.setData(count);
+		responseStructure.setData("inOffice " + count[0] + " onsite " + count[1]);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 
@@ -240,7 +249,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	public ResponseEntity<ResponseStructure<List<Employee>>> getManagerEmployee(Department department) {
-		// TODO Auto-generated method stub
 
 		List<Employee> all = employeeRepo.findAll();
 		ArrayList<Employee> employees = new ArrayList<Employee>();

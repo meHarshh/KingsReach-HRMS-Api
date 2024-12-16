@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Leave;
 import com.kingsmen.kingsreach.entity.Payroll;
+import com.kingsmen.kingsreach.exceptions.PayrollNotFoundException;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
 import com.kingsmen.kingsreach.repo.LeaveRepo;
 import com.kingsmen.kingsreach.repo.PayrollRepo;
@@ -59,7 +60,7 @@ public class PayrollServiceImpl implements PayrollService {
 
 		ResponseStructure<Payroll> responseStructure = new ResponseStructure<Payroll>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage("The payroll of " + employee.getFirstName() + " from " + payroll.getDepartment()
+		responseStructure.setMessage("The payroll of " + employee.getName() + " from " + payroll.getDepartment()
 		+ " department has been updated");
 
 		responseStructure.setData(payrollRepo.save(payroll));
@@ -191,7 +192,8 @@ public class PayrollServiceImpl implements PayrollService {
 	public ResponseEntity<ResponseStructure<Payroll>> deleteEmployeeSalary(int payrollId) {
 		System.out.println("Fetching payroll with ID: " + payrollId);
 
-		Payroll payroll = payrollRepo.findById(payrollId).orElseThrow(() -> new RuntimeException("Payroll not found"));
+		Payroll payroll = payrollRepo.findById(payrollId)
+				.orElseThrow(() -> new PayrollNotFoundException("Payroll Assosiated with given ID not found"));
 
 		System.out.println("Deleting payroll with ID: " + payrollId);
 		payrollRepo.deleteById(payrollId);
@@ -237,7 +239,7 @@ public class PayrollServiceImpl implements PayrollService {
 	public ResponseEntity<ResponseStructure<Payroll>> approvedSalarySlip(Payroll payroll) {
 
 		Payroll payroll2 = payrollRepo.findById(payroll.getPayrollId())
-				.orElseThrow(() -> new RuntimeException("Payroll with the ID is not found."));
+				.orElseThrow(() -> new PayrollNotFoundException("Payroll with the ID is not found."));
 
 		payroll2.setPayrollStatus(payroll.getPayrollStatus());
 

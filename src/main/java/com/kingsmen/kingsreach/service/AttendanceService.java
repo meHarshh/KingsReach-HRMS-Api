@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,8 @@ public interface AttendanceService {
 
 	ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceForMonth();
 
+	ResponseEntity<ResponseStructure<Attendance>> getAttendenceForDate(String employeeId, LocalDate date);
 
+	ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceDetails();
 
 }

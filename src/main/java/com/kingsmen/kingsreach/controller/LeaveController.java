@@ -1,6 +1,7 @@
 package com.kingsmen.kingsreach.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ import com.kingsmen.kingsreach.service.LeaveService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@CrossOrigin(allowCredentials = "true", origins = "http://localhost:5173")
+@CrossOrigin(allowCredentials = "true", origins = "http://hrms.kingsmenrealty.com/")
 @RestController
 public class LeaveController {
 
@@ -47,7 +48,7 @@ public class LeaveController {
 	}
 
 	@GetMapping("/employeePendingLeave")
-	public ResponseEntity<ResponseStructure<int[]>> getRemainingLeave(@RequestParam String employeeId) {
+	public ResponseEntity<ResponseStructure<Map<String, Integer>>> getRemainingLeave(@RequestParam String employeeId) {
 		return leaveservice.getRemainingLeave(employeeId);
 	}
 

@@ -4,7 +4,9 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,9 @@ import com.kingsmen.kingsreach.entity.Payroll;
 import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.enums.LeaveStatus;
 import com.kingsmen.kingsreach.enums.LeaveType;
+import com.kingsmen.kingsreach.exceptions.EmployeeIdNotExistsException;
+import com.kingsmen.kingsreach.exceptions.LeaveIdNotFoundException;
+import com.kingsmen.kingsreach.exceptions.PayrollDetailsNotFoundException;
 import com.kingsmen.kingsreach.repo.LeaveRecordRepo;
 import com.kingsmen.kingsreach.repo.LeaveRepo;
 import com.kingsmen.kingsreach.repo.PayrollRepo;
@@ -72,12 +77,14 @@ public class LeaveServiceImpl implements LeaveService {
 
 		Payroll payroll = payrollRepository.findByEmployeeId(leave.getEmployeeId());
 		if (payroll == null) {
-			throw new RuntimeException("Payroll record not found for employee ID: " + leave.getEmployeeId());
+			throw new PayrollDetailsNotFoundException("Payroll record not found for employee ID: " + leave.getEmployeeId() + " Enter valid Employee ID");
 		}
 		// Fetch the employee's leave record
-		saveLeaveRecord(leave);
-		Leave existingLeave = leaveRepository.findByEmployeeId(leave.getEmployeeId()).orElse(new Leave());
 
+		Leave existingLeave = leaveRepository.findByEmployeeId(leave.getEmployeeId())
+				.orElse(new Leave());
+
+		saveLeaveRecord(leave);
 		existingLeave.setEmployeeName(leave.getEmployeeName());
 		existingLeave.setEmployee(leave.getEmployee());
 		existingLeave.setEmployeeId(leave.getEmployeeId());
@@ -87,6 +94,7 @@ public class LeaveServiceImpl implements LeaveService {
 		existingLeave.setApprovedBy(leave.getApprovedBy());
 		existingLeave.setReason(leave.getReason());
 		existingLeave.setLeaveStatus(LeaveStatus.PENDING);
+		
 		// Calculate leave days
 		long leaveDays = ChronoUnit.DAYS.between(leave.getFromDate(), leave.getToDate()) + 1;
 
@@ -180,10 +188,10 @@ public class LeaveServiceImpl implements LeaveService {
 	@Override
 	@Transactional
 	public ResponseEntity<ResponseStructure<Leave>> changeLeaveStatus(Leave leave) {
-		Leave leave2 = leaveRepository.findById(leave.getLeaveId()).orElseThrow(() -> new RuntimeException());
+		Leave leave2 = leaveRepository.findById(leave.getLeaveId()).orElseThrow(() -> new LeaveIdNotFoundException("Invalid Leave ID"));
 
 		leave2.setLeaveStatus(leave.getLeaveStatus());
-		leave2 = leaveRepository.findById(leave2.getLeaveId()).orElseThrow(() -> new RuntimeException());
+		leave2 = leaveRepository.findById(leave2.getLeaveId()).orElseThrow(() -> new LeaveIdNotFoundException("Invalid Leave ID"));
 
 		ResponseStructure<Leave> responseStructure = new ResponseStructure<Leave>();
 		responseStructure.setData(leave2);
@@ -234,23 +242,30 @@ public class LeaveServiceImpl implements LeaveService {
 	}
 
 	@Override
-	public ResponseEntity<ResponseStructure<int[]>> getRemainingLeave(String employeeId) {
+	public ResponseEntity<ResponseStructure<Map<String, Integer>>> getRemainingLeave(String employeeId) {
 		// TODO Auto-generated method stub
 
-		Leave orElseThrow = leaveRepository.findByEmployeeId(employeeId).orElseThrow(() -> new RuntimeException());
+		Leave orElseThrow = leaveRepository.findByEmployeeId(employeeId)
+				.orElseThrow(() -> new EmployeeIdNotExistsException("Invalid Employee ID"));
 
 		int casualLeaveBalance = orElseThrow.getCasualLeaveBalance();
 		int paidLeaveBalance = orElseThrow.getPaidLeaveBalance();
 		int sickLeaveBalance = orElseThrow.getSickLeaveBalance();
+		int emergencyLeaveBalance = orElseThrow.getEmergencyLeaveBalance();
 
-		int[] pending = { casualLeaveBalance, paidLeaveBalance, sickLeaveBalance };
+		//int[] pending = { casualLeaveBalance, paidLeaveBalance, sickLeaveBalance };
+		Map<String,Integer> pending = new HashMap<>();
+		pending.put("CasualLeaveBalance",casualLeaveBalance);
+		pending.put("PaidLeaveBalance",paidLeaveBalance);
+		pending.put("SickLeaveBalance",sickLeaveBalance);
+		pending.put("EmergencyLeaveBalance",emergencyLeaveBalance);
 
-		ResponseStructure<int[]> responseStructure = new ResponseStructure<int[]>();
+		ResponseStructure<Map<String, Integer>> responseStructure = new ResponseStructure<Map<String, Integer>>();
 		responseStructure.setData(pending);
-		responseStructure.setMessage("The response is having the causal , paid and sick leave in the array");
+		responseStructure.setMessage("The response is having the causal , paid, emergency and sick leave in the array");
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 
-		return new ResponseEntity<ResponseStructure<int[]>>(responseStructure, HttpStatus.OK);
+		return new ResponseEntity<ResponseStructure<Map<String, Integer>>>(responseStructure, HttpStatus.OK);
 
 	}
 
@@ -277,11 +292,20 @@ public class LeaveServiceImpl implements LeaveService {
 		List<Leave> all = leaveRepository.findAll();
 
 		ArrayList<Leave> leaves = new ArrayList<Leave>();
-		for (Leave leave : all) {
-			if (leave.getEmployee().getManager().getEmployeeId().equals(employeeId)) {
-				leaves.add(leave);
-			}
-		}
+//		for (Leave leave : all) {
+//			if (leave.getEmployee().getManager().getEmployeeId().equals(employeeId)) {
+//				leaves.add(leave);
+//			}
+//		}
+
+	 for (Leave leave : all) {
+		        if (leave.getEmployee() != null // Check if leave has an associated employee
+		            && leave.getEmployee().getManager() != null // Check if the employee has a manager
+		            && employeeId != null // Ensure the provided employeeId is not null
+		            && employeeId.equals(leave.getEmployee().getManager().getEmployeeId())) {  	// Match manager's ID
+		            leaves.add(leave); // Add the leave to the result list
+		        }
+		    }
 		ResponseStructure<List<Leave>> responseStructure = new ResponseStructure<List<Leave>>();
 		responseStructure.setData(leaves);
 		responseStructure.setMessage("The people on leave based on manager are below");
@@ -289,5 +313,6 @@ public class LeaveServiceImpl implements LeaveService {
 
 		return new ResponseEntity<ResponseStructure<List<Leave>>>(responseStructure, HttpStatus.OK);
 	}
-
+	
 }
+
