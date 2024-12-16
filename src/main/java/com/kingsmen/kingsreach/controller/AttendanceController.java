@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kingsmen.kingsreach.entity.Attendance;
@@ -39,10 +40,13 @@ public class AttendanceController {
 		return attendanceService.getAttendanceForMonth();
 	}
 	
-//	@GetMapping(value = "/getAttendenceOfSpecificDate")
-//	private ResponseEntity<ResponseStructure<Attendance>> getAttendenceForDate(String employeeId, LocalDate date){
-//		return attendanceService.getAttendenceForDate(employeeId, date);
-//	}
+	@GetMapping(value = "/getAttendenceOfSpecificDate")
+	private ResponseEntity<ResponseStructure<Attendance>> getAttendenceForDate(@RequestParam  String employeeId, @RequestParam LocalDate date){
+		return attendanceService.getAttendenceForDate(employeeId, date);
+	}
 	
-	
+	@GetMapping(value = "/getAttendenceDetails")
+	private ResponseEntity<ResponseStructure<List<Attendance>>> getAttendenceDetails(){
+		return attendanceService.getAttendanceDetails();
+	}
 }

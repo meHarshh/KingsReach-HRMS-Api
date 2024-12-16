@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.repo;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,10 +11,6 @@ public interface AttendanceRepo extends JpaRepository<Attendance, Integer> {
 
 	Optional<Attendance> findByEmployeeId(String employeeId);
 
-
-//	void findByEmployeeIdAndDate(String employeeId, LocalDate date);
-
-
-
+	Attendance findByEmployeeIdAndDate(String employeeId, LocalDate date);
 
 }

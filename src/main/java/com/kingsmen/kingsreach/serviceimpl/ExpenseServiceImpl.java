@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Expense;
+import com.kingsmen.kingsreach.exceptions.ExpenseNotFoundException;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
 import com.kingsmen.kingsreach.repo.ExpenseRepo;
 import com.kingsmen.kingsreach.service.ExpenseService;
@@ -59,7 +60,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 	@Override
 	public ResponseEntity<ResponseStructure<Expense>> editExpense(int expenseId, Expense expense) {
 	Expense existingExpense = expenseRepo.findById(expenseId)
-			.orElseThrow(() -> new RuntimeException("No details found for TerminationDetail ID: " + expenseId));
+			.orElseThrow(() -> new ExpenseNotFoundException("No details found for Expense ID: " + expenseId));
 	
 	existingExpense.setAmount(expense.getAmount());
 	existingExpense.setDate(expense.getDate());

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.kingsmen.kingsreach.entity.TerminationDetail;
+import com.kingsmen.kingsreach.exceptions.TerminationDetailNotFoundException;
 import com.kingsmen.kingsreach.repo.TerminationDetailRepo;
 import com.kingsmen.kingsreach.service.TerminationDetailService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
@@ -36,7 +37,7 @@ public class TerminationDetailServiceImpl implements TerminationDetailService {
 	public ResponseEntity<ResponseStructure<TerminationDetail>> editTermination(int terminationDetailId, TerminationDetail terminationDetail) {
 
 		TerminationDetail employee = detailRepo.findById(terminationDetailId)
-				.orElseThrow(() -> new RuntimeException("No details found for TerminationDetail ID: " + terminationDetailId));
+				.orElseThrow(() -> new TerminationDetailNotFoundException("No details found for TerminationDetail ID: " + terminationDetailId));
 
 		employee.setEmployeeId(terminationDetail.getEmployeeId());
 		employee.setNoticeDate(terminationDetail.getNoticeDate());
@@ -62,7 +63,7 @@ public class TerminationDetailServiceImpl implements TerminationDetailService {
 	public ResponseEntity<ResponseStructure<TerminationDetail>> deleteTermination(int terminationDetailId) {
 		
 		TerminationDetail employee = detailRepo.findById(terminationDetailId)
-				.orElseThrow(() -> new RuntimeException("No details found for TerminationDetail ID: " + terminationDetailId));
+				.orElseThrow(() -> new TerminationDetailNotFoundException("No details found for TerminationDetail ID: " + terminationDetailId));
 
 		detailRepo.delete(employee);
 

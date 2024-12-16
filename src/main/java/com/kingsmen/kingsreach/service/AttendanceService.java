@@ -16,8 +16,8 @@ public interface AttendanceService {
 
 	ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceForMonth();
 
-//	ResponseEntity<ResponseStructure<Attendance>> getAttendenceForDate(String employeeId, LocalDate date);
+	ResponseEntity<ResponseStructure<Attendance>> getAttendenceForDate(String employeeId, LocalDate date);
 
-
+	ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceDetails();
 
 }

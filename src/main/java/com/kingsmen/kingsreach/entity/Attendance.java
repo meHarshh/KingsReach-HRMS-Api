@@ -30,7 +30,7 @@ public class Attendance {
 	private String employeeName;
 	private String employeeId;
 
-	
+	private LocalDate date;
 	
 	@JsonIgnore
 	@ManyToOne
@@ -149,6 +149,14 @@ public class Attendance {
 
 	public void setTotalBreakTime(int totalBreakTime) {
 		this.totalBreakTime = totalBreakTime;
+	}
+
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDate date) {
+		this.date = date;
 	}
 
 }

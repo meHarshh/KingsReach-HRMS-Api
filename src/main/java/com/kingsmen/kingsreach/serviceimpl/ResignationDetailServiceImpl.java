@@ -35,11 +35,9 @@ public class ResignationDetailServiceImpl implements ResignationDetailService {
 
 		resignationDetail=resignationDetailRepo.save(resignationDetail);
 
-		String message="Employee ID :" + resignationDetail.getEmployeeId() + " " + resignationDetail.getName() +" resigned.";
-
 		ResponseStructure<ResignationDetail> responseStructure=new ResponseStructure<ResignationDetail>();
 		responseStructure.setStatusCode(HttpStatus.CREATED.value());
-		responseStructure.setMessage(message);
+		responseStructure.setMessage("Employee ID :" + resignationDetail.getEmployeeId() + " " + resignationDetail.getName() +" resigned.");
 		responseStructure.setData(resignationDetail);
 
 		return new ResponseEntity<ResponseStructure<ResignationDetail>>(responseStructure,HttpStatus.CREATED);

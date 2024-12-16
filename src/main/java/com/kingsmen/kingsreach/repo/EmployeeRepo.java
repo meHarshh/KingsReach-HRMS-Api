@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.kingsmen.kingsreach.entity.Employee;
+import com.kingsmen.kingsreach.entity.Manager;
 
 public interface EmployeeRepo extends JpaRepository<Employee, Integer> {
 
@@ -25,5 +26,9 @@ public interface EmployeeRepo extends JpaRepository<Employee, Integer> {
 	boolean existsByEmployeeId(String employeeId);
 
 	List<Employee> findEmployeesByDate(LocalDate now);
+
+	List<Employee> findByDate(LocalDate date);
+
+	List<Employee> findByManager(Manager manager);
 
 }

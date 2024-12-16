@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +18,9 @@ import com.kingsmen.kingsreach.entity.Payroll;
 import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.enums.LeaveStatus;
 import com.kingsmen.kingsreach.enums.LeaveType;
+import com.kingsmen.kingsreach.exceptions.EmployeeIdNotExistsException;
+import com.kingsmen.kingsreach.exceptions.LeaveIdNotFoundException;
+import com.kingsmen.kingsreach.exceptions.PayrollDetailsNotFoundException;
 import com.kingsmen.kingsreach.repo.LeaveRepo;
 import com.kingsmen.kingsreach.repo.PayrollRepo;
 import com.kingsmen.kingsreach.service.LeaveService;
@@ -70,7 +72,7 @@ public class LeaveServiceImpl implements LeaveService {
 
 		Payroll payroll = payrollRepository.findByEmployeeId(leave.getEmployeeId());
 		if (payroll == null) {
-			throw new RuntimeException("Payroll record not found for employee ID: " + leave.getEmployeeId());
+			throw new PayrollDetailsNotFoundException("Payroll record not found for employee ID: " + leave.getEmployeeId() + " Enter valid Employee ID");
 		}
 		// Fetch the employee's leave record
 		Leave existingLeave = leaveRepository.findByEmployeeId(leave.getEmployeeId())
@@ -168,10 +170,10 @@ public class LeaveServiceImpl implements LeaveService {
 	@Override
 	@Transactional
 	public ResponseEntity<ResponseStructure<Leave>> changeLeaveStatus(Leave leave) {
-		Leave leave2 = leaveRepository.findById(leave.getLeaveId()).orElseThrow(() -> new RuntimeException());
+		Leave leave2 = leaveRepository.findById(leave.getLeaveId()).orElseThrow(() -> new LeaveIdNotFoundException("Invalid Leave ID"));
 
 		leave2.setLeaveStatus(leave.getLeaveStatus());
-		leave2 = leaveRepository.findById(leave2.getLeaveId()).orElseThrow(() -> new RuntimeException());
+		leave2 = leaveRepository.findById(leave2.getLeaveId()).orElseThrow(() -> new LeaveIdNotFoundException("Invalid Leave ID"));
 
 		ResponseStructure<Leave> responseStructure = new ResponseStructure<Leave>();
 		responseStructure.setData(leave2);
@@ -225,7 +227,8 @@ public class LeaveServiceImpl implements LeaveService {
 	public ResponseEntity<ResponseStructure<Map<String, Integer>>> getRemainingLeave(String employeeId) {
 		// TODO Auto-generated method stub
 
-		Leave orElseThrow = leaveRepository.findByEmployeeId(employeeId).orElseThrow(() -> new RuntimeException());
+		Leave orElseThrow = leaveRepository.findByEmployeeId(employeeId)
+				.orElseThrow(() -> new EmployeeIdNotExistsException("Invalid Employee ID"));
 
 		int casualLeaveBalance = orElseThrow.getCasualLeaveBalance();
 		int paidLeaveBalance = orElseThrow.getPaidLeaveBalance();
@@ -292,5 +295,6 @@ public class LeaveServiceImpl implements LeaveService {
 
 		return new ResponseEntity<ResponseStructure<List<Leave>>>(responseStructure, HttpStatus.OK);
 	}
+	
 }
 

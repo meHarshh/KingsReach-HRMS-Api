@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Reimbursement;
 import com.kingsmen.kingsreach.enums.ReimbursementStatus;
+import com.kingsmen.kingsreach.exceptions.ReimbursementNotFoundException;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
 import com.kingsmen.kingsreach.repo.ReimbursementRepo;
 import com.kingsmen.kingsreach.service.ReimbursementService;
@@ -71,7 +72,7 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 
 		int reimbursementId = reimbursement.getReimbursementId();
 		Reimbursement reimbursement2 = reimbursementRepo.findById(reimbursementId)
-				.orElseThrow(() -> new RuntimeException("Reimbursement with ID " + reimbursementId + " not found"));
+				.orElseThrow(() -> new ReimbursementNotFoundException("Reimbursement with ID " + reimbursementId + " not found"));
 
 		reimbursement2.setReimbursementStatus(reimbursement.getReimbursementStatus());
 
