@@ -24,6 +24,7 @@ public class Reimbursement {
 	private int[] projects;
 	private double amount;
 	private ReimbursementStatus reimbursementStatus;
+	private String reason;
 	
 	@JsonIgnore
 	@ManyToOne
@@ -101,6 +102,14 @@ public class Reimbursement {
 
 	public void setProjects(int[] projects) {
 		this.projects = projects;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 
 }
