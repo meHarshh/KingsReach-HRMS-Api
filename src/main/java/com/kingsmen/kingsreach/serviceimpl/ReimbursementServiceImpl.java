@@ -59,27 +59,29 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 
 	@Override
 	public ResponseEntity<ResponseStructure<Reimbursement>> changeReimbursementStatus(Reimbursement reimbursement) {
-//		String employeeId = reimbursement.getEmployeeId();
-//		Optional<Employee> byEmployeeId = employeeRepo.findByEmployeeId(employeeId);
-//		Employee employee = byEmployeeId.get();
-//		System.out.println(employee.getFirstName());
-//
-//		Reimbursement reimbursement2 = employee.getReimbursement();
-//		reimbursement2 = reimbursementRepo.findById(reimbursement2.getReimbursementId()).orElseThrow(()->new RuntimeException("No employees found"));
-//		reimbursement2.setReimbursementStatus(reimbursement.getReimbursementStatus());
-//
-//		Reimbursement reimbursement3 = reimbursementRepo.save(reimbursement2);
+		//		String employeeId = reimbursement.getEmployeeId();
+		//		Optional<Employee> byEmployeeId = employeeRepo.findByEmployeeId(employeeId);
+		//		Employee employee = byEmployeeId.get();
+		//		System.out.println(employee.getFirstName());
+		//
+		//		Reimbursement reimbursement2 = employee.getReimbursement();
+		//		reimbursement2 = reimbursementRepo.findById(reimbursement2.getReimbursementId()).orElseThrow(()->new RuntimeException("No employees found"));
+		//		reimbursement2.setReimbursementStatus(reimbursement.getReimbursementStatus());
+		//
+		//		Reimbursement reimbursement3 = reimbursementRepo.save(reimbursement2);
 
 		int reimbursementId = reimbursement.getReimbursementId();
 		Reimbursement reimbursement2 = reimbursementRepo.findById(reimbursementId)
 				.orElseThrow(() -> new ReimbursementNotFoundException("Reimbursement with ID " + reimbursementId + " not found"));
 
 		reimbursement2.setReimbursementStatus(reimbursement.getReimbursementStatus());
+		
+		Reimbursement reimbursement3 = reimbursementRepo.save(reimbursement2);
 
 		ResponseStructure<Reimbursement> responseStructure = new ResponseStructure<Reimbursement>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage(reimbursement.getEmployeeName() + " updated successfully.");
-		responseStructure.setData(reimbursement2);
+		responseStructure.setData(reimbursement3);
 
 		return new ResponseEntity<ResponseStructure<Reimbursement>>(responseStructure, HttpStatus.OK);
 	}
@@ -87,7 +89,7 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 	@Override
 	public ResponseEntity<ResponseStructure<List<Reimbursement>>> findReimbursementDetail() {
 		List<Reimbursement> list = reimbursementRepo.findAll();
-		
+
 		ResponseStructure<List<Reimbursement>> responseStructure = new ResponseStructure<List<Reimbursement>>();
 		responseStructure.setData(list);
 		responseStructure.setStatusCode(HttpStatus.OK.value());
@@ -95,5 +97,5 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 
 		return new ResponseEntity<ResponseStructure<List<Reimbursement>>>(responseStructure, HttpStatus.OK);
 	}
-	}
+}
 

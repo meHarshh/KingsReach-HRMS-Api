@@ -19,7 +19,7 @@ public class Expense {
 
 	private String expenseName;
 
-	@Transient
+	//@Transient
 	private String employeeName;
 
 	//@Transient
