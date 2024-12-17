@@ -108,8 +108,8 @@ public class Employee implements Serializable {
 	@JoinColumn(name = "manager_id")
 	private Manager manager;
 
-	@OneToOne
-	private Leave leave;
+	@OneToMany(mappedBy = "employee")
+	private List<Leave> leave;
 
 	public String getManagerId() {
 		return managerId;
@@ -165,11 +165,11 @@ public class Employee implements Serializable {
 		this.name = name;
 	}
 
-	public Leave getLeave() {
+	public List<Leave> getLeave() {
 		return leave;
 	}
 
-	public void setLeave(Leave leave) {
+	public void setLeave(List<Leave> leave) {
 		this.leave = leave;
 	}
 

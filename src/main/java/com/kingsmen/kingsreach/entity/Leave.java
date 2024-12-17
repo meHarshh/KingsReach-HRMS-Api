@@ -150,4 +150,15 @@ public class Leave {
 	public void setEmergencyLeaveBalance(int emergencyLeaveBalance) {
 		this.emergencyLeaveBalance = emergencyLeaveBalance;
 	}
+
+	@Override
+	public String toString() {
+		return "Leave [leaveId=" + leaveId + ", leaveType=" + leaveType + ", fromDate=" + fromDate + ", toDate="
+				+ toDate + ", reason=" + reason + ", leaveStatus=" + leaveStatus + ", employeeId=" + employeeId
+				+ ", employeeName=" + employeeName + ", casualLeaveBalance=" + casualLeaveBalance
+				+ ", sickLeaveBalance=" + sickLeaveBalance + ", paidLeaveBalance=" + paidLeaveBalance
+				+ ", emergencyLeaveBalance=" + emergencyLeaveBalance + ", employee=" + employee + ", approvedBy="
+				+ approvedBy + "]";
+	}
+	
 }

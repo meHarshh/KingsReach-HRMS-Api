@@ -46,7 +46,7 @@ public class AttendanceController {
 	}
 	
 	@GetMapping(value = "/getAttendenceDetails")
-	private ResponseEntity<ResponseStructure<List<Attendance>>> getAttendenceDetails(){
+	private ResponseEntity<ResponseStructure<Object>> getAttendenceDetails(){
 		return attendanceService.getAttendanceDetails();
 	}
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.ResignationDetail;
 import com.kingsmen.kingsreach.entity.TerminationDetail;
+import com.kingsmen.kingsreach.exceptions.ResignationIdNotFoundException;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
 import com.kingsmen.kingsreach.repo.ResignationDetailRepo;
 import com.kingsmen.kingsreach.repo.TerminationDetailRepo;
@@ -60,14 +61,15 @@ public class ResignationDetailServiceImpl implements ResignationDetailService {
 
 
 		ResignationDetail existingResignation = resignationDetailRepo.findById(resignationId)
-				.orElseThrow(() -> new RuntimeException("Resignation with ID " + resignationId + " not found"));
+				.orElseThrow(() -> new ResignationIdNotFoundException("Resignation with ID " + resignationId + " not found"));
 
 		existingResignation.setResignationStatus(resignationDetail.getResignationStatus());
+		ResignationDetail updatedDetail = resignationDetailRepo.save(existingResignation);
 
 		ResponseStructure<ResignationDetail> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Resignation status updated successfully.");
-		responseStructure.setData(existingResignation);
+		responseStructure.setData(updatedDetail);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	}
