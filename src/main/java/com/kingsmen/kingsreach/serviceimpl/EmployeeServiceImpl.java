@@ -181,7 +181,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		Optional<Employee> byEmployeeId = employeeRepo.findByEmployeeId(employee.getEmployeeId());
 		Employee employee2 = byEmployeeId.get();
 
-		employee2.setEmployeeId(employee.getEmployeeId());
+	//	employee2.setEmployeeId(employee.getEmployeeId());
 		employee2.setFirstName(employee.getFirstName());
 		employee2.setLastName(employee.getLastName());
 		employee2.setOfficialEmail(employee.getOfficialEmail());
@@ -201,9 +201,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee2.setDepartment(employee.getDepartment());
 		employee2.setRole(employee.getRole());
 		employee2.setAttendance(employee.getAttendance());
-
+		employee2.setGender(employee.getGender());
+		employee2.setMotherNumber(employee.getMotherNumber());
+		employee2.setEmail(employee.getEmail());
+		employee2.setPhoneNumber(employee.getPhoneNumber());
+		employee2.setOfficialNumber(employee.getOfficialNumber());
+		employee2.setEmergencyContact(employee.getEmergencyContact());
+		employee2.setEmergencyContactName(employee.getEmergencyContactName());
+		employee2.setEmergencyContactRelation(employee.getEmergencyContactRelation());
+		employee2.setLocalAddress(employee.getLocalAddress());
+		employee2.setBankName(employee.getBankName());
+		employee2.setBranchName(employee.getBranchName());
+		employee2.setAccountNumber(employee.getAccountNumber());
+		employee2.setIfscCode(employee.getIfscCode());
 		employee2.setFatherContactNumber(employee.getFatherContactNumber());
-
+		employee2.setExperience(employee.getExperience());
+		employee2.setCreatedAt(LocalDateTime.now());
 		employee2.setUpdatedAt(LocalDateTime.now());
 
 		Employee employee3 = employeeRepo.save(employee2);
