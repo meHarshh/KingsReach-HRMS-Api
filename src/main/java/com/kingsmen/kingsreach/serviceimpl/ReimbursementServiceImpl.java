@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,6 +64,7 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		Notification notify = new Notification();
 		notify.setEmployeeId(reimbursement.getEmployeeId());
 		notify.setMessage(reimbursement.getEmployeeName() + " added successfully.");
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<Reimbursement>>(responseStructure, HttpStatus.CREATED);
@@ -98,6 +100,7 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		Notification notify = new Notification();
 		notify.setEmployeeId(reimbursement.getEmployeeId());
 		notify.setMessage(reimbursement.getEmployeeName() + " updated successfully.");
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<Reimbursement>>(responseStructure, HttpStatus.OK);
@@ -112,10 +115,17 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("The employees Reimbursement data is fetched");
 
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setMessage("The employees Reimbursement data is fetched");
-		notificationRepo.save(notify);
+		return new ResponseEntity<ResponseStructure<List<Reimbursement>>>(responseStructure, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<List<Reimbursement>>> getReimbursement(String employeeId) {
+		List<Reimbursement> reimbursement = reimbursementRepo.findByEmployeeId(employeeId);
+
+		ResponseStructure<List<Reimbursement>> responseStructure = new ResponseStructure<List<Reimbursement>>();
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage("Reimbursement  detail of " +  employeeId + " fetched successfully.");
+		responseStructure.setData(reimbursement);
 
 		return new ResponseEntity<ResponseStructure<List<Reimbursement>>>(responseStructure, HttpStatus.OK);
 	}

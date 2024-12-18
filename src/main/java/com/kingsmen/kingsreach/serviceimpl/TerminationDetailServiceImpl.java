@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,7 @@ public class TerminationDetailServiceImpl implements TerminationDetailService {
 		Notification notify = new Notification();
 		notify.setEmployeeId(detail.getEmployeeId());
 		notify.setMessage(message);
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<TerminationDetail>>(responseStructure, HttpStatus.CREATED);
@@ -71,6 +73,7 @@ public class TerminationDetailServiceImpl implements TerminationDetailService {
 		Notification notify = new Notification();
 		notify.setEmployeeId(terminationDetail.getEmployeeId());
 		notify.setMessage(message);
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<TerminationDetail>>(responseStructure, HttpStatus.ACCEPTED);
@@ -96,6 +99,7 @@ public class TerminationDetailServiceImpl implements TerminationDetailService {
 		Notification notify = new Notification();
 		notify.setEmployeeId(employee.getEmployeeId());
 		notify.setMessage(message);
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<TerminationDetail>>(responseStructure, HttpStatus.OK);
@@ -111,11 +115,6 @@ public class TerminationDetailServiceImpl implements TerminationDetailService {
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Termination details retrieved successfully.");
 		responseStructure.setData(terminationDetails);
-
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setMessage("Termination details retrieved successfully.");
-		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<List<TerminationDetail>>>(responseStructure, HttpStatus.OK);
 

@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ public class EventServiceImpl implements EventService {
 		//Notification code 
 		Notification notify = new Notification();
 		notify.setMessage("Event detail added.");
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<Event>>(responseStructure, HttpStatus.CREATED);
@@ -49,11 +51,6 @@ public class EventServiceImpl implements EventService {
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setData(list);
 		responseStructure.setMessage("Event detail fetched.");
-
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setMessage("Event detail fetched.");
-		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<List<Event>>>(responseStructure, HttpStatus.OK);
 	}

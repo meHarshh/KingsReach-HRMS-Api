@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -74,6 +75,7 @@ public class PayrollServiceImpl implements PayrollService {
 		Notification notify = new Notification();
 		notify.setEmployeeId(payroll.getEmployeeId());
 		notify.setMessage(message);
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<Payroll>>(responseStructure, HttpStatus.OK);
@@ -107,11 +109,6 @@ public class PayrollServiceImpl implements PayrollService {
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("The employees payroll data is fetched");
 
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setMessage("The employees payroll data is fetched");
-		notificationRepo.save(notify);
-
 		return new ResponseEntity<ResponseStructure<List<Payroll>>>(responseStructure, HttpStatus.OK);
 	}
 
@@ -125,12 +122,6 @@ public class PayrollServiceImpl implements PayrollService {
 			responseStructure.setStatusCode(HttpStatus.NOT_FOUND.value());
 			responseStructure.setMessage("Employee not found with ID: " + employeeId);
 			responseStructure.setData(null);
-
-			//Notification code 
-			Notification notify = new Notification();
-			notify.setEmployeeId(employeeId);
-			notify.setMessage("Employee not found with ID: " + employeeId);
-			notificationRepo.save(notify);
 
 			return new ResponseEntity<>(responseStructure, HttpStatus.NOT_FOUND);
 		}
@@ -153,12 +144,6 @@ public class PayrollServiceImpl implements PayrollService {
 		responseStructure
 		.setMessage("Salary details of employee " + payroll.getEmployeeId() + " fetched successfully.");
 		responseStructure.setData(payroll);
-
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setEmployeeId(employeeId);
-		notify.setMessage("Salary details of employee " + payroll.getEmployeeId() + " fetched successfully.");
-		notificationRepo.save(notify);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	}
@@ -216,6 +201,7 @@ public class PayrollServiceImpl implements PayrollService {
 		Notification notify = new Notification();
 		notify.setEmployeeId(payroll.getEmployeeId());
 		notify.setMessage("Employee salary updated successfully");
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
@@ -243,6 +229,7 @@ public class PayrollServiceImpl implements PayrollService {
 		Notification notify = new Notification();
 		notify.setEmployeeId(payroll.getEmployeeId());
 		notify.setMessage("Employee salary detail deleted successfully.");
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
@@ -295,6 +282,7 @@ public class PayrollServiceImpl implements PayrollService {
 		Notification notify = new Notification();
 		notify.setEmployeeId(payroll.getEmployeeId());
 		notify.setMessage("Payroll status changed  successfully.");
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
@@ -315,12 +303,6 @@ public class PayrollServiceImpl implements PayrollService {
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("All Payroll Details fetched Successfully.");
 		responseStructure.setData(list);
-
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setEmployeeId(employeeId);
-		notify.setMessage("All Payroll Details fetched Successfully.");
-		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<List<Object>>>(responseStructure,HttpStatus.OK);
 	} 

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,5 +30,10 @@ public class OnsiteController {
 	@GetMapping(value = "/findAllOnsiteEmployees")
 	private ResponseEntity<ResponseStructure<List<Onsite>>> findOnsiteEmployees(){
 		return onsiteService.findOnsiteEmployees();
+	}
+	
+	@GetMapping(value = "/getOnsiteEmployee/{employeeId}")
+	private ResponseEntity<ResponseStructure<Onsite>> getOnsiteEmployee(@PathVariable String employeeId){
+		return  onsiteService.getOnsiteEmployee(employeeId);
 	}
 }

@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +51,7 @@ public class ResignationDetailServiceImpl implements ResignationDetailService {
 		Notification notify = new Notification();
 		notify.setEmployeeId(resignationDetail.getEmployeeId());
 		notify.setMessage("Employee ID :" + resignationDetail.getEmployeeId() + " " + resignationDetail.getName() +" resigned.");
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<ResignationDetail>>(responseStructure,HttpStatus.CREATED);
@@ -63,11 +65,6 @@ public class ResignationDetailServiceImpl implements ResignationDetailService {
 		responseStructure.setStatusCode(HttpStatus.CREATED.value());
 		responseStructure.setMessage("Resignation Details fetched successfully.");
 		responseStructure.setData(list);
-
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setMessage("Resignation Details fetched successfully.");
-		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<List<ResignationDetail>>>(responseStructure,HttpStatus.CREATED);
 	}
@@ -91,6 +88,7 @@ public class ResignationDetailServiceImpl implements ResignationDetailService {
 		Notification notify = new Notification();
 		notify.setEmployeeId(resignationDetail.getEmployeeId());
 		notify.setMessage("Resignation status updated successfully.");
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
@@ -117,11 +115,6 @@ public class ResignationDetailServiceImpl implements ResignationDetailService {
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Data retrieved successfully");
 		responseStructure.setData(map);
-
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setMessage("Data retrieved successfully");
-		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<Map<String, Object>>>(responseStructure, HttpStatus.OK);
 	}
