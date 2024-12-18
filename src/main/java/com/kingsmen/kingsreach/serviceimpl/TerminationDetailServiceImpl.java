@@ -6,8 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.kingsmen.kingsreach.entity.Notification;
 import com.kingsmen.kingsreach.entity.TerminationDetail;
 import com.kingsmen.kingsreach.exceptions.TerminationDetailNotFoundException;
+import com.kingsmen.kingsreach.repo.NotificationRepo;
 import com.kingsmen.kingsreach.repo.TerminationDetailRepo;
 import com.kingsmen.kingsreach.service.TerminationDetailService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
@@ -17,6 +19,9 @@ public class TerminationDetailServiceImpl implements TerminationDetailService {
 
 	@Autowired
 	private TerminationDetailRepo detailRepo;
+
+	@Autowired
+	private NotificationRepo notificationRepo;
 
 	@Override
 	public ResponseEntity<ResponseStructure<TerminationDetail>> terminationDetail(TerminationDetail detail) {
@@ -29,6 +34,12 @@ public class TerminationDetailServiceImpl implements TerminationDetailService {
 		responseStructure.setStatusCode(HttpStatus.CREATED.value());
 		responseStructure.setMessage(message);
 		responseStructure.setData(detail);
+
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setEmployeeId(detail.getEmployeeId());
+		notify.setMessage(message);
+		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<TerminationDetail>>(responseStructure, HttpStatus.CREATED);
 	}
@@ -56,12 +67,18 @@ public class TerminationDetailServiceImpl implements TerminationDetailService {
 		responseStructure.setMessage(message);
 		responseStructure.setData(updatedDetail);
 
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setEmployeeId(terminationDetail.getEmployeeId());
+		notify.setMessage(message);
+		notificationRepo.save(notify);
+
 		return new ResponseEntity<ResponseStructure<TerminationDetail>>(responseStructure, HttpStatus.ACCEPTED);
 	}
 
 	@Override
 	public ResponseEntity<ResponseStructure<TerminationDetail>> deleteTermination(int terminationDetailId) {
-		
+
 		TerminationDetail employee = detailRepo.findById(terminationDetailId)
 				.orElseThrow(() -> new TerminationDetailNotFoundException("No details found for TerminationDetail ID: " + terminationDetailId));
 
@@ -74,6 +91,12 @@ public class TerminationDetailServiceImpl implements TerminationDetailService {
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage(message);
 		responseStructure.setData(employee);
+
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setEmployeeId(employee.getEmployeeId());
+		notify.setMessage(message);
+		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<TerminationDetail>>(responseStructure, HttpStatus.OK);
 
@@ -88,6 +111,11 @@ public class TerminationDetailServiceImpl implements TerminationDetailService {
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Termination details retrieved successfully.");
 		responseStructure.setData(terminationDetails);
+
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setMessage("Termination details retrieved successfully.");
+		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<List<TerminationDetail>>>(responseStructure, HttpStatus.OK);
 

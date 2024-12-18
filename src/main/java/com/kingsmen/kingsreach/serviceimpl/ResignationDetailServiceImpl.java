@@ -10,10 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.kingsmen.kingsreach.entity.Employee;
+import com.kingsmen.kingsreach.entity.Notification;
 import com.kingsmen.kingsreach.entity.ResignationDetail;
 import com.kingsmen.kingsreach.entity.TerminationDetail;
 import com.kingsmen.kingsreach.exceptions.ResignationIdNotFoundException;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
+import com.kingsmen.kingsreach.repo.NotificationRepo;
 import com.kingsmen.kingsreach.repo.ResignationDetailRepo;
 import com.kingsmen.kingsreach.repo.TerminationDetailRepo;
 import com.kingsmen.kingsreach.service.ResignationDetailService;
@@ -31,6 +33,9 @@ public class ResignationDetailServiceImpl implements ResignationDetailService {
 	@Autowired
 	private EmployeeRepo employeeRepo;
 
+	@Autowired
+	private NotificationRepo notificationRepo;
+
 	@Override
 	public ResponseEntity<ResponseStructure<ResignationDetail>> resignationDetail(ResignationDetail resignationDetail) {
 
@@ -40,6 +45,12 @@ public class ResignationDetailServiceImpl implements ResignationDetailService {
 		responseStructure.setStatusCode(HttpStatus.CREATED.value());
 		responseStructure.setMessage("Employee ID :" + resignationDetail.getEmployeeId() + " " + resignationDetail.getName() +" resigned.");
 		responseStructure.setData(resignationDetail);
+
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setEmployeeId(resignationDetail.getEmployeeId());
+		notify.setMessage("Employee ID :" + resignationDetail.getEmployeeId() + " " + resignationDetail.getName() +" resigned.");
+		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<ResignationDetail>>(responseStructure,HttpStatus.CREATED);
 	}
@@ -52,6 +63,11 @@ public class ResignationDetailServiceImpl implements ResignationDetailService {
 		responseStructure.setStatusCode(HttpStatus.CREATED.value());
 		responseStructure.setMessage("Resignation Details fetched successfully.");
 		responseStructure.setData(list);
+
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setMessage("Resignation Details fetched successfully.");
+		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<List<ResignationDetail>>>(responseStructure,HttpStatus.CREATED);
 	}
@@ -70,6 +86,12 @@ public class ResignationDetailServiceImpl implements ResignationDetailService {
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Resignation status updated successfully.");
 		responseStructure.setData(updatedDetail);
+
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setEmployeeId(resignationDetail.getEmployeeId());
+		notify.setMessage("Resignation status updated successfully.");
+		notificationRepo.save(notify);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	}
@@ -95,6 +117,11 @@ public class ResignationDetailServiceImpl implements ResignationDetailService {
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Data retrieved successfully");
 		responseStructure.setData(map);
+
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setMessage("Data retrieved successfully");
+		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<Map<String, Object>>>(responseStructure, HttpStatus.OK);
 	}

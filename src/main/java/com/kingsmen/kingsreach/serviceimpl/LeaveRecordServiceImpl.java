@@ -14,8 +14,10 @@ import org.springframework.stereotype.Service;
 import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Leave;
 import com.kingsmen.kingsreach.entity.LeaveRecord;
+import com.kingsmen.kingsreach.entity.Notification;
 import com.kingsmen.kingsreach.repo.LeaveRecordRepo;
 import com.kingsmen.kingsreach.repo.LeaveRepo;
+import com.kingsmen.kingsreach.repo.NotificationRepo;
 import com.kingsmen.kingsreach.service.LeaveRecordService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
@@ -26,6 +28,9 @@ public class LeaveRecordServiceImpl implements LeaveRecordService {
 
 	@Autowired
 	private LeaveRepo leaveRepo;
+
+	@Autowired
+	private NotificationRepo notificationRepo;
 
 	@Override
 	public ResponseEntity<ResponseStructure<LeaveRecord>> saveEmployeeLeaveRecord(LeaveRecord leaveRecord) {
@@ -47,6 +52,12 @@ public class LeaveRecordServiceImpl implements LeaveRecordService {
 		responseStructure.setMessage(leaveRecord.getEmployeeName() + " leave records are added");
 		responseStructure.setData(leaveRecord);
 
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setEmployeeId(leaveRecord.getEmployeeId());
+		notify.setMessage(leaveRecord.getEmployeeName() + " leave records are added");
+		notificationRepo.save(notify);
+
 		return new ResponseEntity<ResponseStructure<LeaveRecord>>(responseStructure, HttpStatus.CREATED);
 	}
 
@@ -58,6 +69,11 @@ public class LeaveRecordServiceImpl implements LeaveRecordService {
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("EmployeeLeave Record Fetched Successfully.");
 		responseStructure.setData(list);
+
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setMessage("EmployeeLeave Record Fetched Successfully.");
+		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<List<LeaveRecord>>>(responseStructure, HttpStatus.OK);
 
@@ -75,6 +91,12 @@ public class LeaveRecordServiceImpl implements LeaveRecordService {
 		responseStructure.setMessage("Leave record retrieved successfully");
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setData(list);
+
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setEmployeeId(employeeId);
+		notify.setMessage("Leave record retrieved successfully");
+		notificationRepo.save(notify);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	}

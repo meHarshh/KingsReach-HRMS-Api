@@ -14,6 +14,7 @@ public class PolicyDetail {
 	private String policyName;
 	private String description;
 	private String department;
+	
 	public int getPolicyId() {
 		return policyId;
 	}

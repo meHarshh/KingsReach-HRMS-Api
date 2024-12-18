@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.kingsmen.kingsreach.entity.Notification;
 import com.kingsmen.kingsreach.entity.PolicyDetail;
+import com.kingsmen.kingsreach.repo.NotificationRepo;
 import com.kingsmen.kingsreach.repo.PolicyDetailRepo;
 import com.kingsmen.kingsreach.service.PolicyDetailService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
@@ -17,6 +19,9 @@ public class PolicyDetailServiceImpl implements PolicyDetailService {
 
 	@Autowired
 	private PolicyDetailRepo detailRepo;
+	
+	@Autowired
+	private NotificationRepo notificationRepo;
 
 	@Override
 	public ResponseEntity<ResponseStructure<PolicyDetail>> policyDetail(PolicyDetail detail) {
@@ -28,6 +33,11 @@ public class PolicyDetailServiceImpl implements PolicyDetailService {
 		responseStructure.setStatusCode(HttpStatus.CREATED.value());
 		responseStructure.setMessage(message);
 		responseStructure.setData(detail);
+		
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setMessage(message);
+		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<PolicyDetail>>(responseStructure,HttpStatus.CREATED);
 	}
@@ -49,6 +59,11 @@ public class PolicyDetailServiceImpl implements PolicyDetailService {
 		responseStructure.setStatusCode(HttpStatus.ACCEPTED.value());
 		responseStructure.setMessage(message);
 		responseStructure.setData(policyDetail3);
+		
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setMessage(message);
+		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<PolicyDetail>>(responseStructure,HttpStatus.ACCEPTED);
 

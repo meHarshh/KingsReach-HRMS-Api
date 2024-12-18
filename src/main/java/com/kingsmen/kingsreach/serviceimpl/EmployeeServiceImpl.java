@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.kingsmen.kingsreach.entity.Admin;
 import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Manager;
+import com.kingsmen.kingsreach.entity.Notification;
 import com.kingsmen.kingsreach.entity.Onsite;
 import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.enums.EmployeeRole;
@@ -26,6 +27,7 @@ import com.kingsmen.kingsreach.exceptions.UserIdOrEmailAlreadyExistException;
 import com.kingsmen.kingsreach.repo.AdminRepo;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
 import com.kingsmen.kingsreach.repo.ManagerRepo;
+import com.kingsmen.kingsreach.repo.NotificationRepo;
 import com.kingsmen.kingsreach.repo.OnsiteRepo;
 import com.kingsmen.kingsreach.service.EmployeeService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
@@ -44,6 +46,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	private OnsiteRepo onsiteRepo;
+
+	@Autowired
+	private NotificationRepo notificationRepo;
 
 	@Override
 	public ResponseEntity<ResponseStructure<Employee>> addEmployee(Employee employee) {
@@ -70,7 +75,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee.setCreatedAt(LocalDateTime.now());
 		employee.setName(employee.getFirstName() + " " + employee.getLastName());
 
-//		Setting the manager for the employee by down-casting the Manager entity
+		//		Setting the manager for the employee by down-casting the Manager entity
 		if (employee.getRole() != EmployeeRole.ADMIN && employee.getRole() != EmployeeRole.MANAGER) {
 			String managerId = employee.getManagerId();
 			Employee orElseThrow = employeeRepo.findByEmployeeId(managerId).orElseThrow(() -> new EmployeeIdNotExistsException(
@@ -108,6 +113,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 		responseStructure.setStatusCode(HttpStatus.CREATED.value());
 		responseStructure.setMessage(message);
 		responseStructure.setData(employee);
+
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setEmployeeId(employee.getEmployeeId());
+		notify.setMessage(message);
+		notificationRepo.save(notify);
+
 		return new ResponseEntity<ResponseStructure<Employee>>(responseStructure, HttpStatus.CREATED);
 	}
 
@@ -127,6 +139,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 			responseStructure.setStatusCode(HttpStatus.OK.value());
 			responseStructure.setMessage(message);
 			responseStructure.setData(employees);
+
+			//Notification code 
+			Notification notify = new Notification();
+			notify.setEmployeeId(employee2.getEmployeeId());
+			notify.setMessage(message);
+			notificationRepo.save(notify);
 
 			return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.OK);
 		} else {
@@ -149,6 +167,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Emloyee Details Fetched Successfully.");
 		responseStructure.setData(list);
+
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setMessage("The Employees Deatils Fetched Successfully.");
+		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.OK);
 	}
@@ -189,6 +212,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Employee Data updated Successfully.");
 		responseStructure.setData(employee3);
+
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setEmployeeId(employee.getEmployeeId());
+		notify.setMessage("Employee Data updated Successfully.");
+		notificationRepo.save(notify);
+
 		return new ResponseEntity<ResponseStructure<Employee>>(responseStructure, HttpStatus.OK);
 	}
 
@@ -207,6 +237,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 		responseStructure.setData(employees);
 		responseStructure.setMessage("The list of the manager is here in the below list");
 		responseStructure.setStatusCode(HttpStatus.OK.value());
+
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setMessage("The list of the manager is here in the below list");
+		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.OK);
 	}
@@ -233,6 +268,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Employee strength details fetched successfully");
 		responseStructure.setData("inOffice " + count[0] + " onsite " + count[1]);
+
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setMessage("Employee strength details fetched successfully");
+		notificationRepo.save(notify);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 
@@ -265,6 +305,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 		responseStructure.setData(employees);
 		responseStructure.setMessage("The list of the manager is here in the below list");
 		responseStructure.setStatusCode(HttpStatus.OK.value());
+
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setMessage("The list of the manager is here in the below list");
+		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.OK);
 

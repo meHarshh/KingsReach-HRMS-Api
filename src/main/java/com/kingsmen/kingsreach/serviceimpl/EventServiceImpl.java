@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.kingsmen.kingsreach.entity.Event;
+import com.kingsmen.kingsreach.entity.Notification;
 import com.kingsmen.kingsreach.repo.EventRepo;
+import com.kingsmen.kingsreach.repo.NotificationRepo;
 import com.kingsmen.kingsreach.service.EventService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
@@ -18,29 +20,42 @@ public class EventServiceImpl implements EventService {
 	@Autowired
 	private EventRepo eventRepo;
 
+	@Autowired
+	private NotificationRepo notificationRepo;
+
 	@Override
 	public ResponseEntity<ResponseStructure<Event>> addEvent(Event event) {
-	 eventRepo.save(event);
-	 
-	 ResponseStructure<Event> responseStructure = new ResponseStructure<Event>();
-	 responseStructure.setStatusCode(HttpStatus.CREATED.value());
-	 responseStructure.setData(event);
-	 responseStructure.setMessage("Event detail added.");
-	 
-	 return new ResponseEntity<ResponseStructure<Event>>(responseStructure, HttpStatus.CREATED);
+		eventRepo.save(event);
+
+		ResponseStructure<Event> responseStructure = new ResponseStructure<Event>();
+		responseStructure.setStatusCode(HttpStatus.CREATED.value());
+		responseStructure.setData(event);
+		responseStructure.setMessage("Event detail added.");
+
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setMessage("Event detail added.");
+		notificationRepo.save(notify);
+
+		return new ResponseEntity<ResponseStructure<Event>>(responseStructure, HttpStatus.CREATED);
 	}
 
 	@Override
 	public ResponseEntity<ResponseStructure<List<Event>>> getEvents() {
-		
-	List<Event> list = eventRepo.findAll();
-	 
-	 ResponseStructure<List<Event>> responseStructure = new ResponseStructure<List<Event>>();
-	 responseStructure.setStatusCode(HttpStatus.OK.value());
-	 responseStructure.setData(list);
-	 responseStructure.setMessage("Event detail added.");
-	 
-	 return new ResponseEntity<ResponseStructure<List<Event>>>(responseStructure, HttpStatus.OK);
+
+		List<Event> list = eventRepo.findAll();
+
+		ResponseStructure<List<Event>> responseStructure = new ResponseStructure<List<Event>>();
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setData(list);
+		responseStructure.setMessage("Event detail fetched.");
+
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setMessage("Event detail fetched.");
+		notificationRepo.save(notify);
+
+		return new ResponseEntity<ResponseStructure<List<Event>>>(responseStructure, HttpStatus.OK);
 	}
 
 }
