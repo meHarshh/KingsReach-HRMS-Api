@@ -12,10 +12,12 @@ import org.springframework.stereotype.Service;
 
 import com.kingsmen.kingsreach.entity.Attendance;
 import com.kingsmen.kingsreach.entity.Employee;
+import com.kingsmen.kingsreach.entity.Notification;
 import com.kingsmen.kingsreach.entity.Onsite;
 import com.kingsmen.kingsreach.exceptions.EmployeeIdNotExistsException;
 import com.kingsmen.kingsreach.repo.AttendanceRepo;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
+import com.kingsmen.kingsreach.repo.NotificationRepo;
 import com.kingsmen.kingsreach.repo.OnsiteRepo;
 import com.kingsmen.kingsreach.service.AttendanceService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
@@ -28,9 +30,12 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 	@Autowired
 	private EmployeeRepo employeeRepo;
-	
+
 	@Autowired
 	private OnsiteRepo onsiteRepo;
+
+	@Autowired
+	private NotificationRepo notificationRepo;
 
 	@Override
 	public ResponseEntity<ResponseStructure<Attendance>> addAttendance(Attendance attendance) {
@@ -52,6 +57,12 @@ public class AttendanceServiceImpl implements AttendanceService {
 		responseStructure.setMessage(message);
 		responseStructure.setData(attendance);
 
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setEmployeeId(attendance.getEmployeeId());
+		notify.setMessage(message);
+		notificationRepo.save(notify);
+
 		return new ResponseEntity<ResponseStructure<Attendance>>(responseStructure, HttpStatus.CREATED);
 	}
 
@@ -66,6 +77,12 @@ public class AttendanceServiceImpl implements AttendanceService {
 		responseStructure.setMessage("Attendence detail fetched successfully.");
 		responseStructure.setData(attendance);
 
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setEmployeeId(employeeId);
+		notify.setMessage("Attendence detail fetched successfully.");
+		notificationRepo.save(notify);
+
 		return new ResponseEntity<ResponseStructure<Attendance>>(responseStructure, HttpStatus.OK);
 	}
 
@@ -76,22 +93,33 @@ public class AttendanceServiceImpl implements AttendanceService {
 		responseStructure.setMessage("All attendance fetched");
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setMessage("All attendance fetched");
+		notificationRepo.save(notify);
+
 		return new ResponseEntity<ResponseStructure<List<Attendance>>>(responseStructure, HttpStatus.OK);
 	}
 
 	@Override
 	public ResponseEntity<ResponseStructure<Attendance>> getAttendenceForDate(String employeeId, LocalDate date) {
 		Attendance attendanceOptional = attendanceRepo.findByEmployeeIdAndDate(employeeId, date);
-		
+
 		ResponseStructure<Attendance> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Attendence of employee " + date + " fetched successfully.");
 		responseStructure.setData(attendanceOptional);
 
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setEmployeeId(employeeId);
+		notify.setMessage("Attendence of employee " + date + " fetched successfully.");
+		notificationRepo.save(notify);
+
 		return new ResponseEntity<ResponseStructure<Attendance>>(responseStructure,HttpStatus.OK);
 	}
-	
-	
+
+
 	@Override
 	public ResponseEntity<ResponseStructure<Object>> getAttendanceDetails() {
 		List<Onsite> onsites = onsiteRepo.findByDate(LocalDate.now());
@@ -102,11 +130,11 @@ public class AttendanceServiceImpl implements AttendanceService {
 				arrayList.add(onsite);
 			}
 		}
-		
+
 		List<Attendance> attendances = attendanceRepo.findByDate(LocalDate.now());
-		
+
 		int totalEmployees = attendances.size() + onsites.size();
-		
+
 		int inOffice = attendances.size() - arrayList.size();
 
 		int[] count = { inOffice, onsites.size(), totalEmployees};
@@ -116,7 +144,12 @@ public class AttendanceServiceImpl implements AttendanceService {
 		responseStructure.setMessage("Employee strength details fetched successfully");
 		responseStructure.setData("inOffice " + count[0] + " onsite " + count[1] + " Total Employees " + count[2]);
 
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setMessage("Employee strength details fetched successfully");
+		notificationRepo.save(notify);
+
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	}
-	
+
 }

@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 
 import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Expense;
+import com.kingsmen.kingsreach.entity.Notification;
 import com.kingsmen.kingsreach.exceptions.ExpenseNotFoundException;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
 import com.kingsmen.kingsreach.repo.ExpenseRepo;
+import com.kingsmen.kingsreach.repo.NotificationRepo;
 import com.kingsmen.kingsreach.service.ExpenseService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
@@ -24,6 +26,9 @@ public class ExpenseServiceImpl implements ExpenseService {
 
 	@Autowired
 	private ExpenseRepo expenseRepo;
+
+	@Autowired
+	private NotificationRepo notificationRepo;
 
 	@Override
 	public ResponseEntity<ResponseStructure<Expense>> addExpense(Expense expense) {
@@ -41,6 +46,12 @@ public class ExpenseServiceImpl implements ExpenseService {
 		responseStructure.setMessage(expense.getEmployeeName() + " expenses are added");
 		responseStructure.setData(expense);
 
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setEmployeeId(expense.getEmployeeId());
+		notify.setMessage(expense.getEmployeeName() + " expenses are added");
+		notificationRepo.save(notify);
+
 		return new ResponseEntity<ResponseStructure<Expense>>(responseStructure, HttpStatus.CREATED);
 	}
 
@@ -53,30 +64,41 @@ public class ExpenseServiceImpl implements ExpenseService {
 		responseStructure.setMessage("Expense Details Fetched successfully.");
 		responseStructure.setData(list);
 
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setMessage("Expense Details Fetched successfully.");
+		notificationRepo.save(notify);
+
 		return new ResponseEntity<ResponseStructure<List<Expense>>>(responseStructure, HttpStatus.OK);
 
 	}
 
 	@Override
 	public ResponseEntity<ResponseStructure<Expense>> editExpense(int expenseId, Expense expense) {
-	Expense existingExpense = expenseRepo.findById(expenseId)
-			.orElseThrow(() -> new ExpenseNotFoundException("No details found for Expense ID: " + expenseId));
-	
-	existingExpense.setAmount(expense.getAmount());
-	existingExpense.setDate(expense.getDate());
-	existingExpense.setExpenseName(expense.getExpenseName());
-	existingExpense.setReason(expense.getReason());
-	existingExpense.setEmployeeName(expense.getEmployeeName());
-	
-	existingExpense = expenseRepo.save(existingExpense);
-	
-	ResponseStructure<Expense> responseStructure = new ResponseStructure<Expense>();
-	responseStructure.setStatusCode(HttpStatus.OK.value());
-	responseStructure.setMessage(expense.getEmployeeName() + " expenses are updated");
-	responseStructure.setData(existingExpense);
+		Expense existingExpense = expenseRepo.findById(expenseId)
+				.orElseThrow(() -> new ExpenseNotFoundException("No details found for Expense ID: " + expenseId));
 
-	return new ResponseEntity<ResponseStructure<Expense>>(responseStructure, HttpStatus.OK);
-	
+		existingExpense.setAmount(expense.getAmount());
+		existingExpense.setDate(expense.getDate());
+		existingExpense.setExpenseName(expense.getExpenseName());
+		existingExpense.setReason(expense.getReason());
+		existingExpense.setEmployeeName(expense.getEmployeeName());
+
+		existingExpense = expenseRepo.save(existingExpense);
+
+		ResponseStructure<Expense> responseStructure = new ResponseStructure<Expense>();
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage(expense.getEmployeeName() + " expenses are updated");
+		responseStructure.setData(existingExpense);
+
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setEmployeeId(expense.getEmployeeId());
+		notify.setMessage(expense.getEmployeeName() + " expenses are updated");
+		notificationRepo.save(notify);
+
+		return new ResponseEntity<ResponseStructure<Expense>>(responseStructure, HttpStatus.OK);
+
 	}
 }
 

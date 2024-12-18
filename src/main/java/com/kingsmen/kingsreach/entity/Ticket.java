@@ -35,6 +35,7 @@ public class Ticket implements Serializable{
 	private LocalDateTime updatedAt;
 	private Department department;
 	private EmployeeRole role;
+	private String managerName;
 
 	@JsonIgnore
 	@ManyToOne
@@ -142,6 +143,14 @@ public class Ticket implements Serializable{
 
 	public void setRole(EmployeeRole role) {
 		this.role = role;
+	}
+
+	public String getManagerName() {
+		return managerName;
+	}
+
+	public void setManagerName(String managerName) {
+		this.managerName = managerName;
 	}
 
 }
