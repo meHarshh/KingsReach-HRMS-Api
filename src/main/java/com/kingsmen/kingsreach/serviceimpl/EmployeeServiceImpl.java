@@ -220,13 +220,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		ResponseStructure<Employee> responseStructure = new ResponseStructure<Employee>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage("Employee Data updated Successfully.");
+		responseStructure.setMessage(employee.getName() + " Data updated Successfully.");
 		responseStructure.setData(employee3);
 
 		//Notification code 
 		Notification notify = new Notification();
 		notify.setEmployeeId(employee.getEmployeeId());
-		notify.setMessage("Employee Data updated Successfully.");
+		notify.setMessage(employee.getName() + " Data updated Successfully.");
 		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
@@ -273,7 +273,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 		ResponseStructure<Object> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Employee strength details fetched successfully");
-		responseStructure.setData("inOffice " + count[0] + " onsite " + count[1]);
+		responseStructure.setMessage("inOffice , onsite ");
+		responseStructure.setData(count);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 

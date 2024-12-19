@@ -29,7 +29,7 @@ public class TerminationDetailServiceImpl implements TerminationDetailService {
 
 		detail = detailRepo.save(detail);
 
-		String message = "Termination details of " + detail.getEmployeeName() + " added.";
+		String message = "Termination details of " + detail.getEmployeeId() + " : " + detail.getEmployeeName() + " added.";
 
 		ResponseStructure<TerminationDetail> responseStructure = new ResponseStructure<TerminationDetail>();
 		responseStructure.setStatusCode(HttpStatus.CREATED.value());
@@ -89,7 +89,7 @@ public class TerminationDetailServiceImpl implements TerminationDetailService {
 
 		ResponseStructure<TerminationDetail> responseStructure = new ResponseStructure<TerminationDetail>();
 
-		String message = "Termination details for  ID: " + terminationDetailId + " deleted successfully.";
+		String message = "Termination details for  ID: " + terminationDetailId + " : " + employee.getEmployeeName() + " deleted successfully.";
 
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage(message);

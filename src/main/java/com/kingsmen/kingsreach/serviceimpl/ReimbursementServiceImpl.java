@@ -57,13 +57,13 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 
 		ResponseStructure<Reimbursement> responseStructure = new ResponseStructure<Reimbursement>();
 		responseStructure.setStatusCode(HttpStatus.CREATED.value());
-		responseStructure.setMessage(reimbursement.getEmployeeName() + " added successfully.");
+		responseStructure.setMessage(reimbursement.getEmployeeName() + " reimbursment added successfully.");
 		responseStructure.setData(reimbursement);
 
 		//Notification code 
 		Notification notify = new Notification();
 		notify.setEmployeeId(reimbursement.getEmployeeId());
-		notify.setMessage(reimbursement.getEmployeeName() + " added successfully.");
+		notify.setMessage(reimbursement.getEmployeeName() + " reimbursment added successfully.");
 		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
@@ -93,13 +93,13 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 
 		ResponseStructure<Reimbursement> responseStructure = new ResponseStructure<Reimbursement>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage(reimbursement.getEmployeeName() + " updated successfully.");
+		responseStructure.setMessage(reimbursement.getEmployeeName() + " reimbursment detail updated successfully.");
 		responseStructure.setData(reimbursement3);
 
 		//Notification code 
 		Notification notify = new Notification();
 		notify.setEmployeeId(reimbursement.getEmployeeId());
-		notify.setMessage(reimbursement.getEmployeeName() + " updated successfully.");
+		notify.setMessage(reimbursement.getEmployeeName() + " reimbursment detail updated successfully.");
 		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 

@@ -81,13 +81,13 @@ public class ResignationDetailServiceImpl implements ResignationDetailService {
 
 		ResponseStructure<ResignationDetail> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage("Resignation status updated successfully.");
+		responseStructure.setMessage(existingResignation.getName() + " Resignation status updated successfully.");
 		responseStructure.setData(updatedDetail);
 
 		//Notification code 
 		Notification notify = new Notification();
 		notify.setEmployeeId(resignationDetail.getEmployeeId());
-		notify.setMessage("Resignation status updated successfully.");
+		notify.setMessage(existingResignation.getName() + " Resignation status updated successfully.");
 		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 

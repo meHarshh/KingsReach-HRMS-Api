@@ -57,7 +57,7 @@ public class TicketServiceImpl implements TicketService {
 
 		ResponseStructure<Ticket> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage("Ticket raised successfully.");
+		responseStructure.setMessage( ticket.getEmployeeName() +  " raised the ticket");
 		responseStructure.setData(savedTicket); 
 
 		//Notification code 
@@ -92,7 +92,7 @@ public class TicketServiceImpl implements TicketService {
 		//Notification code 
 		Notification notify = new Notification();
 		notify.setEmployeeId(ticket.getEmployeeId());
-		notify.setMessage(" Ticket updated successfully.");
+		notify.setMessage(ticket.getEmployeeName() + " Ticket updated successfully.");
 		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
@@ -118,12 +118,12 @@ public class TicketServiceImpl implements TicketService {
 
 		ResponseStructure<Ticket> responseStructure = new ResponseStructure<Ticket>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage("Ticket deleted successfully.");
+		responseStructure.setMessage("Ticket ID : "+  ticketId + " deleted successfully.");
 		responseStructure.setData(null);
 
 		//Notification code 
 		Notification notify = new Notification();
-		notify.setMessage("Ticket deleted successfully.");
+		notify.setMessage("Ticket ID : " +  ticketId + " deleted successfully.");
 		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 

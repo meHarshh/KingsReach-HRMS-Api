@@ -31,11 +31,11 @@ public class EventServiceImpl implements EventService {
 		ResponseStructure<Event> responseStructure = new ResponseStructure<Event>();
 		responseStructure.setStatusCode(HttpStatus.CREATED.value());
 		responseStructure.setData(event);
-		responseStructure.setMessage("Event detail added.");
+		responseStructure.setMessage(event.getEventTitle() + " Event detail added successfully.");
 
 		//Notification code 
 		Notification notify = new Notification();
-		notify.setMessage("Event detail added.");
+		notify.setMessage(event.getEventTitle() + " Event detail added successfully.");
 		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 

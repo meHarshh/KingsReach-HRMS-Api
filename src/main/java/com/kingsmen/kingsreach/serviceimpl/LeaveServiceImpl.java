@@ -176,12 +176,12 @@ public class LeaveServiceImpl implements LeaveService {
 
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setData(existingLeave);
-		responseStructure.setMessage("Leave applied successfully" + leave.getEmployeeName());
+		responseStructure.setMessage(leave.getEmployeeName() + " Leave applied successfully");
 
 		//Notification code 
 		Notification notify = new Notification();
 		notify.setEmployeeId(leave.getEmployeeId());
-		notify.setMessage("Leave applied successfully" + leave.getEmployeeName());
+		notify.setMessage(leave.getEmployeeName() + " Leave applied successfully");
 		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
@@ -316,12 +316,7 @@ public class LeaveServiceImpl implements LeaveService {
 		List<Leave> all = leaveRepository.findAll();
 
 		ArrayList<Leave> leaves = new ArrayList<Leave>();
-		//		for (Leave leave : all) {
-		//			if (leave.getEmployee().getManager().getEmployeeId().equals(employeeId)) {
-		//				leaves.add(leave);
-		//			}
-		//		}
-
+		
 		for (Leave leave : all) {
 			if (leave.getEmployee() != null // Check if leave has an associated employee
 					&& leave.getEmployee().getManager() != null // Check if the employee has a manager
@@ -330,6 +325,7 @@ public class LeaveServiceImpl implements LeaveService {
 				leaves.add(leave); // Add the leave to the result list
 			}
 		}
+
 		ResponseStructure<List<Leave>> responseStructure = new ResponseStructure<List<Leave>>();
 		responseStructure.setData(leaves);
 		responseStructure.setMessage("The people on leave based on manager are below");
