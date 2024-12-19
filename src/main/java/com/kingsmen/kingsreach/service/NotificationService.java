@@ -13,6 +13,6 @@ public interface NotificationService {
 
 	ResponseEntity<ResponseStructure<List<Notification>>> findAllNotification();
 
-	ResponseEntity<ResponseStructure<Notification>> fetchNotification(String employeeId);
+	ResponseEntity<ResponseStructure<List<Notification>>> fetchNotification(String employeeId);
 
 }

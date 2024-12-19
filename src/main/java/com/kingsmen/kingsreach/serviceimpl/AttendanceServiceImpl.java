@@ -1,6 +1,7 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -61,6 +62,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		Notification notify = new Notification();
 		notify.setEmployeeId(attendance.getEmployeeId());
 		notify.setMessage(message);
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<Attendance>>(responseStructure, HttpStatus.CREATED);
@@ -76,13 +78,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Attendence detail fetched successfully.");
 		responseStructure.setData(attendance);
-
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setEmployeeId(employeeId);
-		notify.setMessage("Attendence detail fetched successfully.");
-		notificationRepo.save(notify);
-
+		
 		return new ResponseEntity<ResponseStructure<Attendance>>(responseStructure, HttpStatus.OK);
 	}
 
@@ -92,11 +88,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 		responseStructure.setData(attendanceRepo.findAll());
 		responseStructure.setMessage("All attendance fetched");
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setMessage("All attendance fetched");
-		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<List<Attendance>>>(responseStructure, HttpStatus.OK);
 	}
@@ -109,12 +100,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Attendence of employee " + date + " fetched successfully.");
 		responseStructure.setData(attendanceOptional);
-
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setEmployeeId(employeeId);
-		notify.setMessage("Attendence of employee " + date + " fetched successfully.");
-		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<Attendance>>(responseStructure,HttpStatus.OK);
 	}
@@ -142,12 +127,8 @@ public class AttendanceServiceImpl implements AttendanceService {
 		ResponseStructure<Object> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Employee strength details fetched successfully");
-		responseStructure.setData("inOffice " + count[0] + " onsite " + count[1] + " Total Employees " + count[2]);
-
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setMessage("Employee strength details fetched successfully");
-		notificationRepo.save(notify);
+		responseStructure.setMessage("inOffice ,onsite ,totalEmployees");
+		responseStructure.setData(count);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	}

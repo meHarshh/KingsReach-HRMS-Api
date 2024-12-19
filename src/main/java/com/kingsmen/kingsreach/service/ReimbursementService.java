@@ -15,4 +15,6 @@ public interface ReimbursementService {
 
 	ResponseEntity<ResponseStructure<List<Reimbursement>>> findReimbursementDetail();
 
+	ResponseEntity<ResponseStructure<List<Reimbursement>>> getReimbursement(String employeeId);
+
 }

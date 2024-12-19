@@ -11,6 +11,8 @@ public interface OnsiteRepo extends JpaRepository<Onsite, Integer>{
 
 	List<Onsite> findByDate(LocalDate now);
 
+	Onsite findByEmployeeId(String employeeId);
+
 	
 
 	

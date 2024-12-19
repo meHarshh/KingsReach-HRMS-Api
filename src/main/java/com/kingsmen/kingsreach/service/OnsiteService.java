@@ -13,4 +13,6 @@ public interface OnsiteService {
 
 	ResponseEntity<ResponseStructure<List<Onsite>>> findOnsiteEmployees();
 
+	ResponseEntity<ResponseStructure<Onsite>> getOnsiteEmployee(String employeeId);
+
 }
