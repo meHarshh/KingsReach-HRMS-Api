@@ -328,67 +328,11 @@ public class LeaveServiceImpl implements LeaveService {
 
 		ResponseStructure<List<Leave>> responseStructure = new ResponseStructure<List<Leave>>();
 		responseStructure.setData(leaves);
-		responseStructure.setMessage("The people on leave based on manager are below");
+		responseStructure.setMessage("The people on leave based on manager Id are below");
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 
 		return new ResponseEntity<ResponseStructure<List<Leave>>>(responseStructure, HttpStatus.OK);
 	}
-
-
-	//	@Override
-	//	public ResponseEntity<ResponseStructure<List<List<Leave>>>> fetchLeaveBasedOnManagerEmployee(String employeeId) {
-	//		System.out.println("Input employeeId: " + employeeId);
-	//
-	//	    List<Leave> allLeaves = leaveRepository.findAll();
-	//	    System.out.println("All leaves from the database: " + allLeaves);
-	//
-	//	    List<Leave> managerLeaves = new ArrayList<>();
-	//	    List<Leave> employeeLeaves = new ArrayList<>();
-	//
-	////	    for (Leave leave : allLeaves) {
-	////	        if (leave.getEmployee() != null) {
-	////	            Employee employee = leave.getEmployee();
-	////	            System.out.println("Processing leave: " + leave);
-	////
-	////	            if (employeeId.equals(employee.getEmployeeId())) {
-	////	                // Manager's leave
-	////	                System.out.println("Manager leave added: " + leave);
-	////	                managerLeaves.add(leave);
-	////	            } else if (employee.getManager() != null 
-	////	                    && employeeId.equals(employee.getManager().getEmployeeId())) {
-	////	                // Employee under manager
-	////	                System.out.println("Employee leave added: " + leave);
-	////	                employeeLeaves.add(leave);
-	////	            }
-	////	        }
-	////	    }
-	//	    
-	//	    for (Leave leave : allLeaves) {
-	//	        if (leave.getEmployee() != null) {
-	//	            Employee employee = leave.getEmployee();
-	//	            System.out.println("Processing leave for employee: " + employee.getEmployeeId());
-	//	            System.out.println("Manager ID: " + (employee.getManager() != null ? employee.getManager().getEmployeeId() : "null"));
-	//	            if (employeeId.equals(employee.getEmployeeId())) {
-	//	                System.out.println("Adding manager's leave: " + leave);
-	//	            } else if (employee.getManager() != null && employeeId.equals(employee.getManager().getEmployeeId())) {
-	//	                System.out.println("Adding employee's leave under manager: " + leave);
-	//	            }
-	//	        } else {
-	//	            System.out.println("Leave has no associated employee: " + leave);
-	//	        }
-	//	    }
-	//
-	//	    List<List<Leave>> responseData = new ArrayList<>();
-	//	    responseData.add(managerLeaves);
-	//	    responseData.add(employeeLeaves);
-	//
-	//	    ResponseStructure<List<List<Leave>>> responseStructure = new ResponseStructure<>();
-	//	    responseStructure.setData(responseData);
-	//	    responseStructure.setMessage("The people on leave based on manager are below");
-	//	    responseStructure.setStatusCode(HttpStatus.OK.value());
-	//
-	//	    return new ResponseEntity<>(responseStructure, HttpStatus.OK);
-	//	}
 
 }
 
