@@ -59,7 +59,7 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		responseStructure.setMessage(reimbursement.getEmployeeName() + " added successfully.");
 		responseStructure.setData(reimbursement);
 
-		//Notification code 
+		// Notification code
 		Notification notify = new Notification();
 		notify.setEmployeeId(reimbursement.getEmployeeId());
 		notify.setMessage(reimbursement.getEmployeeName() + " added successfully.");
@@ -70,20 +70,9 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 
 	@Override
 	public ResponseEntity<ResponseStructure<Reimbursement>> changeReimbursementStatus(Reimbursement reimbursement) {
-		//		String employeeId = reimbursement.getEmployeeId();
-		//		Optional<Employee> byEmployeeId = employeeRepo.findByEmployeeId(employeeId);
-		//		Employee employee = byEmployeeId.get();
-		//		System.out.println(employee.getFirstName());
-		//
-		//		Reimbursement reimbursement2 = employee.getReimbursement();
-		//		reimbursement2 = reimbursementRepo.findById(reimbursement2.getReimbursementId()).orElseThrow(()->new RuntimeException("No employees found"));
-		//		reimbursement2.setReimbursementStatus(reimbursement.getReimbursementStatus());
-		//
-		//		Reimbursement reimbursement3 = reimbursementRepo.save(reimbursement2);
-
 		int reimbursementId = reimbursement.getReimbursementId();
-		Reimbursement reimbursement2 = reimbursementRepo.findById(reimbursementId)
-				.orElseThrow(() -> new ReimbursementNotFoundException("Reimbursement with ID " + reimbursementId + " not found"));
+		Reimbursement reimbursement2 = reimbursementRepo.findById(reimbursementId).orElseThrow(
+				() -> new ReimbursementNotFoundException("Reimbursement with ID " + reimbursementId + " not found"));
 
 		reimbursement2.setReimbursementStatus(reimbursement.getReimbursementStatus());
 
@@ -94,7 +83,7 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		responseStructure.setMessage(reimbursement.getEmployeeName() + " updated successfully.");
 		responseStructure.setData(reimbursement3);
 
-		//Notification code 
+		// Notification code
 		Notification notify = new Notification();
 		notify.setEmployeeId(reimbursement.getEmployeeId());
 		notify.setMessage(reimbursement.getEmployeeName() + " updated successfully.");
@@ -112,7 +101,7 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("The employees Reimbursement data is fetched");
 
-		//Notification code 
+		// Notification code
 		Notification notify = new Notification();
 		notify.setMessage("The employees Reimbursement data is fetched");
 		notificationRepo.save(notify);
@@ -120,4 +109,3 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		return new ResponseEntity<ResponseStructure<List<Reimbursement>>>(responseStructure, HttpStatus.OK);
 	}
 }
-
