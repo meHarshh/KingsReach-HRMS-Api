@@ -141,13 +141,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 			responseStructure.setMessage(message);
 			responseStructure.setData(employees);
 
-			//Notification code 
-			Notification notify = new Notification();
-			notify.setEmployeeId(employee2.getEmployeeId());
-			notify.setMessage(message);
-			notify.setCreatedAt(LocalDateTime.now());
-			notificationRepo.save(notify);
-
 			return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.OK);
 		} else {
 			String errorMessage = "Invalid credentials: Employee not found.";
