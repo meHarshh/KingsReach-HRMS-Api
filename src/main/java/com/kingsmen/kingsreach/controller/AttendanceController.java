@@ -18,7 +18,7 @@ import com.kingsmen.kingsreach.service.AttendanceService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
 
-@CrossOrigin(allowCredentials = "true", origins = "https://hrms.kingsmenrealty.com/")
+@CrossOrigin(allowCredentials = "true", origins = "http://hrms.kingsmenrealty.com/")
 @RestController
 public class AttendanceController {
 

@@ -75,7 +75,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee.setCreatedAt(LocalDateTime.now());
 		employee.setName(employee.getFirstName() + " " + employee.getLastName());
 
-		//		Setting the manager for the employee by down-casting the Manager entity
+		// Setting the manager for the employee by down-casting the Manager entity
 		if (employee.getRole() != EmployeeRole.ADMIN && employee.getRole() != EmployeeRole.MANAGER) {
 			String managerId = employee.getManagerId();
 			Employee orElseThrow = employeeRepo.findByEmployeeId(managerId).orElseThrow(() -> new EmployeeIdNotExistsException(
