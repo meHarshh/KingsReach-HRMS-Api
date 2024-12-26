@@ -1,6 +1,7 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +57,7 @@ public class LeaveRecordServiceImpl implements LeaveRecordService {
 		Notification notify = new Notification();
 		notify.setEmployeeId(leaveRecord.getEmployeeId());
 		notify.setMessage(leaveRecord.getEmployeeName() + " leave records are added");
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<LeaveRecord>>(responseStructure, HttpStatus.CREATED);
@@ -69,11 +71,6 @@ public class LeaveRecordServiceImpl implements LeaveRecordService {
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("EmployeeLeave Record Fetched Successfully.");
 		responseStructure.setData(list);
-
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setMessage("EmployeeLeave Record Fetched Successfully.");
-		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<List<LeaveRecord>>>(responseStructure, HttpStatus.OK);
 
@@ -91,12 +88,6 @@ public class LeaveRecordServiceImpl implements LeaveRecordService {
 		responseStructure.setMessage("Leave record retrieved successfully");
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setData(list);
-
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setEmployeeId(employeeId);
-		notify.setMessage("Leave record retrieved successfully");
-		notificationRepo.save(notify);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	}

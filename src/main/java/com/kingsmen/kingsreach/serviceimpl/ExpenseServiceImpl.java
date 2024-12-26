@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,6 +51,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 		Notification notify = new Notification();
 		notify.setEmployeeId(expense.getEmployeeId());
 		notify.setMessage(expense.getEmployeeName() + " expenses are added");
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<Expense>>(responseStructure, HttpStatus.CREATED);
@@ -63,11 +65,6 @@ public class ExpenseServiceImpl implements ExpenseService {
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Expense Details Fetched successfully.");
 		responseStructure.setData(list);
-
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setMessage("Expense Details Fetched successfully.");
-		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<List<Expense>>>(responseStructure, HttpStatus.OK);
 
@@ -95,6 +92,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 		Notification notify = new Notification();
 		notify.setEmployeeId(expense.getEmployeeId());
 		notify.setMessage(expense.getEmployeeName() + " expenses are updated");
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<Expense>>(responseStructure, HttpStatus.OK);

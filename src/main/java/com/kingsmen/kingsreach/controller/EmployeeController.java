@@ -16,8 +16,7 @@ import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.service.EmployeeService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
-
-@CrossOrigin(allowCredentials = "true", origins = "https://hrms.kingsmenrealty.com/")
+@CrossOrigin(allowCredentials = "true", origins = "http://hrms.kingsmenrealty.com/")
 @RestController
 public class EmployeeController {
 

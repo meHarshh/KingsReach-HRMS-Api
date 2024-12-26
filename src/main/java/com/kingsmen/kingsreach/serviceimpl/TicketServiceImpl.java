@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -56,13 +57,14 @@ public class TicketServiceImpl implements TicketService {
 
 		ResponseStructure<Ticket> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage("Ticket raised successfully.");
+		responseStructure.setMessage( ticket.getEmployeeName() +  " raised the ticket");
 		responseStructure.setData(savedTicket); 
 
 		//Notification code 
 		Notification notify = new Notification();
 		notify.setEmployeeId(ticket.getEmployeeId());
 		notify.setMessage("Ticket raised successfully.");
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
@@ -90,7 +92,8 @@ public class TicketServiceImpl implements TicketService {
 		//Notification code 
 		Notification notify = new Notification();
 		notify.setEmployeeId(ticket.getEmployeeId());
-		notify.setMessage(" Ticket updated successfully.");
+		notify.setMessage(ticket.getEmployeeName() + " Ticket updated successfully.");
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<Ticket>>(responseStructure, HttpStatus.OK);
@@ -105,11 +108,6 @@ public class TicketServiceImpl implements TicketService {
 		responseStructure.setMessage(" Ticket details Found successfully.");
 		responseStructure.setData(list);
 
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setMessage(" Ticket details Found successfully.");
-		notificationRepo.save(notify);
-
 		return new ResponseEntity<ResponseStructure<List<Ticket>>>(responseStructure, HttpStatus.OK);
 
 	}
@@ -120,12 +118,13 @@ public class TicketServiceImpl implements TicketService {
 
 		ResponseStructure<Ticket> responseStructure = new ResponseStructure<Ticket>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage("Ticket deleted successfully.");
+		responseStructure.setMessage("Ticket ID : "+  ticketId + " deleted successfully.");
 		responseStructure.setData(null);
 
 		//Notification code 
 		Notification notify = new Notification();
-		notify.setMessage("Ticket deleted successfully.");
+		notify.setMessage("Ticket ID : " +  ticketId + " deleted successfully.");
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<Ticket>>(responseStructure, HttpStatus.OK);
@@ -147,12 +146,6 @@ public class TicketServiceImpl implements TicketService {
 		responseStructure.setMessage("All the tickets are fetched raised by employee having Employee Id" + employeeId);
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setEmployeeId(employeeId);
-		notify.setMessage("All the tickets are fetched raised by employee having Employee Id" + employeeId);
-		notificationRepo.save(notify);
-
 		return new ResponseEntity<ResponseStructure<List<Ticket>>>(responseStructure, HttpStatus.OK);
 	}
 
@@ -172,11 +165,6 @@ public class TicketServiceImpl implements TicketService {
 		responseStructure.setData(tickets);
 		responseStructure.setMessage("All the tickets are fetched based on department");
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setMessage("All the tickets are fetched based on department");
-		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<List<Ticket>>>(responseStructure, HttpStatus.OK);
 	}

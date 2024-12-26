@@ -1,5 +1,7 @@
 package com.kingsmen.kingsreach.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,6 +16,7 @@ public class Notification {
 	
 	private String message;
 	private String employeeId;
+	private LocalDateTime createdAt;
 	
 	public int getNotificationId() {
 		return notificationId;
@@ -39,4 +42,12 @@ public class Notification {
 		this.employeeId = employeeId;
 	}
 
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+	
 }

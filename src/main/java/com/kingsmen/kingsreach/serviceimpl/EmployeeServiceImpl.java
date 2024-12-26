@@ -118,6 +118,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		Notification notify = new Notification();
 		notify.setEmployeeId(employee.getEmployeeId());
 		notify.setMessage(message);
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<Employee>>(responseStructure, HttpStatus.CREATED);
@@ -144,6 +145,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			Notification notify = new Notification();
 			notify.setEmployeeId(employee2.getEmployeeId());
 			notify.setMessage(message);
+			notify.setCreatedAt(LocalDateTime.now());
 			notificationRepo.save(notify);
 
 			return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.OK);
@@ -167,11 +169,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Emloyee Details Fetched Successfully.");
 		responseStructure.setData(list);
-
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setMessage("The Employees Deatils Fetched Successfully.");
-		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.OK);
 	}
@@ -223,13 +220,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		ResponseStructure<Employee> responseStructure = new ResponseStructure<Employee>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage("Employee Data updated Successfully.");
+		responseStructure.setMessage(employee.getName() + " Data updated Successfully.");
 		responseStructure.setData(employee3);
 
 		//Notification code 
 		Notification notify = new Notification();
 		notify.setEmployeeId(employee.getEmployeeId());
-		notify.setMessage("Employee Data updated Successfully.");
+		notify.setMessage(employee.getName() + " Data updated Successfully.");
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<Employee>>(responseStructure, HttpStatus.OK);
@@ -250,11 +248,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 		responseStructure.setData(employees);
 		responseStructure.setMessage("The list of the manager is here in the below list");
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setMessage("The list of the manager is here in the below list");
-		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.OK);
 	}
@@ -280,12 +273,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 		ResponseStructure<Object> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Employee strength details fetched successfully");
-		responseStructure.setData("inOffice " + count[0] + " onsite " + count[1]);
-
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setMessage("Employee strength details fetched successfully");
-		notificationRepo.save(notify);
+		responseStructure.setMessage("inOffice , onsite ");
+		responseStructure.setData(count);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 
@@ -318,11 +307,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 		responseStructure.setData(employees);
 		responseStructure.setMessage("The list of the manager is here in the below list");
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setMessage("The list of the manager is here in the below list");
-		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.OK);
 

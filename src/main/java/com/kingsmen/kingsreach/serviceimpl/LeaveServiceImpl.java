@@ -1,6 +1,7 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -175,12 +176,13 @@ public class LeaveServiceImpl implements LeaveService {
 
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setData(existingLeave);
-		responseStructure.setMessage("Leave applied successfully" + leave.getEmployeeName());
+		responseStructure.setMessage(leave.getEmployeeName() + " Leave applied successfully");
 
 		//Notification code 
 		Notification notify = new Notification();
 		notify.setEmployeeId(leave.getEmployeeId());
-		notify.setMessage("Leave applied successfully" + leave.getEmployeeName());
+		notify.setMessage(leave.getEmployeeName() + " Leave applied successfully");
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return ResponseEntity.ok(responseStructure);
@@ -215,6 +217,7 @@ public class LeaveServiceImpl implements LeaveService {
 		Notification notify = new Notification();
 		notify.setEmployeeId(leave.getEmployeeId());
 		notify.setMessage("The leave status changed to " + leave2.getLeaveStatus());
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<Leave>>(responseStructure, HttpStatus.OK);
@@ -228,11 +231,6 @@ public class LeaveServiceImpl implements LeaveService {
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setData(list);
 		responseStructure.setMessage("Leave details fetched Successfully.");
-
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setMessage("Leave details fetched Successfully.");
-		notificationRepo.save(notify);
 
 		return ResponseEntity.ok(responseStructure);
 	}
@@ -252,12 +250,6 @@ public class LeaveServiceImpl implements LeaveService {
 		responseStructure.setMessage("The Employees Leave Deatils Fetched Successfully.");
 		responseStructure.setData(leaves);
 
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setEmployeeId(employeeId);
-		notify.setMessage("The Employees Leave Deatils Fetched Successfully.");
-		notificationRepo.save(notify);
-
 		return ResponseEntity.ok(responseStructure);
 	}
 
@@ -269,11 +261,6 @@ public class LeaveServiceImpl implements LeaveService {
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Absent Employees Leave Deatils Fetched Successfully.");
 		responseStructure.setData(list);
-
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setMessage("Absent Employees Leave Deatils Fetched Successfully.");
-		notificationRepo.save(notify);
 
 		return ResponseEntity.ok(responseStructure);
 	}
@@ -302,12 +289,6 @@ public class LeaveServiceImpl implements LeaveService {
 		responseStructure.setMessage("The response is having the causal , paid, emergency and sick leave in the array");
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setEmployeeId(employeeId);
-		notify.setMessage("The response is having the causal , paid, emergency and sick leave in the array");
-		notificationRepo.save(notify);
-
 		return new ResponseEntity<ResponseStructure<Map<String, Integer>>>(responseStructure, HttpStatus.OK);
 
 	}
@@ -327,11 +308,6 @@ public class LeaveServiceImpl implements LeaveService {
 		responseStructure.setMessage("The people on leave based on department are below");
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setMessage("The people on leave based on department are below");
-		notificationRepo.save(notify);
-
 		return new ResponseEntity<ResponseStructure<List<Leave>>>(responseStructure, HttpStatus.OK);
 	}
 
@@ -340,12 +316,7 @@ public class LeaveServiceImpl implements LeaveService {
 		List<Leave> all = leaveRepository.findAll();
 
 		ArrayList<Leave> leaves = new ArrayList<Leave>();
-		//		for (Leave leave : all) {
-		//			if (leave.getEmployee().getManager().getEmployeeId().equals(employeeId)) {
-		//				leaves.add(leave);
-		//			}
-		//		}
-
+		
 		for (Leave leave : all) {
 			if (leave.getEmployee() != null // Check if leave has an associated employee
 					&& leave.getEmployee().getManager() != null // Check if the employee has a manager
@@ -354,75 +325,14 @@ public class LeaveServiceImpl implements LeaveService {
 				leaves.add(leave); // Add the leave to the result list
 			}
 		}
+
 		ResponseStructure<List<Leave>> responseStructure = new ResponseStructure<List<Leave>>();
 		responseStructure.setData(leaves);
-		responseStructure.setMessage("The people on leave based on manager are below");
+		responseStructure.setMessage("The people on leave based on manager Id are below");
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setEmployeeId(employeeId);
-		notify.setMessage("The people on leave based on manager are below");
-		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<List<Leave>>>(responseStructure, HttpStatus.OK);
 	}
-
-
-	//	@Override
-	//	public ResponseEntity<ResponseStructure<List<List<Leave>>>> fetchLeaveBasedOnManagerEmployee(String employeeId) {
-	//		System.out.println("Input employeeId: " + employeeId);
-	//
-	//	    List<Leave> allLeaves = leaveRepository.findAll();
-	//	    System.out.println("All leaves from the database: " + allLeaves);
-	//
-	//	    List<Leave> managerLeaves = new ArrayList<>();
-	//	    List<Leave> employeeLeaves = new ArrayList<>();
-	//
-	////	    for (Leave leave : allLeaves) {
-	////	        if (leave.getEmployee() != null) {
-	////	            Employee employee = leave.getEmployee();
-	////	            System.out.println("Processing leave: " + leave);
-	////
-	////	            if (employeeId.equals(employee.getEmployeeId())) {
-	////	                // Manager's leave
-	////	                System.out.println("Manager leave added: " + leave);
-	////	                managerLeaves.add(leave);
-	////	            } else if (employee.getManager() != null 
-	////	                    && employeeId.equals(employee.getManager().getEmployeeId())) {
-	////	                // Employee under manager
-	////	                System.out.println("Employee leave added: " + leave);
-	////	                employeeLeaves.add(leave);
-	////	            }
-	////	        }
-	////	    }
-	//	    
-	//	    for (Leave leave : allLeaves) {
-	//	        if (leave.getEmployee() != null) {
-	//	            Employee employee = leave.getEmployee();
-	//	            System.out.println("Processing leave for employee: " + employee.getEmployeeId());
-	//	            System.out.println("Manager ID: " + (employee.getManager() != null ? employee.getManager().getEmployeeId() : "null"));
-	//	            if (employeeId.equals(employee.getEmployeeId())) {
-	//	                System.out.println("Adding manager's leave: " + leave);
-	//	            } else if (employee.getManager() != null && employeeId.equals(employee.getManager().getEmployeeId())) {
-	//	                System.out.println("Adding employee's leave under manager: " + leave);
-	//	            }
-	//	        } else {
-	//	            System.out.println("Leave has no associated employee: " + leave);
-	//	        }
-	//	    }
-	//
-	//	    List<List<Leave>> responseData = new ArrayList<>();
-	//	    responseData.add(managerLeaves);
-	//	    responseData.add(employeeLeaves);
-	//
-	//	    ResponseStructure<List<List<Leave>>> responseStructure = new ResponseStructure<>();
-	//	    responseStructure.setData(responseData);
-	//	    responseStructure.setMessage("The people on leave based on manager are below");
-	//	    responseStructure.setStatusCode(HttpStatus.OK.value());
-	//
-	//	    return new ResponseEntity<>(responseStructure, HttpStatus.OK);
-	//	}
 
 }
 

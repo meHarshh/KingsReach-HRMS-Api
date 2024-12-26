@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Leave;
 
@@ -16,6 +15,5 @@ public interface LeaveRepo extends JpaRepository<Leave, Integer>{
 	List<Leave> findByEmployee(Employee employee);
 
 	List<Leave> findByFromDate(LocalDate now);
-
 
 }

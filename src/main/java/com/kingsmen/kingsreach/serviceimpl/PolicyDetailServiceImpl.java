@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ public class PolicyDetailServiceImpl implements PolicyDetailService {
 		//Notification code 
 		Notification notify = new Notification();
 		notify.setMessage(message);
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<PolicyDetail>>(responseStructure,HttpStatus.CREATED);
@@ -63,6 +65,7 @@ public class PolicyDetailServiceImpl implements PolicyDetailService {
 		//Notification code 
 		Notification notify = new Notification();
 		notify.setMessage(message);
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<PolicyDetail>>(responseStructure,HttpStatus.ACCEPTED);

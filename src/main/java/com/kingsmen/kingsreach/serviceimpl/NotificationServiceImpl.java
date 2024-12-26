@@ -42,15 +42,15 @@ public class NotificationServiceImpl implements NotificationService{
 	}
 
 	@Override
-	public ResponseEntity<ResponseStructure<Notification>> fetchNotification(String employeeId) {
-	Notification notification =	notificationRepo.findByEmployeeId(employeeId);
+	public ResponseEntity<ResponseStructure<List<Notification>>> fetchNotification(String employeeId) {
+	List<Notification> notification =	notificationRepo.findByEmployeeId(employeeId);
 	
-	ResponseStructure<Notification> responseStructure = new ResponseStructure<Notification>();
+	ResponseStructure<List<Notification>> responseStructure = new ResponseStructure<List<Notification>>();
 	responseStructure.setStatusCode(HttpStatus.OK.value());
 	responseStructure.setMessage("Notification fetched successfully.");
 	responseStructure.setData(notification);
 	
-	return new ResponseEntity<ResponseStructure<Notification>>(responseStructure,HttpStatus.OK);
+	return new ResponseEntity<ResponseStructure<List<Notification>>>(responseStructure,HttpStatus.OK);
 	}
 
 }

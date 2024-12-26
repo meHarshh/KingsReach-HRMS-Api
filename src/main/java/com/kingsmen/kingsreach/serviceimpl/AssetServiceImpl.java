@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,6 +52,7 @@ public class AssetServiceImpl implements AssetService {
 			Notification notify = new Notification();
 			notify.setEmployeeId(asset.getEmployeeId());
 			notify.setMessage(message);
+			notify.setCreatedAt(LocalDateTime.now());
 			notificationRepo.save(notify);
 
 			return new ResponseEntity<ResponseStructure<Asset>>(responseStructure, HttpStatus.OK);
@@ -68,11 +70,6 @@ public class AssetServiceImpl implements AssetService {
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Asset Details Fetched successfully.");
 		responseStructure.setData(asset);
-
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setMessage("Asset Details Fetched successfully.");
-		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<List<Asset>>>(responseStructure, HttpStatus.OK);
 

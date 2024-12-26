@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,7 +16,7 @@ import com.kingsmen.kingsreach.entity.Reimbursement;
 import com.kingsmen.kingsreach.service.ReimbursementService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@CrossOrigin(allowCredentials = "true", origins = "http://localhost:5173/")
+@CrossOrigin(allowCredentials = "true", origins = "http://hrms.kingsmenrealty.com/")
 @RestController
 public class ReimbursementController {
 
@@ -30,12 +31,16 @@ public class ReimbursementController {
 	@PutMapping(value = "/changeReimbursementStatus")
 	private ResponseEntity<ResponseStructure<Reimbursement>> changeReimbursementStatus(@RequestBody Reimbursement reimbursement) {
 		return reimbursementService.changeReimbursementStatus(reimbursement);
-
 	}
 	
 	@GetMapping(value = "/findReimbursementDetail")
 	private ResponseEntity<ResponseStructure<List<Reimbursement>>> findReimbursementDetail(){
 		return reimbursementService.findReimbursementDetail();
 	}
-
+	
+	@GetMapping(value = "/getReimbursement/{employeeId}")
+	private ResponseEntity<ResponseStructure<List<Reimbursement>>> getReimbursement(@PathVariable String employeeId) {
+		return reimbursementService.getReimbursement(employeeId);
+	}
+	
 }

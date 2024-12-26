@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +15,7 @@ import com.kingsmen.kingsreach.entity.Onsite;
 import com.kingsmen.kingsreach.service.OnsiteService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@CrossOrigin(allowCredentials = "true", origins = "http://localhost:5173/")
+@CrossOrigin(allowCredentials = "true", origins = "http://hrms.kingsmenrealty.com/")
 @RestController
 public class OnsiteController {
 
@@ -29,5 +30,10 @@ public class OnsiteController {
 	@GetMapping(value = "/findAllOnsiteEmployees")
 	private ResponseEntity<ResponseStructure<List<Onsite>>> findOnsiteEmployees(){
 		return onsiteService.findOnsiteEmployees();
+	}
+	
+	@GetMapping(value = "/getOnsiteEmployee/{employeeId}")
+	private ResponseEntity<ResponseStructure<Onsite>> getOnsiteEmployee(@PathVariable String employeeId){
+		return  onsiteService.getOnsiteEmployee(employeeId);
 	}
 }

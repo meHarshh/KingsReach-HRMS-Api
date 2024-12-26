@@ -1,6 +1,7 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,7 @@ public class OnsiteServiceImpl implements OnsiteService {
 		Notification notify = new Notification();
 		notify.setEmployeeId(onsite.getEmployeeId());
 		notify.setMessage(message);
+		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<ResponseStructure<Onsite>>(responseStructure, HttpStatus.OK);
@@ -56,13 +58,23 @@ public class OnsiteServiceImpl implements OnsiteService {
 		responseStructure.setMessage("Onsite Employees Details Fetched Successfully.");
 		responseStructure.setData(list);
 
-		//Notification code 
-		Notification notify = new Notification();
-		notify.setMessage("Onsite Employees Details Fetched Successfully.");
-		notificationRepo.save(notify);
-
 		return new ResponseEntity<ResponseStructure<List<Onsite>>>(responseStructure, HttpStatus.OK);
 
+	}
+
+
+	@Override
+	public ResponseEntity<ResponseStructure<Onsite>> getOnsiteEmployee(String employeeId) {
+		Onsite onsite = onsiteRepo.findByEmployeeId(employeeId);
+
+		String message="Employee with " + employeeId + " details  fetched succesfully.";
+
+		ResponseStructure<Onsite> responseStructure=new ResponseStructure<Onsite>();
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage(message);
+		responseStructure.setData(onsite);
+
+		return new ResponseEntity<ResponseStructure<Onsite>>(responseStructure, HttpStatus.OK);
 	}
 
 }
