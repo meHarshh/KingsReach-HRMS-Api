@@ -75,7 +75,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee.setCreatedAt(LocalDateTime.now());
 		employee.setName(employee.getFirstName() + " " + employee.getLastName());
 
-		//		Setting the manager for the employee by down-casting the Manager entity
+		// Setting the manager for the employee by down-casting the Manager entity
 		if (employee.getRole() != EmployeeRole.ADMIN && employee.getRole() != EmployeeRole.MANAGER) {
 			String managerId = employee.getManagerId();
 			Employee orElseThrow = employeeRepo.findByEmployeeId(managerId).orElseThrow(() -> new EmployeeIdNotExistsException(
@@ -140,13 +140,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 			responseStructure.setStatusCode(HttpStatus.OK.value());
 			responseStructure.setMessage(message);
 			responseStructure.setData(employees);
-
-			//Notification code 
-			Notification notify = new Notification();
-			notify.setEmployeeId(employee2.getEmployeeId());
-			notify.setMessage(message);
-			notify.setCreatedAt(LocalDateTime.now());
-			notificationRepo.save(notify);
 
 			return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.OK);
 		} else {
