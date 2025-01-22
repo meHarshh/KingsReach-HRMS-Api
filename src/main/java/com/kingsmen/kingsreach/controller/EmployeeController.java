@@ -30,32 +30,33 @@ public class EmployeeController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<ResponseStructure<List<Employee>>> login(@RequestParam String officialEmail, @RequestParam String password) {
+	public ResponseEntity<ResponseStructure<List<Employee>>> login(@RequestParam String officialEmail,
+			@RequestParam String password) {
 		return employeeService.login(officialEmail, password);
 	}
-	
+
 	@GetMapping("/fetchAllEmployees")
-	public ResponseEntity<ResponseStructure<List<Employee>>> getEmployees(){
+	public ResponseEntity<ResponseStructure<List<Employee>>> getEmployees() {
 		return employeeService.getEmployees();
 	}
-	
+
 	@PutMapping("/editEmployee")
 	public ResponseEntity<ResponseStructure<Employee>> editEmployee(@RequestBody Employee employee) {
 		return employeeService.editEmployee(employee);
 	}
-	
+
 	@GetMapping("/getManager")
-	private ResponseEntity<ResponseStructure<List<Employee>>> getManager(){
+	private ResponseEntity<ResponseStructure<List<Employee>>> getManager() {
 		return employeeService.getManager();
 	}
 
 	@GetMapping(value = "/getEmployeeStrength")
-	private ResponseEntity<ResponseStructure<Object>> employeesStrength(){
-		return employeeService.employeesStrength();	
+	private ResponseEntity<ResponseStructure<Object>> employeesStrength() {
+		return employeeService.employeesStrength();
 	}
 
 	@GetMapping("/getManagerEmployee")
-	private ResponseEntity<ResponseStructure<List<Employee>>> getManagerEmployee(@RequestParam Department department){
+	private ResponseEntity<ResponseStructure<List<Employee>>> getManagerEmployee(@RequestParam Department department) {
 		return employeeService.getManagerEmployee(department);
 	}
 
