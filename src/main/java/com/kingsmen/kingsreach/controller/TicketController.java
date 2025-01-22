@@ -18,7 +18,7 @@ import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.service.TicketService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@CrossOrigin(allowCredentials = "true", origins = "http://hrms.kingsmenrealty.com/")
+@CrossOrigin(allowCredentials = "true", origins = "http://localhost:5173/")
 @RestController
 public class TicketController {
 
@@ -32,7 +32,7 @@ public class TicketController {
 
 	@PutMapping(value = "/editTicket")
 	private ResponseEntity<ResponseStructure<Ticket>> updateTicket(@RequestBody Ticket ticket) {
-		return ticketService.updateTicket(ticket);
+		return ticketService.updateTicket(ticket);	
 	}
 
 	@GetMapping(value = "/findAllTicket")
