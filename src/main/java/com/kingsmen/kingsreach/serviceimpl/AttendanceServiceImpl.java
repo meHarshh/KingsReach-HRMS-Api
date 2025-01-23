@@ -45,10 +45,13 @@ public class AttendanceServiceImpl implements AttendanceService {
 				.orElseThrow(() -> new EmployeeIdNotExistsException("No value present with the ID.")));
 
 		Employee employee = byEmployeeId.get();
-		//attendance.setEmployee(employee);
+		// attendance.setEmployee(employee);
 		attendance.setFirstPunchIn(attendance.getFirstPunchIn());
-
+		attendance.setLastPunchOut(attendance.getLastPunchOut());
+		attendance.setEmployeeName(employee.getName());
+		attendance.setDate(attendance.getDate());
 		attendance.setEmployee(employee);
+
 		attendanceRepo.save(attendance);
 
 		ResponseStructure<Attendance> responseStructure = new ResponseStructure<Attendance>();
@@ -58,7 +61,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		responseStructure.setMessage(message);
 		responseStructure.setData(attendance);
 
-		//Notification code 
+		// Notification code
 		Notification notify = new Notification();
 		notify.setEmployeeId(attendance.getEmployeeId());
 		notify.setMessage(message);
@@ -70,21 +73,22 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 	@Override
 	public ResponseEntity<ResponseStructure<Attendance>> getAttendance(String employeeId) {
-		Attendance attendance = attendanceRepo.findByEmployeeId(employeeId).orElseThrow(()-> new EmployeeIdNotExistsException(
-				"No value Present with the assosiated ID.Enter the valid Employee ID"));
+		Attendance attendance = attendanceRepo.findByEmployeeId(employeeId)
+				.orElseThrow(() -> new EmployeeIdNotExistsException(
+						"No value Present with the assosiated ID.Enter the valid Employee ID"));
 
 		ResponseStructure<Attendance> responseStructure = new ResponseStructure<Attendance>();
 
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Attendence detail fetched successfully.");
 		responseStructure.setData(attendance);
-		
+
 		return new ResponseEntity<ResponseStructure<Attendance>>(responseStructure, HttpStatus.OK);
 	}
 
 	@Override
 	public ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceForMonth() {
-		ResponseStructure<List<Attendance>> responseStructure= new ResponseStructure<List<Attendance>>();
+		ResponseStructure<List<Attendance>> responseStructure = new ResponseStructure<List<Attendance>>();
 		responseStructure.setData(attendanceRepo.findAll());
 		responseStructure.setMessage("All attendance fetched");
 		responseStructure.setStatusCode(HttpStatus.OK.value());
@@ -98,12 +102,11 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 		ResponseStructure<Attendance> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage("Attendence of employee " + date + " fetched successfully.");
+		responseStructure.setMessage("Attendence of " + date + " fetched successfully.");
 		responseStructure.setData(attendanceOptional);
 
-		return new ResponseEntity<ResponseStructure<Attendance>>(responseStructure,HttpStatus.OK);
+		return new ResponseEntity<ResponseStructure<Attendance>>(responseStructure, HttpStatus.OK);
 	}
-
 
 	@Override
 	public ResponseEntity<ResponseStructure<Object>> getAttendanceDetails() {
@@ -122,7 +125,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 		int inOffice = attendances.size() - arrayList.size();
 
-		int[] count = { inOffice, onsites.size(), totalEmployees};
+		int[] count = { inOffice, onsites.size(), totalEmployees };
 
 		ResponseStructure<Object> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());

@@ -107,7 +107,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			throw new InvalidRoleException("Invalid role specified for the employee");
 		}
 
-		String message = "Employee ID :" + employee.getEmployeeId() + " Added Successfully!!";
+		String message = "Employee ID :" + employee.getEmployeeId() + " "+ employee.getFirstName() +" "+ employee.getLastName() + " Added Successfully!!";
 
 		ResponseStructure<Employee> responseStructure = new ResponseStructure<Employee>();
 		responseStructure.setStatusCode(HttpStatus.CREATED.value());
@@ -134,7 +134,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			List<Employee> employees = new ArrayList<Employee>();
 			employees.add(employee2);
 
-			String message = "Employee ID :" + employee2.getEmployeeId() + " LoggedIn Successfully!!";
+			String message = "Employee ID :" + employee2.getFirstName() + " LoggedIn Successfully!!";
 
 			ResponseStructure<List<Employee>> responseStructure = new ResponseStructure<List<Employee>>();
 			responseStructure.setStatusCode(HttpStatus.OK.value());

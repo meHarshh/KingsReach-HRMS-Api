@@ -13,6 +13,6 @@ public interface AssetService {
 
 	ResponseEntity<ResponseStructure<List<Asset>>> findAllService();
 
-	ResponseEntity<ResponseStructure<Asset>> changeStatus(Asset asset);
+	ResponseEntity<ResponseStructure<Asset>> changeStatus(int id, Asset asset);
 
 }
