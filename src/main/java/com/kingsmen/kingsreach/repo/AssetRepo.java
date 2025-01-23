@@ -6,5 +6,7 @@ import com.kingsmen.kingsreach.entity.Asset;
 
 public interface AssetRepo extends JpaRepository<Asset, Integer>{
 
+	Asset findByAssetId(String assetId);
+
 	
 }

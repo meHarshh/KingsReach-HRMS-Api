@@ -37,20 +37,20 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 
 		Optional<Employee> byEmployeeId = employeeRepo.findByEmployeeId(reimbursement.getEmployeeId());
 		reimbursement.setEmployee(byEmployeeId.get());
-
+		int amount = 0;
+		int totalKms = 0;
 		int[] projects = reimbursement.getProjects();
-		if (reimbursement.getPurpose() == "Petrol Allowance") {
-			int amount = 0;
-			int totalKms = 0;
+
+		if (reimbursement.getPurpose().equals("Petrol")) {
+
 			for (int i = 0; i < projects.length; i++) {
 				totalKms += projects[i];
 			}
 
 			totalKms = totalKms * 2;
-			amount = totalKms / projects.length * 5;
+			amount = (totalKms * 5) / projects.length;
 			reimbursement.setAmount(amount);
 		}
-
 		reimbursement.setReimbursementStatus(ReimbursementStatus.PENDING);
 
 		reimbursementRepo.save(reimbursement);

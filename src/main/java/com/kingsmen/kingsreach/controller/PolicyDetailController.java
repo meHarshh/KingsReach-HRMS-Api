@@ -27,7 +27,6 @@ public class PolicyDetailController {
 	
 	@PutMapping("/editPolicy")
 	public ResponseEntity<ResponseStructure<PolicyDetail>> editPolicy(@RequestParam String policyName ,@RequestBody PolicyDetail policyDetail) {
-		
 		return policyDetailService.editPolicy(policyName, policyDetail);
 	}
 	

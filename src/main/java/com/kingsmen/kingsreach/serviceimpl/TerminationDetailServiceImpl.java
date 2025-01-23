@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.kingsmen.kingsreach.entity.Notification;
 import com.kingsmen.kingsreach.entity.TerminationDetail;
+import com.kingsmen.kingsreach.exceptions.EmployeeAlreadyTerminatedException;
 import com.kingsmen.kingsreach.exceptions.TerminationDetailNotFoundException;
 import com.kingsmen.kingsreach.repo.NotificationRepo;
 import com.kingsmen.kingsreach.repo.TerminationDetailRepo;
@@ -29,7 +30,7 @@ public class TerminationDetailServiceImpl implements TerminationDetailService {
 
 		String employeeId = detail.getEmployeeId();
 		if (detailRepo.findByEmployeeId(employeeId).isPresent()) {
-			throw new IllegalArgumentException();
+			throw new EmployeeAlreadyTerminatedException("Employee Already Terminated");
 		}
 		detail = detailRepo.save(detail);
 
