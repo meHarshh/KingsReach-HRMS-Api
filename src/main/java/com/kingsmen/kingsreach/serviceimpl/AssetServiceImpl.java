@@ -74,4 +74,33 @@ public class AssetServiceImpl implements AssetService {
 		return new ResponseEntity<ResponseStructure<List<Asset>>>(responseStructure, HttpStatus.OK);
 
 	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<Asset>> changeStatus(Asset asset) {
+		Asset asset2 = assetRepo.findByAssetId(asset.getAssetId());
+
+		asset2.setStatus(asset.getStatus());
+
+		Asset asset3 = assetRepo.save(asset2);
+
+		String message = asset.getEmployeeName() + " asset detail updated successfully.";
+
+		ResponseStructure<Asset> responseStructure = new ResponseStructure<Asset>();
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage(message);
+		responseStructure.setData(asset3);
+
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setEmployeeId(asset.getEmployeeId());
+		notify.setMessage(asset.getEmployeeName() + " asset detail updated successfully.");
+		notify.setCreatedAt(LocalDateTime.now());
+		notificationRepo.save(notify);
+
+		return new ResponseEntity<ResponseStructure<Asset>>(responseStructure, HttpStatus.OK);
+
+	}
+
+
+
 }

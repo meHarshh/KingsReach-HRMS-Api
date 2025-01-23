@@ -30,40 +30,6 @@ public class Reimbursement {
 	@ManyToOne
 	private Employee employee;
 
-
-	public ReimbursementStatus getReimbursementStatus() {
-		return reimbursementStatus;
-	}
-
-	public void setReimbursementStatus(ReimbursementStatus reimbursementStatus) {
-		this.reimbursementStatus = reimbursementStatus;
-	}
-
-	public double getAmount() {
-		return amount;
-	}
-
-	public void setAmount(double amount) {
-		this.amount = amount;
-	}
-	
-
-	public Employee getEmployee() {
-		return employee;
-	}
-
-	public void setEmployee(Employee employee) {
-		this.employee = employee;
-	}
-
-	public String getEmployeeId() {
-		return employeeId;
-	}
-
-	public void setEmployeeId(String employeeId) {
-		this.employeeId = employeeId;
-	}
-
 	public int getReimbursementId() {
 		return reimbursementId;
 	}
@@ -78,6 +44,14 @@ public class Reimbursement {
 
 	public void setEmployeeName(String employeeName) {
 		this.employeeName = employeeName;
+	}
+
+	public String getEmployeeId() {
+		return employeeId;
+	}
+
+	public void setEmployeeId(String employeeId) {
+		this.employeeId = employeeId;
 	}
 
 	public String getPurpose() {
@@ -104,12 +78,36 @@ public class Reimbursement {
 		this.projects = projects;
 	}
 
+	public double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+
+	public ReimbursementStatus getReimbursementStatus() {
+		return reimbursementStatus;
+	}
+
+	public void setReimbursementStatus(ReimbursementStatus reimbursementStatus) {
+		this.reimbursementStatus = reimbursementStatus;
+	}
+
 	public String getReason() {
 		return reason;
 	}
 
 	public void setReason(String reason) {
 		this.reason = reason;
+	}
+
+	public Employee getEmployee() {
+		return employee;
+	}
+
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
 	}
 
 }
