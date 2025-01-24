@@ -48,10 +48,10 @@ public class AttendanceServiceImpl implements AttendanceService {
 		// attendance.setEmployee(employee);
 		attendance.setFirstPunchIn(attendance.getFirstPunchIn());
 		attendance.setLastPunchOut(attendance.getLastPunchOut());
-		attendance.setEmployeeName(employee.getName());
-		attendance.setDate(attendance.getDate());
+		attendance.setAttendanceDate(LocalDate.now());
 		attendance.setEmployee(employee);
-
+		attendance.setWorkmode(attendance.getWorkmode());
+		attendance.setLocation(attendance.getLocation());
 		attendanceRepo.save(attendance);
 
 		ResponseStructure<Attendance> responseStructure = new ResponseStructure<Attendance>();

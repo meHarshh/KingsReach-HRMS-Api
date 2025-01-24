@@ -4,12 +4,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.kingsmen.kingsreach.enums.Workmode;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Transient;
 
 @Entity
 public class Attendance {
@@ -26,15 +28,24 @@ public class Attendance {
 	private LocalDate attendanceDate;
 	private String location;
 	private int totalBreakTime;
+	private Workmode workmode;
 
+	@Transient
 	private String employeeName;
+	@Transient
 	private String employeeId;
 
-	private LocalDate date;
-	
 	@JsonIgnore
 	@ManyToOne
 	private Employee employee;
+
+	public Workmode getWorkmode() {
+		return workmode;
+	}
+
+	public void setWorkmode(Workmode workmode) {
+		this.workmode = workmode;
+	}
 
 	public String getEmployeeName() {
 		return employeeName;
@@ -149,14 +160,6 @@ public class Attendance {
 
 	public void setTotalBreakTime(int totalBreakTime) {
 		this.totalBreakTime = totalBreakTime;
-	}
-
-	public LocalDate getDate() {
-		return date;
-	}
-
-	public void setDate(LocalDate date) {
-		this.date = date;
 	}
 
 }
