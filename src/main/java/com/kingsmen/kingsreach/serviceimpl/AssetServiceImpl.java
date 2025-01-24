@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.kingsmen.kingsreach.entity.Asset;
 import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Notification;
+import com.kingsmen.kingsreach.exception.IdNotFoundException;
 import com.kingsmen.kingsreach.exceptions.AssetNotFoundException;
 import com.kingsmen.kingsreach.repo.AssetRepo;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
@@ -41,7 +42,7 @@ public class AssetServiceImpl implements AssetService {
 			asset.setEmployee(employee);
 			Asset asset1 = assetRepo.save(asset);
 
-			String message = asset.getAssetName() + " granted to " + asset.getAssetId();
+			String message = asset.getAssetName() + " granted to " + asset.getEmployeeName();
 
 			ResponseStructure<Asset> responseStructure = new ResponseStructure<Asset>();
 			responseStructure.setStatusCode(HttpStatus.OK.value());
@@ -74,4 +75,34 @@ public class AssetServiceImpl implements AssetService {
 		return new ResponseEntity<ResponseStructure<List<Asset>>>(responseStructure, HttpStatus.OK);
 
 	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<Asset>> changeStatus(int id,Asset asset) {
+		Asset asset2 = assetRepo.findById(id)
+				.orElseThrow(() -> new IdNotFoundException("Asset with ID not found"));
+
+		asset2.setStatus(asset.getStatus());
+
+		Asset asset3 = assetRepo.save(asset2);
+
+		String message = asset.getEmployeeName() + " asset detail updated successfully.";
+
+		ResponseStructure<Asset> responseStructure = new ResponseStructure<Asset>();
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage(message);
+		responseStructure.setData(asset3);
+
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setEmployeeId(asset.getEmployeeId());
+		notify.setMessage(asset.getEmployeeName() + " asset detail updated successfully.");
+		notify.setCreatedAt(LocalDateTime.now());
+		notificationRepo.save(notify);
+
+		return new ResponseEntity<ResponseStructure<Asset>>(responseStructure, HttpStatus.OK);
+
+	}
+
+
+
 }

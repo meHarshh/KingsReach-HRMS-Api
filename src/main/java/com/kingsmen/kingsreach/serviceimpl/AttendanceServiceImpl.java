@@ -102,7 +102,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 		ResponseStructure<Attendance> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage("Attendence of employee " + date + " fetched successfully.");
+		responseStructure.setMessage("Attendence of " + date + " fetched successfully.");
 		responseStructure.setData(attendanceOptional);
 
 		return new ResponseEntity<ResponseStructure<Attendance>>(responseStructure, HttpStatus.OK);
