@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,11 @@ public class PayrollController {
 	@GetMapping(value ="/getPayrollDetails")
 	private ResponseEntity<ResponseStructure<List<Object>>>  getPayrollDetails(@RequestParam String employeeId){
 		return payrollService.getPayrollDetails(employeeId);
+	}
+	
+	@GetMapping(value = "/getPayrollOfMonth/{date}")
+	private ResponseEntity<ResponseStructure<List<Payroll>>> getPayrollOfMonth(@PathVariable LocalDate date){
+		return payrollService.getPayrollOfMonth(date);
 	}
 
 }

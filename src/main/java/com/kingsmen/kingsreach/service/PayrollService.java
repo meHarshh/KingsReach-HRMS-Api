@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -22,5 +23,7 @@ public interface PayrollService {
 	ResponseEntity<ResponseStructure<Payroll>> approvedSalarySlip(Payroll payroll);
 
 	ResponseEntity<ResponseStructure<List<Object>>> getPayrollDetails(String employeeId);
+
+	ResponseEntity<ResponseStructure<List<Payroll>>> getPayrollOfMonth(LocalDate date);
 
 }

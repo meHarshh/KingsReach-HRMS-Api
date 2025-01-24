@@ -1,5 +1,6 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,17 +53,20 @@ public class PayrollServiceImpl implements PayrollService {
 
 		double salary = payroll.getSalary(); 
 
-		double finalSalary = calculateLopDeduction(salary, lopDays);
-		double lopDeduction = calculateLop(salary, lopDays);
+		int finalSalary = calculateLopDeduction(salary, lopDays);
+	//	int lopDeduction = calculateLop(salary, lopDays);
 
 		double pfDeduction = finalSalary * 0.12;
-		finalSalary = finalSalary - pfDeduction;
+		finalSalary = (int) (finalSalary - pfDeduction);
 
 		payroll.setSalary(finalSalary);
 
-		payroll.setLopDeduction(lopDeduction);
+	//	payroll.setLopDeduction(lopDeduction);
 
 		payroll.setProvidentFund(pfDeduction);
+		
+		payroll.setDate(LocalDate.now());
+		System.out.println(LocalDate.now());
 
 		String message = "The payroll of " + employee.getName() + " from " + payroll.getDepartment() + " department has been updated";
 
@@ -82,19 +86,19 @@ public class PayrollServiceImpl implements PayrollService {
 
 	}
 
-	private double calculateLop(double salary,double lopDays) {
+	private int calculateLop(double salary,double lopDays) {
 		double lopPerDay = salary / 30;
-		double totalLopDeduction = lopPerDay * lopDays;
+		int totalLopDeduction = (int) (lopPerDay * lopDays);
 
 		return totalLopDeduction;
 	}
 
-	public double calculateLopDeduction(double salary, double lopDays) {
+	public int calculateLopDeduction(double salary, double lopDays) {
 
 		double lopPerDay = salary / 30;
 		double totalLopDeduction = lopPerDay * lopDays;
 
-		double finalSalary = salary - totalLopDeduction;
+		int finalSalary = (int) (salary - totalLopDeduction);
 
 		return finalSalary;
 	}
@@ -178,6 +182,12 @@ public class PayrollServiceImpl implements PayrollService {
 
 		Payroll existingPayroll = payrollRepo.findById(payroll.getPayrollId())
 				.orElseThrow(() -> new RuntimeException());
+		
+		double lopDays = payroll.getLopDays(); 
+		double salary = payroll.getSalary(); 
+		
+		int lopDeduction = calculateLop(salary, lopDays);
+		int basicPay = calculateBasicPay(salary);
 
 		existingPayroll.setSalary(payroll.getSalary());
 		existingPayroll.setTaxDeduction(payroll.getTaxDeduction());
@@ -189,6 +199,8 @@ public class PayrollServiceImpl implements PayrollService {
 		existingPayroll.setOtherAllowance(payroll.getOtherAllowance());
 		existingPayroll.setEmployeeProvidentFund(payroll.getEmployeeProvidentFund());
 		existingPayroll.setLopDays(payroll.getLopDays());
+		existingPayroll.setLopDeduction(lopDeduction);
+		existingPayroll.setBasicPay(basicPay);
 
 		Payroll updatedPayroll = payrollRepo.save(existingPayroll);
 
@@ -205,6 +217,11 @@ public class PayrollServiceImpl implements PayrollService {
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
+	}
+
+	private int calculateBasicPay(double salary) {
+		int basicPay = (int) (salary - (salary * 0.40));
+		return basicPay;
 	}
 
 	@Transactional
@@ -305,6 +322,22 @@ public class PayrollServiceImpl implements PayrollService {
 		responseStructure.setData(list);
 
 		return new ResponseEntity<ResponseStructure<List<Object>>>(responseStructure,HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<List<Payroll>>> getPayrollOfMonth(LocalDate date) {
+		//int month = date.getMonthValue(); 
+		
+		List<Payroll> payroll = payrollRepo.findByDate(date);
+		
+		ResponseStructure<List<Payroll>> responseStructure = new ResponseStructure<>();
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure
+		.setMessage("Salary details of employee for the month " + date + " fetched successfully.");
+		responseStructure.setData(payroll);
+
+		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
+		
 	} 
 
 
