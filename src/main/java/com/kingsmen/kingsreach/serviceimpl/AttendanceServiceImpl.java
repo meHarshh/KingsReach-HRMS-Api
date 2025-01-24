@@ -48,10 +48,10 @@ public class AttendanceServiceImpl implements AttendanceService {
 		// attendance.setEmployee(employee);
 		attendance.setFirstPunchIn(attendance.getFirstPunchIn());
 		attendance.setLastPunchOut(attendance.getLastPunchOut());
-		attendance.setEmployeeName(employee.getName());
-		attendance.setDate(attendance.getDate());
+		attendance.setAttendanceDate(LocalDate.now());
 		attendance.setEmployee(employee);
-
+		attendance.setWorkmode(attendance.getWorkmode());
+		attendance.setLocation(attendance.getLocation());
 		attendanceRepo.save(attendance);
 
 		ResponseStructure<Attendance> responseStructure = new ResponseStructure<Attendance>();
@@ -97,12 +97,12 @@ public class AttendanceServiceImpl implements AttendanceService {
 	}
 
 	@Override
-	public ResponseEntity<ResponseStructure<Attendance>> getAttendenceForDate(String employeeId, LocalDate date) {
-		Attendance attendanceOptional = attendanceRepo.findByEmployeeIdAndDate(employeeId, date);
+	public ResponseEntity<ResponseStructure<Attendance>> getAttendenceForDate(String employeeId, LocalDate attendanceDate) {
+		Attendance attendanceOptional = attendanceRepo.findByEmployeeIdAndAttendanceDate(employeeId, attendanceDate);
 
 		ResponseStructure<Attendance> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage("Attendence of " + date + " fetched successfully.");
+		responseStructure.setMessage("Attendence of " + attendanceDate + " fetched successfully.");
 		responseStructure.setData(attendanceOptional);
 
 		return new ResponseEntity<ResponseStructure<Attendance>>(responseStructure, HttpStatus.OK);
@@ -119,7 +119,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 			}
 		}
 
-		List<Attendance> attendances = attendanceRepo.findByDate(LocalDate.now());
+		List<Attendance> attendances = attendanceRepo.findByAttendanceDate(LocalDate.now());
 
 		int totalEmployees = attendances.size() + onsites.size();
 

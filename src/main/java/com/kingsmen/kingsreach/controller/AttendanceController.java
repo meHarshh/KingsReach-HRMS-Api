@@ -41,8 +41,8 @@ public class AttendanceController {
 	}
 	
 	@GetMapping(value = "/getAttendenceOfSpecificDate")
-	private ResponseEntity<ResponseStructure<Attendance>> getAttendenceForDate(@RequestParam  String employeeId, @RequestParam LocalDate date){
-		return attendanceService.getAttendenceForDate(employeeId, date);
+	private ResponseEntity<ResponseStructure<Attendance>> getAttendenceForDate(@RequestParam  String employeeId, @RequestParam LocalDate attendanceDate){
+		return attendanceService.getAttendenceForDate(employeeId, attendanceDate);
 	}
 	
 	@GetMapping(value = "/getAttendenceDetails")
