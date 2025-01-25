@@ -13,4 +13,6 @@ public interface PayrollRepo extends JpaRepository<Payroll, Integer>{
 
 	List<Payroll> findByDate(LocalDate date);
 
+	List<Payroll> findByDateBetween(LocalDate startDate, LocalDate endDate);
+
 }

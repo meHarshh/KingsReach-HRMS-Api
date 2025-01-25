@@ -2,6 +2,7 @@ package com.kingsmen.kingsreach.serviceimpl;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -54,17 +55,17 @@ public class PayrollServiceImpl implements PayrollService {
 		double salary = payroll.getSalary(); 
 
 		int finalSalary = calculateLopDeduction(salary, lopDays);
-	//	int lopDeduction = calculateLop(salary, lopDays);
+		//	int lopDeduction = calculateLop(salary, lopDays);
 
 		double pfDeduction = finalSalary * 0.12;
 		finalSalary = (int) (finalSalary - pfDeduction);
 
 		payroll.setSalary(finalSalary);
 
-	//	payroll.setLopDeduction(lopDeduction);
+		//	payroll.setLopDeduction(lopDeduction);
 
 		payroll.setProvidentFund(pfDeduction);
-		
+
 		payroll.setDate(LocalDate.now());
 		System.out.println(LocalDate.now());
 
@@ -182,10 +183,10 @@ public class PayrollServiceImpl implements PayrollService {
 
 		Payroll existingPayroll = payrollRepo.findById(payroll.getPayrollId())
 				.orElseThrow(() -> new RuntimeException());
-		
+
 		double lopDays = payroll.getLopDays(); 
 		double salary = payroll.getSalary(); 
-		
+
 		int lopDeduction = calculateLop(salary, lopDays);
 		int basicPay = calculateBasicPay(salary);
 
@@ -326,18 +327,26 @@ public class PayrollServiceImpl implements PayrollService {
 
 	@Override
 	public ResponseEntity<ResponseStructure<List<Payroll>>> getPayrollOfMonth(LocalDate date) {
+		//int year = date.getDayOfYear();
 		//int month = date.getMonthValue(); 
-		
-		List<Payroll> payroll = payrollRepo.findByDate(date);
-		
+
+		//List<Payroll> payroll = payrollRepo.findByDate(date);
+
+		int month = date.getMonthValue();
+		int year = date.getYear();
+
+		LocalDate startDate = LocalDate.of(year, month, 1);
+		LocalDate endDate = startDate.with(TemporalAdjusters.lastDayOfMonth());
+
+		List<Payroll> payroll = payrollRepo.findByDateBetween(startDate, endDate);
+
 		ResponseStructure<List<Payroll>> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure
-		.setMessage("Salary details of employee for the month " + date + " fetched successfully.");
+		responseStructure.setMessage("Salary details of employee for the month " + date + " fetched successfully.");
 		responseStructure.setData(payroll);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
-		
+
 	} 
 
 
