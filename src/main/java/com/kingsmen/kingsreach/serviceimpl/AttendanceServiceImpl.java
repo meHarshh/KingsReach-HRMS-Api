@@ -98,8 +98,13 @@ public class AttendanceServiceImpl implements AttendanceService {
 	}
 
 	@Override
+
 	public ResponseEntity<ResponseStructure<Attendance>> getAttendenceForDate(String employeeId, LocalDate attendanceDate) {
 		Attendance attendanceOptional = attendanceRepo.findByEmployeeIdAndAttendanceDate(employeeId, attendanceDate);
+
+	public ResponseEntity<ResponseStructure<Attendance>> getAttendenceForDate(String employeeId, LocalDate date) {
+		Attendance attendanceOptional = attendanceRepo.findByEmployeeIdAndAttendanceDate(employeeId, date);
+
 
 		ResponseStructure<Attendance> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
