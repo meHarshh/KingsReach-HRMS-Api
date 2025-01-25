@@ -3,6 +3,7 @@ package com.kingsmen.kingsreach.entity;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.kingsmen.kingsreach.enums.Department;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,6 +28,7 @@ public class Expense {
 	private double amount;
 	private LocalDate date;
 	private String reason;
+	private Department department;
 
 	@JsonIgnore
 	@Transient
@@ -94,6 +96,14 @@ public class Expense {
 
 	public void setReason(String reason) {
 		this.reason = reason;
+	}
+
+	public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
 	}
 
 }

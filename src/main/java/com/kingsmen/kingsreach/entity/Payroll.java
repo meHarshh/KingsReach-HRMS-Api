@@ -1,8 +1,10 @@
 package com.kingsmen.kingsreach.entity;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.enums.PayrollStatus;
 
 import jakarta.persistence.Column;
@@ -23,7 +25,7 @@ public class Payroll implements Serializable {
 	@Column(name = "employee_id")
 	private String employeeId;
 
-	private String department;
+	private Department department;
 	private double salary;
 	private double taxDeduction;
 	private double specialAllowance;
@@ -41,6 +43,7 @@ public class Payroll implements Serializable {
 
 	private double lopDays;
 	private double lopDeduction;
+	private LocalDate date;
 
 	@JsonIgnore
 	@OneToOne
@@ -86,11 +89,11 @@ public class Payroll implements Serializable {
 		this.employeeId = employeeId;
 	}
 
-	public String getDepartment() {
+	public Department getDepartment() {
 		return department;
 	}
 
-	public void setDepartment(String department) {
+	public void setDepartment(Department department) {
 		this.department = department;
 	}
 
@@ -195,11 +198,19 @@ public class Payroll implements Serializable {
 		this.lopDeduction = lopDeduction;
 	}
 
-	public Payroll(int payrollId, String employeeId, String department, double salary, double taxDeduction,
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
+
+	public Payroll(int payrollId, String employeeId, Department department, double salary, double taxDeduction,
 			double specialAllowance, double employeeStateInsurance, double houseRentAllowance, double providentFund,
 			double grossSalary, double otherAllowance, double employeeProvidentFund, double basicPay,
 			String employeeName, String location, PayrollStatus payrollStatus, double lopDays, double lopDeduction,
-			Employee employee) {
+			LocalDate date, Employee employee) {
 		super();
 		this.payrollId = payrollId;
 		this.employeeId = employeeId;
@@ -219,6 +230,7 @@ public class Payroll implements Serializable {
 		this.payrollStatus = payrollStatus;
 		this.lopDays = lopDays;
 		this.lopDeduction = lopDeduction;
+		this.date = date;
 		this.employee = employee;
 	}
 

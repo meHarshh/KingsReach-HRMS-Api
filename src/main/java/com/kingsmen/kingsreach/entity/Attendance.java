@@ -26,12 +26,11 @@ public class Attendance {
 	private boolean isAbsent;
 	private LocalDate attendanceDate;
 	private String location;
-	private int totalBreakTime;
 	private Workmode workmode;
 
 	
 	private String employeeName;
-	
+
 	private String employeeId;
 
 	@JsonIgnore
@@ -151,14 +150,6 @@ public class Attendance {
 
 	public void setAbsent(boolean isAbsent) {
 		this.isAbsent = isAbsent;
-	}
-
-	public int getTotalBreakTime() {
-		return totalBreakTime;
-	}
-
-	public void setTotalBreakTime(int totalBreakTime) {
-		this.totalBreakTime = totalBreakTime;
 	}
 
 }

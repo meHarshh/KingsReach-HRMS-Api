@@ -31,4 +31,5 @@ public class EventController {
 	private ResponseEntity<ResponseStructure<List<Event>>> getEvents(){
 		return eventService.getEvents();
 	}
+	
 }
