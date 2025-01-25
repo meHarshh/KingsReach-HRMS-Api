@@ -98,13 +98,9 @@ public class AttendanceServiceImpl implements AttendanceService {
 	}
 
 	@Override
-
-	public ResponseEntity<ResponseStructure<Attendance>> getAttendenceForDate(String employeeId, LocalDate attendanceDate) {
+	public ResponseEntity<ResponseStructure<Attendance>> getAttendenceForDate(String employeeId,
+			LocalDate attendanceDate) {
 		Attendance attendanceOptional = attendanceRepo.findByEmployeeIdAndAttendanceDate(employeeId, attendanceDate);
-
-	public ResponseEntity<ResponseStructure<Attendance>> getAttendenceForDate(String employeeId, LocalDate date) {
-		Attendance attendanceOptional = attendanceRepo.findByEmployeeIdAndAttendanceDate(employeeId, date);
-
 
 		ResponseStructure<Attendance> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
@@ -144,9 +140,9 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 	@Override
 	public ResponseEntity<ResponseStructure<Attendance>> getAttendanceBetween(AttendanceHelper attendanceHelper) {
-		Attendance attendance = attendanceRepo.findByEmployeeIdAndAttendanceDateBetween
-				(attendanceHelper.getEmployeeId(),attendanceHelper.getFromDate(),attendanceHelper.getToDate());
-		
+		Attendance attendance = attendanceRepo.findByEmployeeIdAndAttendanceDateBetween(
+				attendanceHelper.getEmployeeId(), attendanceHelper.getFromDate(), attendanceHelper.getToDate());
+
 		ResponseStructure<Attendance> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Employee Attendance details fetched successfully");
