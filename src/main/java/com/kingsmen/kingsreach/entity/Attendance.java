@@ -30,9 +30,9 @@ public class Attendance {
 	private int totalBreakTime;
 	private Workmode workmode;
 
-	@Transient
+	
 	private String employeeName;
-	@Transient
+	
 	private String employeeId;
 
 	@JsonIgnore
