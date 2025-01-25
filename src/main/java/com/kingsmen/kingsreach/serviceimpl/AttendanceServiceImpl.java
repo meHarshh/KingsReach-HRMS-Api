@@ -119,7 +119,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 			}
 		}
 
-		List<Attendance> attendances = attendanceRepo.findByDate(LocalDate.now());
+		List<Attendance> attendances = attendanceRepo.findByAttendanceDate(LocalDate.now());
 
 		int totalEmployees = attendances.size() + onsites.size();
 
