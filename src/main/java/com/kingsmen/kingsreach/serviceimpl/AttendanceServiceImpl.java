@@ -16,6 +16,7 @@ import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Notification;
 import com.kingsmen.kingsreach.entity.Onsite;
 import com.kingsmen.kingsreach.exceptions.EmployeeIdNotExistsException;
+import com.kingsmen.kingsreach.helper.AttendanceHelper;
 import com.kingsmen.kingsreach.repo.AttendanceRepo;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
 import com.kingsmen.kingsreach.repo.NotificationRepo;
@@ -132,6 +133,19 @@ public class AttendanceServiceImpl implements AttendanceService {
 		responseStructure.setMessage("Employee strength details fetched successfully");
 		responseStructure.setMessage("inOffice ,onsite ,totalEmployees");
 		responseStructure.setData(count);
+
+		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<Attendance>> getAttendanceBetween(AttendanceHelper attendanceHelper) {
+		Attendance attendance = attendanceRepo.findByEmployeeIdAndAttendanceDateBetween
+				(attendanceHelper.getEmployeeId(),attendanceHelper.getFromDate(),attendanceHelper.getToDate());
+		
+		ResponseStructure<Attendance> responseStructure = new ResponseStructure<>();
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage("Employee Attendance details fetched successfully");
+		responseStructure.setData(attendance);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	}

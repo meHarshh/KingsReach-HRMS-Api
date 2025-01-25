@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kingsmen.kingsreach.entity.Attendance;
+import com.kingsmen.kingsreach.helper.AttendanceHelper;
 import com.kingsmen.kingsreach.service.AttendanceService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
@@ -48,5 +49,10 @@ public class AttendanceController {
 	@GetMapping(value = "/getAttendenceDetails")
 	private ResponseEntity<ResponseStructure<Object>> getAttendenceDetails(){
 		return attendanceService.getAttendanceDetails();
+	}
+	
+	@GetMapping(value = "/getAttedanceBetween")
+	private ResponseEntity<ResponseStructure<Attendance>> getAttendanceBetween(@RequestBody AttendanceHelper attendanceHelper){
+		return attendanceService.getAttendanceBetween(attendanceHelper);
 	}
 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ import com.kingsmen.kingsreach.exceptions.EmployeeIdNotExistsException;
 import com.kingsmen.kingsreach.exceptions.InvalidEmailException;
 import com.kingsmen.kingsreach.exceptions.PasswordMismatchException;
 import com.kingsmen.kingsreach.exceptions.UserIdOrEmailAlreadyExistException;
+import com.kingsmen.kingsreach.helper.EmployeeHelper;
 import com.kingsmen.kingsreach.repo.AdminRepo;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
 import com.kingsmen.kingsreach.repo.ManagerRepo;
@@ -78,8 +80,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 		// Setting the manager for the employee by down-casting the Manager entity
 		if (employee.getRole() != EmployeeRole.ADMIN && employee.getRole() != EmployeeRole.MANAGER) {
 			String managerId = employee.getManagerId();
-			Employee orElseThrow = employeeRepo.findByEmployeeId(managerId).orElseThrow(() -> new EmployeeIdNotExistsException(
-					"The Employee with given Id is not Exist, Enter valid ID"));
+			Employee orElseThrow = employeeRepo.findByEmployeeId(managerId).orElseThrow(
+					() -> new EmployeeIdNotExistsException("The Employee with given Id is not Exist, Enter valid ID"));
 			employee.setManager((Manager) orElseThrow);
 		}
 		switch (employee.getRole()) {
@@ -107,14 +109,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 			throw new InvalidRoleException("Invalid role specified for the employee");
 		}
 
-		String message = "Employee ID :" + employee.getEmployeeId() + " "+ employee.getFirstName() +" "+ employee.getLastName() + " Added Successfully!!";
+		String message = "Employee ID :" + employee.getEmployeeId() + " " + employee.getFirstName() + " "
+				+ employee.getLastName() + " Added Successfully!!";
 
 		ResponseStructure<Employee> responseStructure = new ResponseStructure<Employee>();
 		responseStructure.setStatusCode(HttpStatus.CREATED.value());
 		responseStructure.setMessage(message);
 		responseStructure.setData(employee);
 
-		//Notification code 
+		// Notification code
 		Notification notify = new Notification();
 		notify.setEmployeeId(employee.getEmployeeId());
 		notify.setMessage(message);
@@ -171,7 +174,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		Optional<Employee> byEmployeeId = employeeRepo.findByEmployeeId(employee.getEmployeeId());
 		Employee employee2 = byEmployeeId.get();
 
-	//	employee2.setEmployeeId(employee.getEmployeeId());
+		// employee2.setEmployeeId(employee.getEmployeeId());
 		employee2.setFirstName(employee.getFirstName());
 		employee2.setLastName(employee.getLastName());
 		employee2.setOfficialEmail(employee.getOfficialEmail());
@@ -216,7 +219,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		responseStructure.setMessage(employee.getName() + " Data updated Successfully.");
 		responseStructure.setData(employee3);
 
-		//Notification code 
+		// Notification code
 		Notification notify = new Notification();
 		notify.setEmployeeId(employee.getEmployeeId());
 		notify.setMessage(employee.getName() + " Data updated Successfully.");
@@ -303,6 +306,28 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.OK);
 
+	}
+
+	public ResponseEntity<ResponseStructure<List<EmployeeHelper>>> getEmployeeNameAndDepartment() {
+		List<Employee> all = employeeRepo.findAll();
+
+		List<EmployeeHelper> employeeHelpers = new ArrayList<>();
+
+		for (Employee employee : all) {
+			EmployeeHelper employeeHelper = new EmployeeHelper();
+			employeeHelper.setEmployeeId(employee.getEmployeeId());
+			employeeHelper.setDepartment(employee.getDepartment());
+			employeeHelper.setEmployeeName(employee.getName());
+
+			employeeHelpers.add(employeeHelper);
+		}
+
+		ResponseStructure<List<EmployeeHelper>> responseStructure = new ResponseStructure<>();
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage("Employee details fetched successfully");
+		responseStructure.setData(employeeHelpers);
+
+		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	}
 
 }
