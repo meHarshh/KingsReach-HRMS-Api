@@ -65,4 +65,5 @@ public class LeaveController {
 	private ResponseEntity<ResponseStructure<List<Leave>>> fetchLeaveBasedOnManagerEmployee(@RequestParam String employeeId){
 		return leaveservice.fetchLeaveBasedOnManagerEmployee(employeeId);
 	}
+	
 }

@@ -31,4 +31,5 @@ public interface EmployeeRepo extends JpaRepository<Employee, Integer> {
 
 	List<Employee> findByManager(Manager manager);
 
+
 }

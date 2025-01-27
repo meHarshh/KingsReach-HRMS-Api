@@ -2,6 +2,7 @@ package com.kingsmen.kingsreach.controller;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -51,8 +52,14 @@ public class AttendanceController {
 		return attendanceService.getAttendanceDetails();
 	}
 	
-	@GetMapping(value = "/getAttedanceBetween")
-	private ResponseEntity<ResponseStructure<Attendance>> getAttendanceBetween(@RequestBody AttendanceHelper attendanceHelper){
+	@PostMapping(value = "/getAttedanceBetween")
+	private ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceBetween(@RequestBody AttendanceHelper attendanceHelper){
 		return attendanceService.getAttendanceBetween(attendanceHelper);
 	}
+	
+	@GetMapping(value = "/daysOfAttendance")
+	private ResponseEntity<ResponseStructure<Map<String, List<Attendance>>>> getAttendanceForDays(){
+		return attendanceService.getAttendanceForDays();
+	}
+	
 }

@@ -2,6 +2,7 @@ package com.kingsmen.kingsreach.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 
@@ -21,6 +22,8 @@ public interface AttendanceService {
 
 	ResponseEntity<ResponseStructure<Object>> getAttendanceDetails();
 
-	ResponseEntity<ResponseStructure<Attendance>> getAttendanceBetween(AttendanceHelper attendanceHelper);
+	ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceBetween(AttendanceHelper attendanceHelper);
+
+	ResponseEntity<ResponseStructure<Map<String, List<Attendance>>>> getAttendanceForDays();
 
 }

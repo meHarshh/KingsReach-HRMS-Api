@@ -155,31 +155,6 @@ public class PayrollServiceImpl implements PayrollService {
 
 	@Override
 	public ResponseEntity<ResponseStructure<Payroll>> editEmployeeSalary(Payroll payroll) {
-		// Optional<Employee> optionalEmployee =
-		// employeeRepo.findByEmployeeId(employeeId);
-		//
-		// if (optionalEmployee.isEmpty()) {
-		// ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
-		// responseStructure.setStatusCode(HttpStatus.NOT_FOUND.value());
-		// responseStructure.setMessage("Employee not found with ID: " + employeeId);
-		// responseStructure.setData(null);
-		//
-		// return new ResponseEntity<>(responseStructure, HttpStatus.NOT_FOUND);
-		// }
-		//
-		// Employee employee = optionalEmployee.get();
-		//
-		// Payroll existingPayroll = employee.getPayroll();
-		//
-		// if (existingPayroll == null) {
-		// ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
-		// responseStructure.setStatusCode(HttpStatus.NOT_FOUND.value());
-		// responseStructure.setMessage("No payroll record found for employee ID: " +
-		// employeeId);
-		// responseStructure.setData(null);
-		//
-		// return new ResponseEntity<>(responseStructure, HttpStatus.NOT_FOUND);
-		// }
 
 		Payroll existingPayroll = payrollRepo.findById(payroll.getPayrollId())
 				.orElseThrow(() -> new RuntimeException());

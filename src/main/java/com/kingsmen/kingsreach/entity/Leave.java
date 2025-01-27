@@ -11,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -32,9 +33,11 @@ public class Leave {
 	private int sickLeaveBalance = 12;
 	private int paidLeaveBalance = 12;
 	private int emergencyLeaveBalance = 7;
+	private int noOfDays;
 
 	@JsonIgnore
 	@ManyToOne
+	@JoinColumn(name = "employee_emp_id")
 	private Employee employee;
 
 	private ApprovedBy approvedBy;
@@ -159,6 +162,14 @@ public class Leave {
 				+ ", sickLeaveBalance=" + sickLeaveBalance + ", paidLeaveBalance=" + paidLeaveBalance
 				+ ", emergencyLeaveBalance=" + emergencyLeaveBalance + ", employee=" + employee + ", approvedBy="
 				+ approvedBy + "]";
+	}
+
+	public int getNoOfDays() {
+		return noOfDays;
+	}
+
+	public void setNoOfDays(int noOfDays) {
+		this.noOfDays = noOfDays;
 	}
 	
 }
