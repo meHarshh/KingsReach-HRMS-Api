@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -86,19 +85,25 @@ public class LeaveServiceImpl implements LeaveService {
 
 	public ResponseEntity<ResponseStructure<Leave>> applyLeave(Leave leave) {
 		ResponseStructure<Leave> responseStructure = new ResponseStructure<>();
-		
-			Employee employee = employeeRepo.findByEmployeeId(leave.getEmployeeId()).orElseThrow();
+
+		Employee employee = employeeRepo.findByEmployeeId(leave.getEmployeeId()).orElseThrow();
 
 		Payroll payroll = payrollRepository.findByEmployeeId(leave.getEmployeeId());
 		if (payroll == null) {
 			throw new PayrollDetailsNotFoundException(
 					"Payroll record not found for employee ID: " + leave.getEmployeeId() + " Enter valid Employee ID");
 		}
+		
+		LocalDate fromDate = leave.getFromDate(); 
+		LocalDate toDate = leave.getToDate(); 
+		int noOfDays = (int) ChronoUnit.DAYS.between(fromDate, toDate);
+		
 		// Fetch the employee's leave record
 
 		Leave existingLeave = leaveRepository.findByEmployeeId(leave.getEmployeeId()).orElse(new Leave());
 
 		saveLeaveRecord(leave);
+		
 		existingLeave.setEmployeeName(employee.getName());
 		existingLeave.setEmployee(employee);
 		existingLeave.setEmployeeId(employee.getEmployeeId());
@@ -108,7 +113,8 @@ public class LeaveServiceImpl implements LeaveService {
 		existingLeave.setApprovedBy(leave.getApprovedBy());
 		existingLeave.setReason(leave.getReason());
 		existingLeave.setLeaveStatus(LeaveStatus.PENDING);
-
+		existingLeave.setNoOfDays(noOfDays);
+		
 		// Calculate leave days
 		long leaveDays = ChronoUnit.DAYS.between(leave.getFromDate(), leave.getToDate()) + 1;
 
@@ -197,6 +203,10 @@ public class LeaveServiceImpl implements LeaveService {
 	}
 
 	private void saveLeaveRecord(Leave leave) {
+		LocalDate fromDate = leave.getFromDate(); 
+		LocalDate toDate = leave.getToDate(); 
+		int noOfDays = (int) ChronoUnit.DAYS.between(fromDate, toDate);
+		
 		LeaveRecord leaveRecord = new LeaveRecord();
 		leaveRecord.setEmployee(leave.getEmployee());
 		leaveRecord.setEmployeeId(leave.getEmployeeId());
@@ -206,7 +216,9 @@ public class LeaveServiceImpl implements LeaveService {
 		leaveRecord.setToDate(leave.getToDate());
 		leaveRecord.setStatus(leave.getLeaveStatus());
 		leaveRecord.setReason(leave.getReason());
-		
+		leaveRecord.setLeaveType(leave.getLeaveType());
+		leaveRecord.setNoOfDays(noOfDays);
+
 		leaveRecordRepo.save(leaveRecord);
 	}
 
@@ -217,6 +229,7 @@ public class LeaveServiceImpl implements LeaveService {
 				.orElseThrow(() -> new LeaveIdNotFoundException("Invalid Leave ID"));
 
 		leave2.setLeaveStatus(leave.getLeaveStatus());
+
 		leave2 = leaveRepository.findById(leave2.getLeaveId())
 				.orElseThrow(() -> new LeaveIdNotFoundException("Invalid Leave ID"));
 
@@ -234,6 +247,7 @@ public class LeaveServiceImpl implements LeaveService {
 
 		return new ResponseEntity<ResponseStructure<Leave>>(responseStructure, HttpStatus.OK);
 	}
+
 
 	@Override
 	public ResponseEntity<ResponseStructure<List<Leave>>> getLeave() {
@@ -335,6 +349,7 @@ public class LeaveServiceImpl implements LeaveService {
 					&& employeeId != null // Ensure the provided employeeId is not null
 					&& employeeId.equals(leave.getEmployee().getManager().getEmployeeId())) { // Match manager's ID
 				leaves.add(leave); // Add the leave to the result list
+
 			}
 		}
 
@@ -345,5 +360,8 @@ public class LeaveServiceImpl implements LeaveService {
 
 		return new ResponseEntity<ResponseStructure<List<Leave>>>(responseStructure, HttpStatus.OK);
 	}
-	
+
 }
+
+
+

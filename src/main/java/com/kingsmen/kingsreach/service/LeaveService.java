@@ -27,5 +27,4 @@ public interface LeaveService {
 
 	ResponseEntity<ResponseStructure<List<Leave>>> fetchLeaveBasedOnManagerEmployee(String employeeId);
 
-
 }

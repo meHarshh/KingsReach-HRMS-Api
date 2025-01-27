@@ -4,7 +4,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,7 +53,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		attendance.setLastPunchOut(attendance.getLastPunchOut());
 		attendance.setAttendanceDate(LocalDate.now());
 		attendance.setEmployee(employee);
-		attendance.setWorkmode(attendance.getWorkmode());
+		attendance.setWorkMode(attendance.getWorkMode());
 		attendance.setLocation(attendance.getLocation());
 		attendanceRepo.save(attendance);
 
@@ -102,10 +104,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 	public ResponseEntity<ResponseStructure<Attendance>> getAttendenceForDate(String employeeId, LocalDate attendanceDate) {
 		Attendance attendanceOptional = attendanceRepo.findByEmployeeIdAndAttendanceDate(employeeId, attendanceDate);
 
-	public ResponseEntity<ResponseStructure<Attendance>> getAttendenceForDate(String employeeId, LocalDate date) {
-		Attendance attendanceOptional = attendanceRepo.findByEmployeeIdAndAttendanceDate(employeeId, date);
-
-
 		ResponseStructure<Attendance> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Attendence of " + attendanceDate + " fetched successfully.");
@@ -143,11 +141,11 @@ public class AttendanceServiceImpl implements AttendanceService {
 	}
 
 	@Override
-	public ResponseEntity<ResponseStructure<Attendance>> getAttendanceBetween(AttendanceHelper attendanceHelper) {
-		Attendance attendance = attendanceRepo.findByEmployeeIdAndAttendanceDateBetween
+	public ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceBetween(AttendanceHelper attendanceHelper) {
+		List<Attendance> attendance = attendanceRepo.findByEmployeeIdAndAttendanceDateBetween
 				(attendanceHelper.getEmployeeId(),attendanceHelper.getFromDate(),attendanceHelper.getToDate());
-		
-		ResponseStructure<Attendance> responseStructure = new ResponseStructure<>();
+
+		ResponseStructure<List<Attendance>> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Employee Attendance details fetched successfully");
 		responseStructure.setData(attendance);
@@ -155,4 +153,25 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	}
 
+	@Override
+	public ResponseEntity<ResponseStructure<Map<String, List<Attendance>>>> getAttendanceForDays() {
+
+		Map<String, List<Attendance>> groupedAttendance = fetchGroupedAttendance();
+
+		ResponseStructure<Map<String, List<Attendance>>> responseStructure = new ResponseStructure<>();
+		responseStructure.setData(groupedAttendance);
+		responseStructure.setMessage("Attendance data fetched successfully");
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+
+		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
+	}
+
+	private Map<String, List<Attendance>> fetchGroupedAttendance() {
+		List<Attendance> attendances = attendanceRepo.findAll();
+		return attendances.stream()
+				.collect(Collectors.groupingBy(Attendance::getEmployeeId));
+	}
+
+
 }
+

@@ -26,24 +26,13 @@ public class Attendance {
 	private boolean isAbsent;
 	private LocalDate attendanceDate;
 	private String location;
-	private Workmode workmode;
-
-	
+	private Workmode workMode;
 	private String employeeName;
-
 	private String employeeId;
 
 	@JsonIgnore
 	@ManyToOne
 	private Employee employee;
-
-	public Workmode getWorkmode() {
-		return workmode;
-	}
-
-	public void setWorkmode(Workmode workmode) {
-		this.workmode = workmode;
-	}
 
 	public String getEmployeeName() {
 		return employeeName;
@@ -150,6 +139,14 @@ public class Attendance {
 
 	public void setAbsent(boolean isAbsent) {
 		this.isAbsent = isAbsent;
+	}
+
+	public Workmode getWorkMode() {
+		return workMode;
+	}
+
+	public void setWorkMode(Workmode workMode) {
+		this.workMode = workMode;
 	}
 
 }

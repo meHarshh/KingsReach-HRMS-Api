@@ -16,6 +16,8 @@ import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Leave;
 import com.kingsmen.kingsreach.entity.LeaveRecord;
 import com.kingsmen.kingsreach.entity.Notification;
+import com.kingsmen.kingsreach.enums.LeaveStatus;
+import com.kingsmen.kingsreach.exception.IdNotFoundException;
 import com.kingsmen.kingsreach.repo.LeaveRecordRepo;
 import com.kingsmen.kingsreach.repo.LeaveRepo;
 import com.kingsmen.kingsreach.repo.NotificationRepo;
@@ -91,5 +93,55 @@ public class LeaveRecordServiceImpl implements LeaveRecordService {
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<LeaveRecord>> changeLeaveStatus(int recordId, LeaveStatus status) {
+		LeaveRecord leaveRecord = leaveRecordRepo.findById(recordId)
+				.orElseThrow(() -> new IdNotFoundException("The leaveId is not found"));
+		leaveRecord.setStatus(status);
+
+		LeaveRecord updatedLeaveRecord = leaveRecordRepo.save(leaveRecord);
+
+		ResponseStructure<LeaveRecord> responseStructure = new ResponseStructure<LeaveRecord>();
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage(" Leave status updated successfully");
+		responseStructure.setData(updatedLeaveRecord);
+
+		//Notification code 
+		Notification notify = new Notification();
+		notify.setEmployeeId(leaveRecord.getEmployeeId());
+		notify.setMessage(" Leave status updated successfully");
+		notify.setCreatedAt(LocalDateTime.now());
+		notificationRepo.save(notify);
+
+		return new ResponseEntity<ResponseStructure<LeaveRecord>>(responseStructure, HttpStatus.OK); 
+
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<List<LeaveRecord>>> fetchLeaveBasedOnManager(String employeeId) {
+		List<LeaveRecord> all = leaveRecordRepo.findAll();
+
+		ArrayList<LeaveRecord> leaveRecords = new ArrayList<LeaveRecord>();
+
+		for (LeaveRecord leaveRecord : all) {
+			if (leaveRecord.getEmployee() != null 
+					&& leaveRecord.getEmployee().getManager() != null 
+					&& employeeId != null 
+					&& employeeId.equals(leaveRecord.getEmployee().getManager().getEmployeeId())) { 
+				leaveRecords.add(leaveRecord); 
+
+			}
+		}
+
+		ResponseStructure<List<LeaveRecord>> responseStructure = new ResponseStructure<List<LeaveRecord>>();
+		responseStructure.setData(leaveRecords);
+		responseStructure.setMessage("The people on leave based on manager Id are below");
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+
+		return new ResponseEntity<ResponseStructure<List<LeaveRecord>>>(responseStructure, HttpStatus.OK);
+	}
+
+
 
 }
