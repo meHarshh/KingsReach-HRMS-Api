@@ -54,6 +54,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		attendance.setEmployee(employee);
 		attendance.setWorkMode(attendance.getWorkMode());
 		attendance.setLocation(attendance.getLocation());
+		attendance.setEmployeeName(employee.getName());
 		attendanceRepo.save(attendance);
 
 		ResponseStructure<Attendance> responseStructure = new ResponseStructure<Attendance>();
