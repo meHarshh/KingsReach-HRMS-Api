@@ -59,7 +59,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		String employeeId = employee.getEmployeeId();
 
 		if (employeeRepo.existsByEmployeeId(employeeId)) {
-			throw new EmployeeIdNotExistsException("The Employee with given Id is not Exist, Enter valid ID");
+			throw new EmployeeIdNotExistsException("The Employee with given Id is Already Exist, Enter valid ID");
 		}
 
 		if (employeeRepo.existsByofficialEmailAndUserName(email, userName)) {

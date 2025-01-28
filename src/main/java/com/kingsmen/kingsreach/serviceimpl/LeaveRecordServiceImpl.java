@@ -47,6 +47,7 @@ public class LeaveRecordServiceImpl implements LeaveRecordService {
 		int between = (int) ChronoUnit.DAYS.between(fromDate, toDate);
 		leaveRecord.setNoOfDays(between);
 		leaveRecord.setEmployee(employee);
+		leaveRecord.setEmployeeName(employee.getName());
 
 		leaveRecord = leaveRecordRepo.save(leaveRecord);
 

@@ -18,7 +18,6 @@ import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Notification;
 import com.kingsmen.kingsreach.entity.Onsite;
 import com.kingsmen.kingsreach.exceptions.EmployeeIdNotExistsException;
-import com.kingsmen.kingsreach.helper.AttendanceHelper;
 import com.kingsmen.kingsreach.repo.AttendanceRepo;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
 import com.kingsmen.kingsreach.repo.NotificationRepo;
@@ -55,6 +54,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		attendance.setEmployee(employee);
 		attendance.setWorkMode(attendance.getWorkMode());
 		attendance.setLocation(attendance.getLocation());
+		attendance.setEmployeeName(employee.getName());
 		attendanceRepo.save(attendance);
 
 		ResponseStructure<Attendance> responseStructure = new ResponseStructure<Attendance>();
@@ -140,20 +140,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	}
 
-	@Override
-
-	public ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceBetween(AttendanceHelper attendanceHelper) {
-		List<Attendance> attendance = attendanceRepo.findByEmployeeIdAndAttendanceDateBetween
-				(attendanceHelper.getEmployeeId(),attendanceHelper.getFromDate(),attendanceHelper.getToDate());
-
-		ResponseStructure<List<Attendance>> responseStructure = new ResponseStructure<>();
-
-		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage("Employee Attendance details fetched successfully");
-		responseStructure.setData(attendance);
-
-		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
-	}
 
 	@Override
 	public ResponseEntity<ResponseStructure<Map<String, List<Attendance>>>> getAttendanceForDays() {
@@ -172,6 +158,20 @@ public class AttendanceServiceImpl implements AttendanceService {
 		List<Attendance> attendances = attendanceRepo.findAll();
 		return attendances.stream()
 				.collect(Collectors.groupingBy(Attendance::getEmployeeId));
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceBetween(String employeeId,
+			LocalDate fromDate, LocalDate toDate) {
+		
+		List<Attendance> attendances = attendanceRepo.findByEmployeeIdAndAttendanceDateBetween(employeeId, fromDate, toDate);
+		ResponseStructure<List<Attendance>> responseStructure = new ResponseStructure<>();
+		responseStructure.setStatusCode(HttpStatus.OK.value()); responseStructure.
+		setMessage("Employee Attendance details fetched successfully");
+		responseStructure.setData(attendances);
+
+		return new ResponseEntity<>(responseStructure, HttpStatus.OK); 
+
 	}
 
 

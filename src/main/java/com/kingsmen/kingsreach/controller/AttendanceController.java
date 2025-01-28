@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kingsmen.kingsreach.entity.Attendance;
-import com.kingsmen.kingsreach.helper.AttendanceHelper;
 import com.kingsmen.kingsreach.service.AttendanceService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
@@ -52,9 +51,10 @@ public class AttendanceController {
 		return attendanceService.getAttendanceDetails();
 	}
 	
-	@PostMapping(value = "/getAttedanceBetween")
-	private ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceBetween(@RequestBody AttendanceHelper attendanceHelper){
-		return attendanceService.getAttendanceBetween(attendanceHelper);
+	@GetMapping(value = "/getAttedanceBetween")
+	private ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceBetween
+	(@RequestParam String employeeId, @RequestParam LocalDate fromDate,@RequestParam LocalDate toDate){
+		return attendanceService.getAttendanceBetween(employeeId,fromDate,toDate);
 	}
 	
 	@GetMapping(value = "/daysOfAttendance")
