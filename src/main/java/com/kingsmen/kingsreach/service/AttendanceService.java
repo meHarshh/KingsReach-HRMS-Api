@@ -7,7 +7,6 @@ import java.util.Map;
 import org.springframework.http.ResponseEntity;
 
 import com.kingsmen.kingsreach.entity.Attendance;
-import com.kingsmen.kingsreach.helper.AttendanceHelper;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
 public interface AttendanceService {
@@ -22,8 +21,11 @@ public interface AttendanceService {
 
 	ResponseEntity<ResponseStructure<Object>> getAttendanceDetails();
 
-	ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceBetween(AttendanceHelper attendanceHelper);
+	//ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceBetween(AttendanceHelper attendanceHelper);
 
 	ResponseEntity<ResponseStructure<Map<String, List<Attendance>>>> getAttendanceForDays();
+
+	ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceBetween(String employeeId, LocalDate fromDate,
+			LocalDate toDate);
 
 }
