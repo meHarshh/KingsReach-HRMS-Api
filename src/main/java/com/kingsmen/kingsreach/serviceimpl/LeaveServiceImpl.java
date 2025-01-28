@@ -237,13 +237,13 @@ public class LeaveServiceImpl implements LeaveService {
 
 		ResponseStructure<Leave> responseStructure = new ResponseStructure<Leave>();
 		responseStructure.setData(leave2);
-		responseStructure.setMessage("The leave status changed to " + leave2.getLeaveStatus());
+		responseStructure.setMessage(leave.getEmployeeName() + "`s leave status changed to " + leave2.getLeaveStatus());
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 
 		// Notification code
 		Notification notify = new Notification();
 		notify.setEmployeeId(leave.getEmployeeId());
-		notify.setMessage("The leave status changed to " + leave2.getLeaveStatus());
+		notify.setMessage(leave.getEmployeeName() + "`s leave status changed to " + leave2.getLeaveStatus());
 		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 

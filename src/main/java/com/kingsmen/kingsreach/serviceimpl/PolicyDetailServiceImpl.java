@@ -28,7 +28,7 @@ public class PolicyDetailServiceImpl implements PolicyDetailService {
 	public ResponseEntity<ResponseStructure<PolicyDetail>> policyDetail(PolicyDetail detail) {
 		detail=detailRepo.save(detail);
 
-		String message="Policy details of " + detail.getDepartment() + " department";
+		String message = "Policy details of " + detail.getDepartment() + " department";
 
 		ResponseStructure<PolicyDetail> responseStructure = new ResponseStructure<PolicyDetail>();
 		responseStructure.setStatusCode(HttpStatus.CREATED.value());

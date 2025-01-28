@@ -67,7 +67,7 @@ public class OnsiteServiceImpl implements OnsiteService {
 	public ResponseEntity<ResponseStructure<Onsite>> getOnsiteEmployee(String employeeId) {
 		Onsite onsite = onsiteRepo.findByEmployeeId(employeeId);
 
-		String message="Employee with " + employeeId + " details  fetched succesfully.";
+		String message = onsite.getEmpName() + " onsite details  fetched succesfully.";
 
 		ResponseStructure<Onsite> responseStructure=new ResponseStructure<Onsite>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());

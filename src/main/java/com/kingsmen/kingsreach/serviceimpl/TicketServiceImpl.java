@@ -63,7 +63,7 @@ public class TicketServiceImpl implements TicketService {
 		//Notification code 
 		Notification notify = new Notification();
 		notify.setEmployeeId(ticket.getEmployeeId());
-		notify.setMessage("Ticket raised successfully.");
+		notify.setMessage(ticket.getEmployeeName() +  " raised the ticket");
 		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
@@ -86,7 +86,7 @@ public class TicketServiceImpl implements TicketService {
 
 		ResponseStructure<Ticket> responseStructure = new ResponseStructure<Ticket>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage(" Ticket updated successfully.");
+		responseStructure.setMessage(ticket.getEmployeeName() + " Ticket updated successfully.");
 		responseStructure.setData(ticket);
 
 		//Notification code 
