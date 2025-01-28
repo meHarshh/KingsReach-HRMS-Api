@@ -56,7 +56,7 @@ public class LeaveRecordServiceImpl implements LeaveRecordService {
 		responseStructure.setMessage(leaveRecord.getEmployeeName() + " leave records are added");
 		responseStructure.setData(leaveRecord);
 
-		//Notification code 
+		// Notification code
 		Notification notify = new Notification();
 		notify.setEmployeeId(leaveRecord.getEmployeeId());
 		notify.setMessage(leaveRecord.getEmployeeName() + " leave records are added");
@@ -83,7 +83,7 @@ public class LeaveRecordServiceImpl implements LeaveRecordService {
 	public ResponseEntity<ResponseStructure<List<LeaveRecord>>> getEmployeeLeaveRecord(String employeeId) {
 		List<LeaveRecord> optional = leaveRecordRepo.findByEmployeeId(employeeId);
 		List<LeaveRecord> list = new ArrayList<LeaveRecord>();
-		for(LeaveRecord lists : optional) {
+		for (LeaveRecord lists : optional) {
 			list.add(lists);
 		}
 
@@ -108,14 +108,14 @@ public class LeaveRecordServiceImpl implements LeaveRecordService {
 		responseStructure.setMessage(" Leave status updated successfully");
 		responseStructure.setData(updatedLeaveRecord);
 
-		//Notification code 
+		// Notification code
 		Notification notify = new Notification();
 		notify.setEmployeeId(leaveRecord.getEmployeeId());
 		notify.setMessage(" Leave status updated successfully");
 		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
-		return new ResponseEntity<ResponseStructure<LeaveRecord>>(responseStructure, HttpStatus.OK); 
+		return new ResponseEntity<ResponseStructure<LeaveRecord>>(responseStructure, HttpStatus.OK);
 
 	}
 
@@ -123,26 +123,29 @@ public class LeaveRecordServiceImpl implements LeaveRecordService {
 	public ResponseEntity<ResponseStructure<List<LeaveRecord>>> fetchLeaveBasedOnManager(String employeeId) {
 		List<LeaveRecord> all = leaveRecordRepo.findAll();
 
+		ArrayList<LeaveRecord> arrayList = new ArrayList<LeaveRecord>();
+		for (LeaveRecord leaveRecord : all) {
+			if (leaveRecord.getEmployee().getManager().getEmployeeId().equals(employeeId)) {
+				arrayList.add(leaveRecord);
+			}
+		}
 		ArrayList<LeaveRecord> leaveRecords = new ArrayList<LeaveRecord>();
 
 		for (LeaveRecord leaveRecord : all) {
-			if (leaveRecord.getEmployee() != null 
-					&& leaveRecord.getEmployee().getManager() != null 
-					&& employeeId != null 
-					&& employeeId.equals(leaveRecord.getEmployee().getManager().getEmployeeId())) { 
-				leaveRecords.add(leaveRecord); 
+			if (leaveRecord.getEmployee() != null && leaveRecord.getEmployee().getManager() != null
+					&& employeeId != null
+					&& employeeId.equals(leaveRecord.getEmployee().getManager().getEmployeeId())) {
+				leaveRecords.add(leaveRecord);
 
 			}
 		}
 
 		ResponseStructure<List<LeaveRecord>> responseStructure = new ResponseStructure<List<LeaveRecord>>();
-		responseStructure.setData(leaveRecords);
+		responseStructure.setData(arrayList);
 		responseStructure.setMessage("The people on leave based on manager Id are below");
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 
 		return new ResponseEntity<ResponseStructure<List<LeaveRecord>>>(responseStructure, HttpStatus.OK);
 	}
-
-
 
 }
