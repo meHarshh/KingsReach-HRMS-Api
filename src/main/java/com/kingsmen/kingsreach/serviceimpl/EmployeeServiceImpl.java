@@ -86,7 +86,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 		switch (employee.getRole()) {
 		case MANAGER:
-			// Manager manager = (Manager) employee;
 			Manager manager = new Manager();
 			BeanUtils.copyProperties(employee, manager);
 			manager = managerRepo.save(manager);
@@ -94,7 +93,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 			break;
 
 		case ADMIN:
-			// Admin admin = (Admin) employee;
 			Admin admin = new Admin();
 			BeanUtils.copyProperties(employee, admin);
 			admin = adminRepo.save(admin);
@@ -109,8 +107,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			throw new InvalidRoleException("Invalid role specified for the employee");
 		}
 
-		String message = "Employee ID :" + employee.getEmployeeId() + " " + employee.getFirstName() + " "
-				+ employee.getLastName() + " Added Successfully!!";
+		String message = "Employee ID :" + employee.getEmployeeId() + " " + employee.getName() + " Added Successfully!!";
 
 		ResponseStructure<Employee> responseStructure = new ResponseStructure<Employee>();
 		responseStructure.setStatusCode(HttpStatus.CREATED.value());
@@ -137,7 +134,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			List<Employee> employees = new ArrayList<Employee>();
 			employees.add(employee2);
 
-			String message = "Employee ID :" + employee2.getFirstName() + " LoggedIn Successfully!!";
+			String message = employee2.getName() + " LoggedIn Successfully!!";
 
 			ResponseStructure<List<Employee>> responseStructure = new ResponseStructure<List<Employee>>();
 			responseStructure.setStatusCode(HttpStatus.OK.value());
