@@ -101,7 +101,9 @@ public class LeaveServiceImpl implements LeaveService {
 		// Fetch the employee's leave record
 
 		Leave existingLeave = leaveRepository.findByEmployeeId(leave.getEmployeeId()).orElse(new Leave());
-
+		leave.setEmployee(employee);
+		leave.setEmployeeName(employee.getName());
+		leave.setEmployeeId(employee.getEmployeeId());
 		saveLeaveRecord(leave);
 
 		existingLeave.setEmployeeName(employee.getName());
