@@ -15,6 +15,8 @@ public interface EmployeeRepo extends JpaRepository<Employee, Integer> {
 
 	boolean existsByofficialEmailAndUserName(String officialEmail, String userName);
 
+	public Optional<Employee> findByofficialEmailAndPassword(String officialEmail, String password);
+
 	public Optional<Employee> findByFirstName(String firstName);
 
 	public Optional<Employee> findByEmployeeId(String employeeId);
@@ -28,8 +30,6 @@ public interface EmployeeRepo extends JpaRepository<Employee, Integer> {
 	List<Employee> findByDate(LocalDate date);
 
 	List<Employee> findByManager(Manager manager);
-
-	Optional<Employee> findByofficialEmailAndPassword(String officialEmail, String password);
 
 
 }
