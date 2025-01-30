@@ -15,7 +15,7 @@ import com.kingsmen.kingsreach.entity.Event;
 import com.kingsmen.kingsreach.service.EventService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@CrossOrigin(allowCredentials = "true", origins = "https://hrms.kingsmenrealty.com/")
+@CrossOrigin(allowCredentials = "true", origins = "https://unrivaled-frangollo-b0ecbe.netlify.app/")
 @RestController
 public class EventController {
 

@@ -18,7 +18,7 @@ import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.service.TicketService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@CrossOrigin(allowCredentials = "true", origins = "https://hrms.kingsmenrealty.com/")
+@CrossOrigin(allowCredentials = "true", origins = "https://unrivaled-frangollo-b0ecbe.netlify.app/")
 @RestController
 public class TicketController {
 
