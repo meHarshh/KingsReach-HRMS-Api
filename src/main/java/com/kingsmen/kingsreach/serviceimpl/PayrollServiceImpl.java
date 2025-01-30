@@ -146,8 +146,7 @@ public class PayrollServiceImpl implements PayrollService {
 
 		ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure
-		.setMessage("Salary details of employee " + payroll.getEmployeeId() + " fetched successfully.");
+		responseStructure.setMessage("Salary details of employee " + payroll.getEmployeeName() + " fetched successfully.");
 		responseStructure.setData(payroll);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
@@ -182,13 +181,13 @@ public class PayrollServiceImpl implements PayrollService {
 
 		ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage("Employee salary updated successfully");
+		responseStructure.setMessage(payroll.getEmployeeName() + " salary updated successfully");
 		responseStructure.setData(updatedPayroll);
 
 		//Notification code 
 		Notification notify = new Notification();
 		notify.setEmployeeId(payroll.getEmployeeId());
-		notify.setMessage("Employee salary updated successfully");
+		notify.setMessage(payroll.getEmployeeName() + " salary updated successfully");
 		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
@@ -203,25 +202,21 @@ public class PayrollServiceImpl implements PayrollService {
 	@Transactional
 	@Override
 	public ResponseEntity<ResponseStructure<Payroll>> deleteEmployeeSalary(int payrollId) {
-		System.out.println("Fetching payroll with ID: " + payrollId);
 
 		Payroll payroll = payrollRepo.findById(payrollId)
 				.orElseThrow(() -> new PayrollNotFoundException("Payroll Assosiated with given ID not found"));
 
-		System.out.println("Deleting payroll with ID: " + payrollId);
 		payrollRepo.deleteById(payrollId);
 
 		ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage("Employee salary detail deleted successfully.");
+		responseStructure.setMessage(payroll.getEmployeeName() + " salary detail deleted successfully.");
 		responseStructure.setData(payroll);
-
-		System.out.println("Payroll deleted: " + payroll);
 
 		//Notification code 
 		Notification notify = new Notification();
 		notify.setEmployeeId(payroll.getEmployeeId());
-		notify.setMessage("Employee salary detail deleted successfully.");
+		notify.setMessage(payroll.getEmployeeName() + " salary detail deleted successfully.");
 		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
@@ -268,13 +263,13 @@ public class PayrollServiceImpl implements PayrollService {
 
 		ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage("Payroll status changed  successfully.");
+		responseStructure.setMessage(payroll.getEmployeeName() + " Payroll status changed");
 		responseStructure.setData(payroll2);
 
 		//Notification code 
 		Notification notify = new Notification();
 		notify.setEmployeeId(payroll.getEmployeeId());
-		notify.setMessage("Payroll status changed  successfully.");
+		notify.setMessage(payroll.getEmployeeName() + " Payroll status changed");
 		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
@@ -302,10 +297,6 @@ public class PayrollServiceImpl implements PayrollService {
 
 	@Override
 	public ResponseEntity<ResponseStructure<List<Payroll>>> getPayrollOfMonth(LocalDate date) {
-		//int year = date.getDayOfYear();
-		//int month = date.getMonthValue(); 
-
-		//List<Payroll> payroll = payrollRepo.findByDate(date);
 
 		int month = date.getMonthValue();
 		int year = date.getYear();
