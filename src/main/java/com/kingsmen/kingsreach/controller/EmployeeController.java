@@ -18,7 +18,7 @@ import com.kingsmen.kingsreach.helper.EmployeeHelper;
 import com.kingsmen.kingsreach.service.EmployeeService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(allowCredentials = "true", origins = "https://unrivaled-frangollo-b0ecbe.netlify.app/")
 @RestController
 public class EmployeeController {
 
