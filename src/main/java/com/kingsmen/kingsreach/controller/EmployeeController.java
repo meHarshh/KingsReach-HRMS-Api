@@ -16,7 +16,7 @@ import com.kingsmen.kingsreach.helper.EmployeeHelper;
 import com.kingsmen.kingsreach.service.EmployeeService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@CrossOrigin(allowCredentials = "true", origins = "*")
+@CrossOrigin(origins = "*")
 @RestController
 public class EmployeeController {
 
