@@ -160,7 +160,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		ResponseStructure<List<Employee>> responseStructure = new ResponseStructure<List<Employee>>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage("Emloyee Details Fetched Successfully.");
+		responseStructure.setMessage("Employee Details Fetched Successfully.");
 		responseStructure.setData(list);
 
 		return new ResponseEntity<ResponseStructure<List<Employee>>>(responseStructure, HttpStatus.OK);
