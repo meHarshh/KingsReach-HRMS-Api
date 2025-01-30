@@ -1,7 +1,6 @@
 package com.kingsmen.kingsreach.controller;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,14 +10,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.helper.EmployeeHelper;
 import com.kingsmen.kingsreach.service.EmployeeService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@CrossOrigin(allowCredentials = "true", origins = "https://hrms.kingsmenrealty.com/")
+@CrossOrigin(allowCredentials = "true", origins = "*")
 @RestController
 public class EmployeeController {
 
@@ -35,7 +33,7 @@ public class EmployeeController {
 			@RequestParam String password) {
 		return employeeService.login(officialEmail, password);
 	}
-
+	
 	@GetMapping("/fetchAllEmployees")
 	public ResponseEntity<ResponseStructure<List<Employee>>> getEmployees() {
 		return employeeService.getEmployees();
