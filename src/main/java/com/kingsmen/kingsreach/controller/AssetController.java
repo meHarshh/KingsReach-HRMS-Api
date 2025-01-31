@@ -16,7 +16,11 @@ import com.kingsmen.kingsreach.entity.Asset;
 import com.kingsmen.kingsreach.service.AssetService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
+<<<<<<< HEAD
 @CrossOrigin(allowCredentials = "true", origins = "https://hrms.kingsmenrealty.com/")
+=======
+@CrossOrigin(allowCredentials = "true", origins = "https://peppy-kitsune-9771a0.netlify.app/")
+>>>>>>> 0467448bd5399d5cb2e6f3d6476c42b4632f1c86
 @RestController
 public class AssetController {
 	
