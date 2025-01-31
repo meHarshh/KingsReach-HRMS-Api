@@ -16,7 +16,7 @@ import com.kingsmen.kingsreach.entity.Reimbursement;
 import com.kingsmen.kingsreach.service.ReimbursementService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@CrossOrigin(allowCredentials = "true", origins = "https://peppy-kitsune-9771a0.netlify.app/")
+@CrossOrigin(allowCredentials = "true", origins = "https://hrms.kingsmenrealty.com/")
 @RestController
 public class ReimbursementController {
 

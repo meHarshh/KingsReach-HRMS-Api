@@ -18,7 +18,7 @@ import com.kingsmen.kingsreach.entity.TerminationDetail;
 import com.kingsmen.kingsreach.service.TerminationDetailService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@CrossOrigin(allowCredentials = "true", origins = "https://peppy-kitsune-9771a0.netlify.app/")
+@CrossOrigin(allowCredentials = "true", origins = "https://hrms.kingsmenrealty.com/")
 @RestController
 public class TerminationDetailController {
 
