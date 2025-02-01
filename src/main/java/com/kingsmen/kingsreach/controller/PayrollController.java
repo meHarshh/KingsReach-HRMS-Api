@@ -19,7 +19,7 @@ import com.kingsmen.kingsreach.entity.Payroll;
 import com.kingsmen.kingsreach.service.PayrollService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@CrossOrigin(allowCredentials = "true", origins = "https://peppy-kitsune-9771a0.netlify.app/")
+@CrossOrigin(allowCredentials = "true", origins = "http://localhost:5173/")
 @RestController
 public class PayrollController {
 	
