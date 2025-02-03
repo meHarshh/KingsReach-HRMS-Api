@@ -105,13 +105,13 @@ public class LeaveRecordServiceImpl implements LeaveRecordService {
 
 		ResponseStructure<LeaveRecord> responseStructure = new ResponseStructure<LeaveRecord>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage(leaveRecord.getEmployeeName() + "`s Leave status updated successfully");
+		responseStructure.setMessage(leaveRecord.getEmployeeName() + "'s Leave status updated successfully");
 		responseStructure.setData(updatedLeaveRecord);
 
 		// Notification code
 		Notification notify = new Notification();
 		notify.setEmployeeId(leaveRecord.getEmployeeId());
-		notify.setMessage(leaveRecord.getEmployeeName() + "`s Leave status updated successfully");
+		notify.setMessage(leaveRecord.getEmployeeName() + "'s Leave status updated successfully");
 		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 

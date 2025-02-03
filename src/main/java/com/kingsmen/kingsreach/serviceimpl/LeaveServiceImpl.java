@@ -94,9 +94,8 @@ public class LeaveServiceImpl implements LeaveService {
 					"Payroll record not found for employee ID: " + leave.getEmployeeId() + " Enter valid Employee ID");
 		}
 
-		LocalDate fromDate = leave.getFromDate();
-		LocalDate toDate = leave.getToDate();
-		int noOfDays = (int) ChronoUnit.DAYS.between(fromDate, toDate);
+		// Calculate leave days
+		int leaveDays = (int) (ChronoUnit.DAYS.between(leave.getFromDate(), leave.getToDate()) + 1);
 
 		// Fetch the employee's leave record
 
@@ -115,10 +114,7 @@ public class LeaveServiceImpl implements LeaveService {
 		existingLeave.setApprovedBy(leave.getApprovedBy());
 		existingLeave.setReason(leave.getReason());
 		existingLeave.setLeaveStatus(LeaveStatus.PENDING);
-		existingLeave.setNoOfDays(noOfDays);
-
-		// Calculate leave days
-		long leaveDays = ChronoUnit.DAYS.between(leave.getFromDate(), leave.getToDate()) + 1;
+		existingLeave.setNoOfDays(leaveDays);
 
 		// Get the current month
 		Month currentMonth = leave.getFromDate().getMonth();
@@ -205,10 +201,9 @@ public class LeaveServiceImpl implements LeaveService {
 	}
 
 	private void saveLeaveRecord(Leave leave) {
-		LocalDate fromDate = leave.getFromDate();
-		LocalDate toDate = leave.getToDate();
-		int noOfDays = (int) ChronoUnit.DAYS.between(fromDate, toDate);
-
+		// Calculate leave days
+		int leaveDays = (int) (ChronoUnit.DAYS.between(leave.getFromDate(), leave.getToDate()) + 1);
+		
 		LeaveRecord leaveRecord = new LeaveRecord();
 		leaveRecord.setEmployee(leave.getEmployee());
 		leaveRecord.setEmployeeId(leave.getEmployeeId());
@@ -219,7 +214,7 @@ public class LeaveServiceImpl implements LeaveService {
 		leaveRecord.setStatus(leave.getLeaveStatus());
 		leaveRecord.setReason(leave.getReason());
 		leaveRecord.setLeaveType(leave.getLeaveType());
-		leaveRecord.setNoOfDays(noOfDays);
+		leaveRecord.setNoOfDays(leaveDays);
 
 		leaveRecordRepo.save(leaveRecord);
 	}
@@ -231,19 +226,20 @@ public class LeaveServiceImpl implements LeaveService {
 				.orElseThrow(() -> new LeaveIdNotFoundException("Invalid Leave ID"));
 
 		leave2.setLeaveStatus(leave.getLeaveStatus());
+		leave2.setApprovedBy(leave.getApprovedBy());
 
 		leave2 = leaveRepository.findById(leave2.getLeaveId())
 				.orElseThrow(() -> new LeaveIdNotFoundException("Invalid Leave ID"));
 
 		ResponseStructure<Leave> responseStructure = new ResponseStructure<Leave>();
 		responseStructure.setData(leave2);
-		responseStructure.setMessage(leave.getEmployeeName() + "`s leave status changed to " + leave2.getLeaveStatus());
+		responseStructure.setMessage(leave.getEmployeeName() + "'s leave status changed to " + leave2.getLeaveStatus());
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 
 		// Notification code
 		Notification notify = new Notification();
 		notify.setEmployeeId(leave.getEmployeeId());
-		notify.setMessage(leave.getEmployeeName() + "`s leave status changed to " + leave2.getLeaveStatus());
+		notify.setMessage(leave.getEmployeeName() + "'s leave status changed to " + leave2.getLeaveStatus());
 		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
 
