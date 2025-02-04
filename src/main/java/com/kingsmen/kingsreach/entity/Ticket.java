@@ -1,4 +1,4 @@
-package com.kingsmen.kingsreach.entity;
+	package com.kingsmen.kingsreach.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

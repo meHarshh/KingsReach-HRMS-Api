@@ -81,6 +81,7 @@ public class TicketServiceImpl implements TicketService {
 		ticket2.setStatus(ticket.getStatus());
 		ticket2.setUpdatedAt(ticket.getUpdatedAt());
 		ticket2.setUpdatedBy(ticket.getUpdatedBy());
+		ticket2.setTicketTitle(ticket.getTicketTitle());
 
 		ticketRepo.save(ticket2);
 
