@@ -15,7 +15,7 @@ import com.kingsmen.kingsreach.entity.Notification;
 import com.kingsmen.kingsreach.service.NotificationService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@CrossOrigin(allowCredentials = "true", origins = "http://localhost:5173/")
+@CrossOrigin(allowCredentials = "true", origins = "http://hrms.kingsmenrealty.com/")
 @RestController
 public class NotificationController {
 	@Autowired
