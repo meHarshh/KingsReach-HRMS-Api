@@ -16,10 +16,11 @@ import com.kingsmen.kingsreach.entity.Asset;
 import com.kingsmen.kingsreach.service.AssetService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
+
 @CrossOrigin(allowCredentials = "true", origins = "http://hrms.kingsmenrealty.com/")
 @RestController
 public class AssetController {
-	
+
 	@Autowired
 	private AssetService assetService;
 
@@ -27,14 +28,14 @@ public class AssetController {
 	private ResponseEntity<ResponseStructure<Asset>> grantedAsset(@RequestBody Asset asset) {
 		return assetService.grantAssets(asset);
 	}
-	
+
 	@GetMapping(value = "/findAllAsset")
-	private  ResponseEntity<ResponseStructure<List<Asset>>>  findAllAsset() {
+	private ResponseEntity<ResponseStructure<List<Asset>>> findAllAsset() {
 		return assetService.findAllService();
 	}
-	
+
 	@PutMapping(value = "/changeStatus/{id}")
-	private ResponseEntity<ResponseStructure<Asset>> changeStatus(@PathVariable int id,@RequestBody Asset asset){
-		return assetService.changeStatus(id,asset);
+	private ResponseEntity<ResponseStructure<Asset>> changeStatus(@PathVariable int id, @RequestBody Asset asset) {
+		return assetService.changeStatus(id, asset);
 	}
 }
