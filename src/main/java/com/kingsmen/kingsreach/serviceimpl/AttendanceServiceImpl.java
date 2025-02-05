@@ -163,7 +163,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 	@Override
 	public ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceBetween(String employeeId,
 			LocalDate fromDate, LocalDate toDate) {
-		
+
 		List<Attendance> attendances = attendanceRepo.findByEmployeeIdAndAttendanceDateBetween(employeeId, fromDate, toDate);
 		ResponseStructure<List<Attendance>> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value()); responseStructure.
@@ -173,7 +173,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK); 
 
 	}
-
 
 }
 

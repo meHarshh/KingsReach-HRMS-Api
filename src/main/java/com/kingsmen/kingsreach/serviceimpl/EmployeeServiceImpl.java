@@ -208,6 +208,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee2.setExperience(employee.getExperience());
 		employee2.setCreatedAt(LocalDateTime.now());
 		employee2.setUpdatedAt(LocalDateTime.now());
+		employee2.setUanNumber(employee.getUanNumber());
 
 		Employee employee3 = employeeRepo.save(employee2);
 
