@@ -22,6 +22,8 @@ public class AttendanceRecord {
 	private String location;
 	private Workmode workMode;
 	private LocalDate attendanceDate;
+	private int totalWorkMinutes;
+	private int totalBreakMinutes;
 	
 	public int getAttendanceRecordId() {
 		return attendanceRecordId;
@@ -78,5 +80,21 @@ public class AttendanceRecord {
 	public void setAttendanceDate(LocalDate attendanceDate) {
 		this.attendanceDate = attendanceDate;
 	}
-	
+
+	public int getTotalWorkMinutes() {
+		return totalWorkMinutes;
+	}
+
+	public void setTotalWorkMinutes(int totalWorkMinutes) {
+		this.totalWorkMinutes = totalWorkMinutes;
+	}
+
+	public int getTotalBreakMinutes() {
+		return totalBreakMinutes;
+	}
+
+	public void setTotalBreakMinutes(int totalBreakMinutes) {
+		this.totalBreakMinutes = totalBreakMinutes;
+	}
+
 }

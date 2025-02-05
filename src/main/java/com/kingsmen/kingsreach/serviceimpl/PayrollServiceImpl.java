@@ -45,6 +45,7 @@ public class PayrollServiceImpl implements PayrollService {
 	@Autowired
 	private NotificationRepo notificationRepo;
 
+	@Autowired
 	private ReimbursementRepo reimbursementRepository;
 
 	@Override

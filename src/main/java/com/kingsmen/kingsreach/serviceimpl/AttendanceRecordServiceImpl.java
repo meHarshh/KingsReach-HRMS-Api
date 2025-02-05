@@ -1,8 +1,6 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
 import java.time.LocalDate;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,16 +31,16 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService{
 	}
 
 	@Override
-	public ResponseEntity<ResponseStructure<List<AttendanceRecord>>> getAttendanceDetail(String employeeId) {
+	public ResponseEntity<ResponseStructure<AttendanceRecord>> getAttendanceDetail(String employeeId) {
 		
-		List<AttendanceRecord> record = attendanceRecordRepo.findByEmployeeId(employeeId);
+		AttendanceRecord record = attendanceRecordRepo.findByEmployeeId(employeeId);
 		
-		ResponseStructure<List<AttendanceRecord>> responseStructure = new ResponseStructure<List<AttendanceRecord>>();
+		ResponseStructure<AttendanceRecord> responseStructure = new ResponseStructure<AttendanceRecord>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setData(record);
 		responseStructure.setMessage("Attendance Recorded fetched successully");
 		
-		return new ResponseEntity<ResponseStructure<List<AttendanceRecord>>>(responseStructure,HttpStatus.OK);
+		return new ResponseEntity<ResponseStructure<AttendanceRecord>>(responseStructure,HttpStatus.OK);
 	}
 
 	@Override
@@ -51,6 +49,8 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService{
 				.orElseThrow(() -> new RuntimeException("Attendence Record not found with Id"));
 		
 		record.setLastPunchOut(attendanceRecord.getLastPunchOut());
+		record.setTotalBreakMinutes(attendanceRecord.getTotalBreakMinutes());
+		record.setTotalWorkMinutes(attendanceRecord.getTotalWorkMinutes());
 		
 		AttendanceRecord record2 = attendanceRecordRepo.save(record);
 		
