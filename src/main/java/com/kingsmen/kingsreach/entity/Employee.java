@@ -76,6 +76,7 @@ public class Employee implements Serializable {
 	private String email;
 	private GenderType gender;
 	private LocalDate date;
+	private String UanNumber;
 
 	private int casualLeaveBalance = 10;
 	private int sickLeaveBalance = 12;
@@ -495,6 +496,14 @@ public class Employee implements Serializable {
 
 	public void setDate(LocalDate date) {
 		this.date = date;
+	}
+
+	public String getUanNumber() {
+		return UanNumber;
+	}
+
+	public void setUanNumber(String uanNumber) {
+		UanNumber = uanNumber;
 	}
 
 }
