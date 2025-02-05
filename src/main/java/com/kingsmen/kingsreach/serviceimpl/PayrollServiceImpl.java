@@ -105,6 +105,10 @@ public class PayrollServiceImpl implements PayrollService {
 		List<Reimbursement> reimbursements = reimbursementRepository.findByEmployeeIdAndDateBetween(employeeId,
 				startDate, endDate);
 
+		for (Reimbursement reimbursement : reimbursements) {
+			System.out.println(reimbursement.getAmount());
+		}
+		
 		// Calculate total approved reimbursement amount
 		return reimbursements.stream().filter(r -> r.getReimbursementStatus() == ReimbursementStatus.APPROVED)
 				.mapToDouble(Reimbursement::getAmount).sum();
