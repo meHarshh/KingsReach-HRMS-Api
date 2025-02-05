@@ -1,5 +1,7 @@
 package com.kingsmen.kingsreach.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -27,7 +29,7 @@ public class AttendanceRecordController {
 	}
 	
 	@GetMapping(value = "/getAttendanceDetail")
-	private ResponseEntity<ResponseStructure<AttendanceRecord>> getAttendanceDetail(@RequestParam String employeeId){
+	private ResponseEntity<ResponseStructure<List<AttendanceRecord>>> getAttendanceDetail(@RequestParam String employeeId){
 		return attendanceRecordService.getAttendanceDetail(employeeId);
 	}
 	

@@ -97,11 +97,9 @@ public class PayrollServiceImpl implements PayrollService {
 	private double calculateTotalReimbursement(String employeeId) {
 		YearMonth currentMonth = YearMonth.from(LocalDate.now());
 
-		// Convert YearMonth to start and end dates
 		LocalDate startDate = currentMonth.atDay(1);
 		LocalDate endDate = currentMonth.atEndOfMonth();
 
-		// Fetch reimbursements for the given employeeId within the current month
 		List<Reimbursement> reimbursements = reimbursementRepository.findByEmployeeIdAndDateBetween(employeeId,
 				startDate, endDate);
 

@@ -1,6 +1,7 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,16 +33,16 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService{
 	}
 
 	@Override
-	public ResponseEntity<ResponseStructure<AttendanceRecord>> getAttendanceDetail(String employeeId) {
+	public ResponseEntity<ResponseStructure<List<AttendanceRecord>>> getAttendanceDetail(String employeeId) {
 		
-		AttendanceRecord record = attendanceRecordRepo.findByEmployeeId(employeeId);
+		List<AttendanceRecord> record = attendanceRecordRepo.findByEmployeeId(employeeId);
 		
-		ResponseStructure<AttendanceRecord> responseStructure = new ResponseStructure<AttendanceRecord>();
+		ResponseStructure<List<AttendanceRecord>> responseStructure = new ResponseStructure<List<AttendanceRecord>>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setData(record);
 		responseStructure.setMessage("Attendance Recorded fetched successully");
 		
-		return new ResponseEntity<ResponseStructure<AttendanceRecord>>(responseStructure,HttpStatus.OK);
+		return new ResponseEntity<ResponseStructure<List<AttendanceRecord>>>(responseStructure,HttpStatus.OK);
 	}
 
 	@Override
