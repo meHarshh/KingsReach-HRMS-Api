@@ -31,7 +31,7 @@ public class OnsiteServiceImpl implements OnsiteService {
 		onsite.setDate(LocalDate.now());
 		onsite=onsiteRepo.save(onsite);
 
-		String message=onsite.getEmpName() + " went to onsite to meet the client " + onsite.getClientName();
+		String message=onsite.getEmpName() + " went to onsite to meet the client " + onsite.getClientName() + " at " + onsite.getLocation();
 
 		ResponseStructure<Onsite> responseStructure=new ResponseStructure<Onsite>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());

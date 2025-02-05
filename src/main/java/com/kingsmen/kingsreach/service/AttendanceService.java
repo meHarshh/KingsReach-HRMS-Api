@@ -21,11 +21,10 @@ public interface AttendanceService {
 
 	ResponseEntity<ResponseStructure<Object>> getAttendanceDetails();
 
-	//ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceBetween(AttendanceHelper attendanceHelper);
-
 	ResponseEntity<ResponseStructure<Map<String, List<Attendance>>>> getAttendanceForDays();
 
 	ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceBetween(String employeeId, LocalDate fromDate,
 			LocalDate toDate);
+
 
 }
