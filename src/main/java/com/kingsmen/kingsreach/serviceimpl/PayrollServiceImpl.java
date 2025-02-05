@@ -2,6 +2,7 @@ package com.kingsmen.kingsreach.serviceimpl;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +17,14 @@ import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Leave;
 import com.kingsmen.kingsreach.entity.Notification;
 import com.kingsmen.kingsreach.entity.Payroll;
+import com.kingsmen.kingsreach.entity.Reimbursement;
+import com.kingsmen.kingsreach.enums.ReimbursementStatus;
 import com.kingsmen.kingsreach.exceptions.PayrollNotFoundException;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
 import com.kingsmen.kingsreach.repo.LeaveRepo;
 import com.kingsmen.kingsreach.repo.NotificationRepo;
 import com.kingsmen.kingsreach.repo.PayrollRepo;
+import com.kingsmen.kingsreach.repo.ReimbursementRepo;
 import com.kingsmen.kingsreach.service.PayrollService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
@@ -41,6 +45,8 @@ public class PayrollServiceImpl implements PayrollService {
 	@Autowired
 	private NotificationRepo notificationRepo;
 
+	private ReimbursementRepo reimbursementRepository;
+
 	@Override
 	public ResponseEntity<ResponseStructure<Payroll>> paySalary(Payroll payroll) {
 
@@ -50,33 +56,34 @@ public class PayrollServiceImpl implements PayrollService {
 
 		payroll.setEmployee(employee);
 
-		double lopDays = payroll.getLopDays(); 
+		double lopDays = payroll.getLopDays();
 
-		double salary = payroll.getSalary(); 
+		double salary = payroll.getSalary();
 
 		int finalSalary = calculateLopDeduction(salary, lopDays);
-		//	int lopDeduction = calculateLop(salary, lopDays);
+		// int lopDeduction = calculateLop(salary, lopDays);
 
 		double pfDeduction = finalSalary * 0.12;
 		finalSalary = (int) (finalSalary - pfDeduction);
 
 		payroll.setSalary(finalSalary);
 
-		//	payroll.setLopDeduction(lopDeduction);
+		// payroll.setLopDeduction(lopDeduction);
 
 		payroll.setProvidentFund(pfDeduction);
 
 		payroll.setDate(LocalDate.now());
 		System.out.println(LocalDate.now());
 
-		String message = "The payroll of " + employee.getName() + " from " + payroll.getDepartment() + " department has been updated";
+		String message = "The payroll of " + employee.getName() + " from " + payroll.getDepartment()
+				+ " department has been updated";
 
 		ResponseStructure<Payroll> responseStructure = new ResponseStructure<Payroll>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage(message);
 		responseStructure.setData(payrollRepo.save(payroll));
 
-		//Notification code 
+		// Notification code
 		Notification notify = new Notification();
 		notify.setEmployeeId(payroll.getEmployeeId());
 		notify.setMessage(message);
@@ -87,7 +94,23 @@ public class PayrollServiceImpl implements PayrollService {
 
 	}
 
-	private int calculateLop(double salary,double lopDays) {
+	private double calculateTotalReimbursement(String employeeId) {
+		YearMonth currentMonth = YearMonth.from(LocalDate.now());
+
+		// Convert YearMonth to start and end dates
+		LocalDate startDate = currentMonth.atDay(1);
+		LocalDate endDate = currentMonth.atEndOfMonth();
+
+		// Fetch reimbursements for the given employeeId within the current month
+		List<Reimbursement> reimbursements = reimbursementRepository.findByEmployeeIdAndDateBetween(employeeId,
+				startDate, endDate);
+
+		// Calculate total approved reimbursement amount
+		return reimbursements.stream().filter(r -> r.getReimbursementStatus() == ReimbursementStatus.APPROVED)
+				.mapToDouble(Reimbursement::getAmount).sum();
+	}
+
+	private int calculateLop(double salary, double lopDays) {
 		double lopPerDay = salary / 30;
 		int totalLopDeduction = (int) (lopPerDay * lopDays);
 
@@ -103,7 +126,6 @@ public class PayrollServiceImpl implements PayrollService {
 
 		return finalSalary;
 	}
-
 
 	@Override
 	public ResponseEntity<ResponseStructure<List<Payroll>>> getEmployeesSalary() {
@@ -146,7 +168,8 @@ public class PayrollServiceImpl implements PayrollService {
 
 		ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage("Salary details of employee " + payroll.getEmployeeName() + " fetched successfully.");
+		responseStructure
+				.setMessage("Salary details of employee " + payroll.getEmployeeName() + " fetched successfully.");
 		responseStructure.setData(payroll);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
@@ -158,12 +181,13 @@ public class PayrollServiceImpl implements PayrollService {
 		Payroll existingPayroll = payrollRepo.findById(payroll.getPayrollId())
 				.orElseThrow(() -> new RuntimeException());
 
-		double lopDays = payroll.getLopDays(); 
-		double salary = payroll.getSalary(); 
-
+		double lopDays = payroll.getLopDays();
+		double salary = payroll.getSalary();
+		double reimbursment = calculateTotalReimbursement(payroll.getEmployeeId());
 		int lopDeduction = calculateLop(salary, lopDays);
 		int basicPay = calculateBasicPay(salary);
 
+		existingPayroll.setReimbursementAmount(reimbursment);
 		existingPayroll.setSalary(payroll.getSalary());
 		existingPayroll.setTaxDeduction(payroll.getTaxDeduction());
 		existingPayroll.setSpecialAllowance(payroll.getSpecialAllowance());
@@ -184,7 +208,7 @@ public class PayrollServiceImpl implements PayrollService {
 		responseStructure.setMessage(payroll.getEmployeeName() + " salary updated successfully");
 		responseStructure.setData(updatedPayroll);
 
-		//Notification code 
+		// Notification code
 		Notification notify = new Notification();
 		notify.setEmployeeId(payroll.getEmployeeId());
 		notify.setMessage(payroll.getEmployeeName() + " salary updated successfully");
@@ -213,7 +237,7 @@ public class PayrollServiceImpl implements PayrollService {
 		responseStructure.setMessage(payroll.getEmployeeName() + " salary detail deleted successfully.");
 		responseStructure.setData(payroll);
 
-		//Notification code 
+		// Notification code
 		Notification notify = new Notification();
 		notify.setEmployeeId(payroll.getEmployeeId());
 		notify.setMessage(payroll.getEmployeeName() + " salary detail deleted successfully.");
@@ -222,7 +246,6 @@ public class PayrollServiceImpl implements PayrollService {
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	}
-
 
 	public Payroll generateMonthlyPayroll(String employeeId) {
 		Payroll payroll = payrollRepo.findByEmployeeId(employeeId);
@@ -266,7 +289,7 @@ public class PayrollServiceImpl implements PayrollService {
 		responseStructure.setMessage(payroll.getEmployeeName() + " Payroll status changed");
 		responseStructure.setData(payroll2);
 
-		//Notification code 
+		// Notification code
 		Notification notify = new Notification();
 		notify.setEmployeeId(payroll.getEmployeeId());
 		notify.setMessage(payroll.getEmployeeName() + " Payroll status changed");
@@ -292,7 +315,7 @@ public class PayrollServiceImpl implements PayrollService {
 		responseStructure.setMessage("All Payroll Details fetched Successfully.");
 		responseStructure.setData(list);
 
-		return new ResponseEntity<ResponseStructure<List<Object>>>(responseStructure,HttpStatus.OK);
+		return new ResponseEntity<ResponseStructure<List<Object>>>(responseStructure, HttpStatus.OK);
 	}
 
 	@Override
@@ -313,8 +336,6 @@ public class PayrollServiceImpl implements PayrollService {
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 
-	} 
-
+	}
 
 }
-

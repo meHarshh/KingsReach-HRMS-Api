@@ -36,7 +36,7 @@ public class Payroll implements Serializable {
 	private double otherAllowance;
 	private double employeeProvidentFund;
 	private double basicPay;
-
+	private double reimbursementAmount;
 	private String employeeName;
 	private String location = "Bengaluru";
 	private PayrollStatus payrollStatus;
@@ -48,6 +48,19 @@ public class Payroll implements Serializable {
 	@JsonIgnore
 	@OneToOne
 	private Employee employee;
+
+	
+	public double getReimbursementAmount() {
+		return reimbursementAmount;
+	}
+
+	public void setReimbursementAmount(double reimbursementAmount) {
+		this.reimbursementAmount = reimbursementAmount;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
 
 	public double getLopDays() {
 		return lopDays;
