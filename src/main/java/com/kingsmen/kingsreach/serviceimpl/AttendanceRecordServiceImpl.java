@@ -32,16 +32,16 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService{
 
 	@Override
 	public ResponseEntity<ResponseStructure<AttendanceRecord>> getAttendanceDetail(String employeeId) {
-		
-		AttendanceRecord record = attendanceRecordRepo.findByEmployeeId(employeeId);
-		
+		LocalDate today = LocalDate.now();
+		AttendanceRecord record =attendanceRecordRepo.findByEmployeeIdAndAttendanceDate(employeeId,today);
+			
 		ResponseStructure<AttendanceRecord> responseStructure = new ResponseStructure<AttendanceRecord>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setData(record);
 		responseStructure.setMessage("Attendance Recorded fetched successully");
 		
 		return new ResponseEntity<ResponseStructure<AttendanceRecord>>(responseStructure,HttpStatus.OK);
-	}
+}
 
 	@Override
 	public ResponseEntity<ResponseStructure<AttendanceRecord>> changeRecordStatus(AttendanceRecord attendanceRecord) {
