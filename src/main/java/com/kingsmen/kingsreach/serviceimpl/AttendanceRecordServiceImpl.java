@@ -6,8 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.kingsmen.kingsreach.entity.Attendance;
 import com.kingsmen.kingsreach.entity.AttendanceRecord;
 import com.kingsmen.kingsreach.repo.AttendanceRecordRepo;
+import com.kingsmen.kingsreach.repo.AttendanceRepo;
 import com.kingsmen.kingsreach.service.AttendanceRecordService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
@@ -16,9 +18,15 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService{
 	
 	@Autowired
 	private AttendanceRecordRepo attendanceRecordRepo;
+	
+	@Autowired
+	private AttendanceRepo attendanceRepo;
 
 	@Override
 	public ResponseEntity<ResponseStructure<AttendanceRecord>> saveAttendanceRecord(AttendanceRecord attendanceRecord) {
+		
+		//saveAttendance(attendanceRecord);
+		
 		attendanceRecord.setAttendanceDate(LocalDate.now());
 		AttendanceRecord record = attendanceRecordRepo.save(attendanceRecord);
 		
@@ -28,6 +36,20 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService{
 		responseStructure.setMessage("Attendance Recorded successully");
 		
 		return new ResponseEntity<ResponseStructure<AttendanceRecord>>(responseStructure,HttpStatus.OK);
+	}
+
+	private void saveAttendance(AttendanceRecord attendanceRecord) {
+		Attendance attendance = new Attendance();
+		attendance.setEmployeeId(attendanceRecord.getEmployeeId());
+		attendance.setFirstPunchIn(attendanceRecord.getFirstPunchIn());
+		attendance.setLastPunchOut(attendanceRecord.getLastPunchOut());
+		attendance.setLocation(attendanceRecord.getLocation());
+		attendance.setWorkMode(attendanceRecord.getWorkMode());
+		attendance.setTotalBreakMinutes(attendanceRecord.getTotalBreakMinutes());
+		attendance.setTotalWorkMinutes(attendanceRecord.getTotalWorkMinutes());
+		attendance.setAttendanceDate(attendanceRecord.getAttendanceDate());
+		
+		attendanceRepo.save(attendance);	
 	}
 
 	@Override
@@ -48,6 +70,7 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService{
 		AttendanceRecord record = attendanceRecordRepo.findById(attendanceRecord.getAttendanceRecordId())
 				.orElseThrow(() -> new RuntimeException("Attendence Record not found with Id"));
 		
+		saveAttendance(attendanceRecord);
 		record.setLastPunchOut(attendanceRecord.getLastPunchOut());
 		record.setTotalBreakMinutes(attendanceRecord.getTotalBreakMinutes());
 		record.setTotalWorkMinutes(attendanceRecord.getTotalWorkMinutes());

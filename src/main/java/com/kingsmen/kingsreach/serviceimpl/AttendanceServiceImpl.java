@@ -45,7 +45,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 		Optional<Employee> byEmployeeId = Optional.of(employeeRepo.findByEmployeeId(attendance.getEmployeeId())
 				.orElseThrow(() -> new EmployeeIdNotExistsException("No value present with the ID.")));
-
+		
 		Employee employee = byEmployeeId.get();
 		// attendance.setEmployee(employee);
 		attendance.setFirstPunchIn(attendance.getFirstPunchIn());

@@ -14,7 +14,7 @@ import com.kingsmen.kingsreach.entity.AttendanceRecord;
 import com.kingsmen.kingsreach.service.AttendanceRecordService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@CrossOrigin(allowCredentials = "true", origins = "http://localhost:5173/")
+@CrossOrigin(allowCredentials = "true", origins = "http://hrms.kingsmenrealty.com/")
 @RestController
 public class AttendanceRecordController {
 	
