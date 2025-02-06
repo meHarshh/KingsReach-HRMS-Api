@@ -29,6 +29,7 @@ public class Attendance {
 	private Workmode workMode;
 	private String employeeName;
 	private String employeeId;
+	private int totalBreakMinutes;
 
 	@JsonIgnore
 	@ManyToOne
@@ -148,5 +149,14 @@ public class Attendance {
 	public void setWorkMode(Workmode workMode) {
 		this.workMode = workMode;
 	}
+
+	public int getTotalBreakMinutes() {
+		return totalBreakMinutes;
+	}
+
+	public void setTotalBreakMinutes(int totalBreakMinutes) {
+		this.totalBreakMinutes = totalBreakMinutes;
+	}
+	
 
 }

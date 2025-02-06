@@ -1,7 +1,6 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
 import java.time.LocalDate;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,16 +32,16 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService{
 
 	@Override
 	public ResponseEntity<ResponseStructure<AttendanceRecord>> getAttendanceDetail(String employeeId) {
-		
-		AttendanceRecord record = attendanceRecordRepo.findByEmployeeId(employeeId);
-		
+		LocalDate today = LocalDate.now();
+		AttendanceRecord record =attendanceRecordRepo.findByEmployeeIdAndAttendanceDate(employeeId,today);
+			
 		ResponseStructure<AttendanceRecord> responseStructure = new ResponseStructure<AttendanceRecord>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setData(record);
 		responseStructure.setMessage("Attendance Recorded fetched successully");
 		
 		return new ResponseEntity<ResponseStructure<AttendanceRecord>>(responseStructure,HttpStatus.OK);
-	}
+}
 
 	@Override
 	public ResponseEntity<ResponseStructure<AttendanceRecord>> changeRecordStatus(AttendanceRecord attendanceRecord) {
@@ -50,6 +49,8 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService{
 				.orElseThrow(() -> new RuntimeException("Attendence Record not found with Id"));
 		
 		record.setLastPunchOut(attendanceRecord.getLastPunchOut());
+		record.setTotalBreakMinutes(attendanceRecord.getTotalBreakMinutes());
+		record.setTotalWorkMinutes(attendanceRecord.getTotalWorkMinutes());
 		
 		AttendanceRecord record2 = attendanceRecordRepo.save(record);
 		

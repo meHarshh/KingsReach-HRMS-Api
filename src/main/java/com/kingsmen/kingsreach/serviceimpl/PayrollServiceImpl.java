@@ -45,7 +45,8 @@ public class PayrollServiceImpl implements PayrollService {
 	@Autowired
 	private NotificationRepo notificationRepo;
 
-	private ReimbursementRepo reimbursementRepository;
+	@Autowired
+	private ReimbursementRepo reimbursementRepo;
 
 	@Override
 	public ResponseEntity<ResponseStructure<Payroll>> paySalary(Payroll payroll) {
@@ -97,17 +98,19 @@ public class PayrollServiceImpl implements PayrollService {
 	private double calculateTotalReimbursement(String employeeId) {
 		YearMonth currentMonth = YearMonth.from(LocalDate.now());
 
-		// Convert YearMonth to start and end dates
 		LocalDate startDate = currentMonth.atDay(1);
 		LocalDate endDate = currentMonth.atEndOfMonth();
 
-		// Fetch reimbursements for the given employeeId within the current month
-		List<Reimbursement> reimbursements = reimbursementRepository.findByEmployeeIdAndDateBetween(employeeId,
+		List<Reimbursement> reimbursements = reimbursementRepo.findByEmployeeIdAndDateBetween(employeeId,
 				startDate, endDate);
 
-		for (Reimbursement reimbursement : reimbursements) {
-			System.out.println(reimbursement.getAmount());
-		}
+//		for (Reimbursement reimbursement : reimbursements) {
+//			System.out.println(reimbursement.getAmount());
+//		}
+		for (Reimbursement r : reimbursements) {
+	        System.out.println("ID: " + r.getEmployeeId() + ", Status: " + r.getReimbursementStatus() +
+	                           " (Enum value: " + ReimbursementStatus.APPROVED + ")");
+	    }
 		
 		// Calculate total approved reimbursement amount
 		return reimbursements.stream().filter(r -> r.getReimbursementStatus() == ReimbursementStatus.APPROVED)
