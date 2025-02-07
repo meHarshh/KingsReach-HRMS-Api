@@ -20,6 +20,7 @@ public class Onsite {
 	private long empContactNo;
 	private String location;
 	private LocalDate date;
+	private long clientNumber;
 
 	public int getOnsiteId() {
 		return onsiteId;
@@ -83,6 +84,14 @@ public class Onsite {
 
 	public void setDate(LocalDate date) {
 		this.date = date;
+	}
+
+	public long getClientNumber() {
+		return clientNumber;
+	}
+
+	public void setClientNumber(long clientNumber) {
+		this.clientNumber = clientNumber;
 	}
 
 }
