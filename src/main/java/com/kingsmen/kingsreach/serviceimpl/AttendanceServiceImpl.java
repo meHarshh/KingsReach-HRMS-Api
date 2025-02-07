@@ -45,7 +45,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 		Optional<Employee> byEmployeeId = Optional.of(employeeRepo.findByEmployeeId(attendance.getEmployeeId())
 				.orElseThrow(() -> new EmployeeIdNotExistsException("No value present with the ID.")));
-		
+
 		Employee employee = byEmployeeId.get();
 		// attendance.setEmployee(employee);
 		attendance.setFirstPunchIn(attendance.getFirstPunchIn());
@@ -103,12 +103,14 @@ public class AttendanceServiceImpl implements AttendanceService {
 	@Override
 	public ResponseEntity<ResponseStructure<Attendance>> getAttendenceForDate(String employeeId,
 			LocalDate attendanceDate) {
-		Attendance attendanceOptional = attendanceRepo.findByEmployeeIdAndAttendanceDate(employeeId, attendanceDate);
+		Optional<Attendance> attendanceOptional = attendanceRepo.findByEmployeeIdAndAttendanceDate(employeeId, attendanceDate);
+
+		Attendance attendance = attendanceOptional.orElse(null); 
 
 		ResponseStructure<Attendance> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Attendence of " + attendanceDate + " fetched successfully.");
-		responseStructure.setData(attendanceOptional);
+		responseStructure.setData(attendance);
 
 		return new ResponseEntity<ResponseStructure<Attendance>>(responseStructure, HttpStatus.OK);
 	}

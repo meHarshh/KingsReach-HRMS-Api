@@ -12,7 +12,7 @@ public interface AttendanceRepo extends JpaRepository<Attendance, Integer> {
 
 	Optional<Attendance> findByEmployeeId(String employeeId);
 
-	Attendance findByEmployeeIdAndAttendanceDate(String employeeId, LocalDate attendanceDate);
+	Optional<Attendance> findByEmployeeIdAndAttendanceDate(String employeeId, LocalDate attendanceDate);
 
 	List<Attendance> findByAttendanceDate(LocalDate now);
 	

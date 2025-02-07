@@ -58,11 +58,12 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService{
 		attendance.setWorkMode(attendanceRecord.getWorkMode());
 		attendance.setTotalBreakMinutes(attendanceRecord.getTotalBreakMinutes());
 		attendance.setTotalWorkMinutes(attendanceRecord.getTotalWorkMinutes());
-		attendance.setAttendanceDate(attendanceRecord.getAttendanceDate());
+		attendance.setAttendanceDate(LocalDate.now());
 		attendance.setEmployeeName(employee.getName());
 		
 		attendanceRepo.save(attendance);	
 	}
+
 
 	@Override
 	public ResponseEntity<ResponseStructure<AttendanceRecord>> getAttendanceDetail(String employeeId) {
@@ -81,13 +82,16 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService{
 	public ResponseEntity<ResponseStructure<AttendanceRecord>> changeRecordStatus(AttendanceRecord attendanceRecord) {
 		AttendanceRecord record = attendanceRecordRepo.findById(attendanceRecord.getAttendanceRecordId())
 				.orElseThrow(() -> new RuntimeException("Attendence Record not found with Id"));
-		
-		saveAttendance(attendanceRecord);
+	
 		record.setLastPunchOut(attendanceRecord.getLastPunchOut());
 		record.setTotalBreakMinutes(attendanceRecord.getTotalBreakMinutes());
 		record.setTotalWorkMinutes(attendanceRecord.getTotalWorkMinutes());
 		
 		AttendanceRecord record2 = attendanceRecordRepo.save(record);
+		
+		if(attendanceRecord.getLastPunchOut() != null) {
+			saveAttendance(attendanceRecord);
+		}
 		
 		ResponseStructure<AttendanceRecord> responseStructure = new ResponseStructure<AttendanceRecord>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
