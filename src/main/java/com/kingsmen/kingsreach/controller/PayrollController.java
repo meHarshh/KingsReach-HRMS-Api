@@ -19,7 +19,7 @@ import com.kingsmen.kingsreach.entity.Payroll;
 import com.kingsmen.kingsreach.service.PayrollService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@CrossOrigin(allowCredentials = "true", origins = "http://hrms.kingsmenrealty.com/")
+@CrossOrigin(allowCredentials = "true", origins = "http://localhost:5173/")
 @RestController
 public class PayrollController {
 	

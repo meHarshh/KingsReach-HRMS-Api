@@ -25,6 +25,7 @@ public class Reimbursement {
 	private double amount;
 	private ReimbursementStatus reimbursementStatus;
 	private String reason;
+	private double distance;
 	
 	@JsonIgnore
 	@ManyToOne
@@ -108,6 +109,14 @@ public class Reimbursement {
 
 	public void setEmployee(Employee employee) {
 		this.employee = employee;
+	}
+
+	public double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(double distance) {
+		this.distance = distance;
 	}
 
 }

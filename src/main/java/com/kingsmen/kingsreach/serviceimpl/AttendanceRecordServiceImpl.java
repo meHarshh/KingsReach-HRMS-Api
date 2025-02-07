@@ -1,6 +1,8 @@
 package com.kingsmen.kingsreach.serviceimpl;
 
 import java.time.LocalDate;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,8 +10,11 @@ import org.springframework.stereotype.Service;
 
 import com.kingsmen.kingsreach.entity.Attendance;
 import com.kingsmen.kingsreach.entity.AttendanceRecord;
+import com.kingsmen.kingsreach.entity.Employee;
+import com.kingsmen.kingsreach.exceptions.EmployeeIdNotExistsException;
 import com.kingsmen.kingsreach.repo.AttendanceRecordRepo;
 import com.kingsmen.kingsreach.repo.AttendanceRepo;
+import com.kingsmen.kingsreach.repo.EmployeeRepo;
 import com.kingsmen.kingsreach.service.AttendanceRecordService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
@@ -21,11 +26,12 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService{
 	
 	@Autowired
 	private AttendanceRepo attendanceRepo;
+	
+	@Autowired
+	private EmployeeRepo employeeRepo;
 
 	@Override
 	public ResponseEntity<ResponseStructure<AttendanceRecord>> saveAttendanceRecord(AttendanceRecord attendanceRecord) {
-		
-		//saveAttendance(attendanceRecord);
 		
 		attendanceRecord.setAttendanceDate(LocalDate.now());
 		AttendanceRecord record = attendanceRecordRepo.save(attendanceRecord);
@@ -39,6 +45,11 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService{
 	}
 
 	private void saveAttendance(AttendanceRecord attendanceRecord) {
+		Optional<Employee> byEmployeeId = Optional.of(employeeRepo.findByEmployeeId(attendanceRecord.getEmployeeId())
+				.orElseThrow(() -> new EmployeeIdNotExistsException("No value present with the ID.")));
+		
+		Employee employee = byEmployeeId.get();
+		
 		Attendance attendance = new Attendance();
 		attendance.setEmployeeId(attendanceRecord.getEmployeeId());
 		attendance.setFirstPunchIn(attendanceRecord.getFirstPunchIn());
@@ -48,6 +59,7 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService{
 		attendance.setTotalBreakMinutes(attendanceRecord.getTotalBreakMinutes());
 		attendance.setTotalWorkMinutes(attendanceRecord.getTotalWorkMinutes());
 		attendance.setAttendanceDate(attendanceRecord.getAttendanceDate());
+		attendance.setEmployeeName(employee.getName());
 		
 		attendanceRepo.save(attendance);	
 	}
