@@ -100,7 +100,7 @@ public class LeaveRecordServiceImpl implements LeaveRecordService {
 		LeaveRecord leaveRecord = leaveRecordRepo.findById(recordId)
 				.orElseThrow(() -> new IdNotFoundException("The leaveId is not found"));
 		leaveRecord.setStatus(status);
-		leaveRecord.setApprovedBy(leaveRecord.getApprovedBy());
+	//	leaveRecord.setApprovedBy(leaveRecord.getApprovedBy());
 
 		LeaveRecord updatedLeaveRecord = leaveRecordRepo.save(leaveRecord);
 
