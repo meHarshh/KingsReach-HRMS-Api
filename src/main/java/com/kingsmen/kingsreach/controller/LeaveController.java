@@ -19,7 +19,7 @@ import com.kingsmen.kingsreach.service.LeaveService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@CrossOrigin(allowCredentials = "true", origins = {"http://localhost:5173/","http://server.ovf.bgg.mybluehostin.me:8080/"})
+@CrossOrigin( origins = {"http://localhost:5173/","http://server.ovf.bgg.mybluehostin.me:8080/"})
 @RestController
 public class LeaveController {
 

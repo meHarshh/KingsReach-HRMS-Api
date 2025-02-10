@@ -18,7 +18,7 @@ import com.kingsmen.kingsreach.helper.EmployeeHelper;
 import com.kingsmen.kingsreach.service.EmployeeService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@CrossOrigin(allowCredentials = "true", origins = {"http://localhost:5173/","http://server.ovf.bgg.mybluehostin.me:8080/"})
+@CrossOrigin( origins = {"http://localhost:5173/","http://server.ovf.bgg.mybluehostin.me:8080/"})
 @RestController
 public class EmployeeController {
 
