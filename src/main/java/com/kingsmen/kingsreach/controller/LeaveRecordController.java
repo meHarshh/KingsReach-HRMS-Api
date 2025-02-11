@@ -17,7 +17,7 @@ import com.kingsmen.kingsreach.enums.LeaveStatus;
 import com.kingsmen.kingsreach.service.LeaveRecordService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@CrossOrigin( origins = {"http://localhost:5173/","http://server.ovf.bgg.mybluehostin.me:8080/"})
+@CrossOrigin(allowCredentials = "true", origins = "http://hrms.kingsmenrealty.com/")
 @RestController
 public class LeaveRecordController {
 	@Autowired

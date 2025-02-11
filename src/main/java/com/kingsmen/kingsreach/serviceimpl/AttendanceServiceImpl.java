@@ -169,8 +169,8 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 		List<Attendance> attendances = attendanceRepo.findByEmployeeIdAndAttendanceDateBetween(employeeId, fromDate, toDate);
 		ResponseStructure<List<Attendance>> responseStructure = new ResponseStructure<>();
-		responseStructure.setStatusCode(HttpStatus.OK.value()); responseStructure.
-		setMessage("Employee Attendance details fetched successfully");
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage("Employee Attendance details fetched successfully");
 		responseStructure.setData(attendances);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK); 
