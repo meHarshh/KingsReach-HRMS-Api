@@ -62,14 +62,11 @@ public class PayrollServiceImpl implements PayrollService {
 		double salary = payroll.getSalary();
 
 		int finalSalary = calculateLopDeduction(salary, lopDays);
-		// int lopDeduction = calculateLop(salary, lopDays);
 
 		double pfDeduction = finalSalary * 0.12;
 		finalSalary = (int) (finalSalary - pfDeduction);
 
 		payroll.setSalary(finalSalary);
-
-		// payroll.setLopDeduction(lopDeduction);
 
 		payroll.setProvidentFund(pfDeduction);
 
