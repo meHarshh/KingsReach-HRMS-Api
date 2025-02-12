@@ -169,8 +169,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public ResponseEntity<ResponseStructure<Employee>> editEmployee(Employee employee) {
 		Optional<Employee> byEmployeeId = employeeRepo.findByEmployeeId(employee.getEmployeeId());
 		Employee employee2 = byEmployeeId.get();
-
-		// employee2.setEmployeeId(employee.getEmployeeId());
+		
 		employee2.setFirstName(employee.getFirstName());
 		employee2.setLastName(employee.getLastName());
 		employee2.setOfficialEmail(employee.getOfficialEmail());
@@ -208,7 +207,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee2.setCreatedAt(LocalDateTime.now());
 		employee2.setUpdatedAt(LocalDateTime.now());
 		employee2.setUanNumber(employee.getUanNumber());
-		employee2.setName(employee.getName());
+		employee2.setName(employee.getFirstName() + " " + employee.getLastName());
 
 		Employee employee3 = employeeRepo.save(employee2);
 
