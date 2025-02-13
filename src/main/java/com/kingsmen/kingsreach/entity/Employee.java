@@ -41,6 +41,7 @@ public class Employee implements Serializable {
 	private String lastName;
 	private String userName;
 	private String name;
+
 	@Enumerated(EnumType.STRING)
 	private EmployeeRole role;
 	private String officialEmail;
