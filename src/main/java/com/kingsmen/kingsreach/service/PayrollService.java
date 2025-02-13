@@ -10,7 +10,7 @@ import com.kingsmen.kingsreach.util.ResponseStructure;
 
 public interface PayrollService {
 	
-	ResponseEntity<ResponseStructure<Payroll>> paySalary(Payroll payroll);
+	ResponseEntity<ResponseStructure<Payroll>> addSalary(Payroll payroll);
 
 	ResponseEntity<ResponseStructure<List<Payroll>>> getEmployeesSalary();
 

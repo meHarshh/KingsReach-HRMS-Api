@@ -14,9 +14,11 @@ import org.springframework.stereotype.Service;
 
 import com.kingsmen.kingsreach.entity.Admin;
 import com.kingsmen.kingsreach.entity.Employee;
+import com.kingsmen.kingsreach.entity.HR;
 import com.kingsmen.kingsreach.entity.Manager;
 import com.kingsmen.kingsreach.entity.Notification;
 import com.kingsmen.kingsreach.entity.Onsite;
+import com.kingsmen.kingsreach.entity.SuperAdmin;
 import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.enums.EmployeeRole;
 import com.kingsmen.kingsreach.exception.InvalidRoleException;
@@ -27,9 +29,11 @@ import com.kingsmen.kingsreach.exceptions.UserIdOrEmailAlreadyExistException;
 import com.kingsmen.kingsreach.helper.EmployeeHelper;
 import com.kingsmen.kingsreach.repo.AdminRepo;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
+import com.kingsmen.kingsreach.repo.HrRepo;
 import com.kingsmen.kingsreach.repo.ManagerRepo;
 import com.kingsmen.kingsreach.repo.NotificationRepo;
 import com.kingsmen.kingsreach.repo.OnsiteRepo;
+import com.kingsmen.kingsreach.repo.SuperAdminRepo;
 import com.kingsmen.kingsreach.service.EmployeeService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
@@ -47,6 +51,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	private OnsiteRepo onsiteRepo;
+
+	@Autowired
+	private HrRepo hrRepo;
+
+	@Autowired
+	private SuperAdminRepo superAdminRepo;
 
 	@Autowired
 	private NotificationRepo notificationRepo;
@@ -103,11 +113,26 @@ public class EmployeeServiceImpl implements EmployeeService {
 			employee = employeeRepo.save(employee);
 			break;
 
+		case HR:
+			HR hr = new HR();
+			BeanUtils.copyProperties(employee, hr);
+			hr = hrRepo.save(hr);
+			employee = hr;
+			break;
+
+		case SUPER_ADMIN:
+			SuperAdmin superAdmin = new SuperAdmin();
+			BeanUtils.copyProperties(employee, superAdmin);
+			superAdmin = superAdminRepo.save(superAdmin);
+			employee = superAdmin;
+			break;
+
 		default:
 			throw new InvalidRoleException("Invalid role specified for the employee");
 		}
 
-		String message = "Employee ID :" + employee.getEmployeeId() + " " + employee.getName() + " Added Successfully!!";
+		String message = "Employee ID :" + employee.getEmployeeId() + " " + employee.getName()
+				+ " Added Successfully!!";
 
 		ResponseStructure<Employee> responseStructure = new ResponseStructure<Employee>();
 		responseStructure.setStatusCode(HttpStatus.CREATED.value());
@@ -170,7 +195,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public ResponseEntity<ResponseStructure<Employee>> editEmployee(Employee employee) {
 		Optional<Employee> byEmployeeId = employeeRepo.findByEmployeeId(employee.getEmployeeId());
 		Employee employee2 = byEmployeeId.get();
-		
+
 		employee2.setFirstName(employee.getFirstName());
 		employee2.setLastName(employee.getLastName());
 		employee2.setOfficialEmail(employee.getOfficialEmail());

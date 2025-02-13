@@ -49,30 +49,21 @@ public class PayrollServiceImpl implements PayrollService {
 	private ReimbursementRepo reimbursementRepo;
 
 	@Override
-	public ResponseEntity<ResponseStructure<Payroll>> paySalary(Payroll payroll) {
+	public ResponseEntity<ResponseStructure<Payroll>> addSalary(Payroll payroll) {
 
 		String employeeId = payroll.getEmployeeId();
 		Optional<Employee> byEmployeeId = employeeRepo.findByEmployeeId(employeeId);
 		Employee employee = byEmployeeId.get();
 
 		payroll.setEmployee(employee);
-//
-//		double lopDays = payroll.getLopDays();
-//
-//		double salary = payroll.getSalary();
-//
-//		int finalSalary = calculateLopDeduction(salary, lopDays);
-//		
-//		double basicPay = calculateBasicPay(salary);
-//		
-//		double pfDeduction = calculateProvidentFund(basicPay);
-//		
-//		finalSalary = (int) (salary - pfDeduction);
-//
-//		payroll.setSalary(salary);
-//		payroll.setGrossSalary(finalSalary);
-//
-//		payroll.setProvidentFund(pfDeduction);
+
+		double lopDays = payroll.getLopDays();
+		double salary = payroll.getSalary();
+		double basePay = calculateBasicPay(salary);
+		double pfDeduction = calculateProvidentFund(basePay);
+		
+		payroll.setProvidentFund(pfDeduction);
+		payroll.setSalary(salary-pfDeduction);
 
 		payroll.setDate(LocalDate.now());
 		System.out.println(LocalDate.now());
