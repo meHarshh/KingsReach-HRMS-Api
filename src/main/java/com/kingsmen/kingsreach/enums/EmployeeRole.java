@@ -2,6 +2,6 @@ package com.kingsmen.kingsreach.enums;
 
 public enum EmployeeRole {
 		
-			ADMIN, EMPLOYEE, MANAGER
+		SUPER_ADMIN, ADMIN, EMPLOYEE, MANAGER, HR  
 			
 }

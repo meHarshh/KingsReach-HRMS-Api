@@ -49,7 +49,7 @@ public class PayrollServiceImpl implements PayrollService {
 	private ReimbursementRepo reimbursementRepo;
 
 	@Override
-	public ResponseEntity<ResponseStructure<Payroll>> paySalary(Payroll payroll) {
+	public ResponseEntity<ResponseStructure<Payroll>> addSalary(Payroll payroll) {
 
 		String employeeId = payroll.getEmployeeId();
 		Optional<Employee> byEmployeeId = employeeRepo.findByEmployeeId(employeeId);
@@ -58,18 +58,12 @@ public class PayrollServiceImpl implements PayrollService {
 		payroll.setEmployee(employee);
 
 		double lopDays = payroll.getLopDays();
-
 		double salary = payroll.getSalary();
-
-		int finalSalary = calculateLopDeduction(salary, lopDays);
-
-		double pfDeduction = calculateProvidentFund(salary);
-		finalSalary = (int) (salary - pfDeduction);
-
-		payroll.setSalary(finalSalary);
-
+		double basePay = calculateBasicPay(salary);
+		double pfDeduction = calculateProvidentFund(basePay);
+		
 		payroll.setProvidentFund(pfDeduction);
-
+		payroll.setSalary(salary-pfDeduction);
 		payroll.setDate(LocalDate.now());
 		System.out.println(LocalDate.now());
 
@@ -98,13 +92,13 @@ public class PayrollServiceImpl implements PayrollService {
 		LocalDate startDate = currentMonth.atDay(1);
 		LocalDate endDate = currentMonth.atEndOfMonth();
 
-		List<Reimbursement> reimbursements = reimbursementRepo.findByEmployeeIdAndDateBetween(employeeId,
-				startDate, endDate);
+		List<Reimbursement> reimbursements = reimbursementRepo.findByEmployeeIdAndDateBetween(employeeId, startDate,
+				endDate);
 
 		for (Reimbursement reimbursement : reimbursements) {
 			System.out.println(reimbursement.getAmount());
 		}
-	
+
 		// Calculate total approved reimbursement amount
 		return reimbursements.stream().filter(r -> r.getReimbursementStatus() == ReimbursementStatus.APPROVED)
 				.mapToDouble(Reimbursement::getAmount).sum();
