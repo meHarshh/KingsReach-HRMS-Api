@@ -202,7 +202,7 @@ public class PayrollServiceImpl implements PayrollService {
 		existingPayroll.setLopDeduction(lopDeduction);
 		existingPayroll.setBasicPay(payroll.getBasicPay());
 		existingPayroll.setProfessionalTax(payroll.getProfessionalTax());
-		existingPayroll.setGrossSalary(finalSalary);
+		existingPayroll.setGrossSalary(finalSalary + reimbursment);
 
 		Payroll updatedPayroll = payrollRepo.save(existingPayroll);
 
