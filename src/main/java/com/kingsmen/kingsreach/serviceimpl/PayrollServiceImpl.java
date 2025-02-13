@@ -64,6 +64,7 @@ public class PayrollServiceImpl implements PayrollService {
 		
 		payroll.setProvidentFund(pfDeduction);
 		payroll.setSalary(salary-pfDeduction);
+
 		payroll.setDate(LocalDate.now());
 		System.out.println(LocalDate.now());
 
@@ -179,7 +180,7 @@ public class PayrollServiceImpl implements PayrollService {
 		double salary = payroll.getSalary();
 		double reimbursment = calculateTotalReimbursement(payroll.getEmployeeId());
 		int lopDeduction = calculateLop(salary, lopDays);
-		int basicPay = calculateBasicPay(salary);
+		//int basicPay = calculateBasicPay(salary);
 
 		existingPayroll.setReimbursementAmount(reimbursment);
 		existingPayroll.setSalary(payroll.getSalary());
@@ -188,12 +189,12 @@ public class PayrollServiceImpl implements PayrollService {
 		existingPayroll.setEmployeeStateInsurance(payroll.getEmployeeStateInsurance());
 		existingPayroll.setHouseRentAllowance(payroll.getHouseRentAllowance());
 		existingPayroll.setProvidentFund(payroll.getProvidentFund());
-		existingPayroll.setGrossSalary(payroll.getGrossSalary());
 		existingPayroll.setOtherAllowance(payroll.getOtherAllowance());
 		existingPayroll.setEmployeeProvidentFund(payroll.getEmployeeProvidentFund());
 		existingPayroll.setLopDays(payroll.getLopDays());
 		existingPayroll.setLopDeduction(lopDeduction);
-		existingPayroll.setBasicPay(basicPay);
+		existingPayroll.setBasicPay(payroll.getBasicPay());
+		existingPayroll.setProfessionalTax(payroll.getProfessionalTax());
 
 		Payroll updatedPayroll = payrollRepo.save(existingPayroll);
 
@@ -213,7 +214,7 @@ public class PayrollServiceImpl implements PayrollService {
 	}
 
 	private int calculateBasicPay(double salary) {
-		int basicPay = (int) (salary - (salary * 0.40));
+		int basicPay = (int)( salary * 0.40);
 		return basicPay;
 	}
 

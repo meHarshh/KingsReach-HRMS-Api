@@ -84,6 +84,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			throw new InvalidEmailException("Please enter the valid email-id");
 		}
 		employee.setCreatedAt(LocalDateTime.now());
+		employee.setDate(LocalDate.now());
 		employee.setName(employee.getFirstName() + " " + employee.getLastName());
 
 		// Setting the manager for the employee by down-casting the Manager entity
@@ -229,7 +230,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee2.setIfscCode(employee.getIfscCode());
 		employee2.setFatherContactNumber(employee.getFatherContactNumber());
 		employee2.setExperience(employee.getExperience());
-		employee2.setCreatedAt(LocalDateTime.now());
+		employee2.setCreatedAt(employee.getCreatedAt());
 		employee2.setUpdatedAt(LocalDateTime.now());
 		employee2.setUanNumber(employee.getUanNumber());
 		employee2.setName(employee.getFirstName() + " " + employee.getLastName());

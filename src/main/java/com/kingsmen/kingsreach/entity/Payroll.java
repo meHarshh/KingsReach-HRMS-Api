@@ -44,6 +44,7 @@ public class Payroll implements Serializable {
 	private double lopDays;
 	private double lopDeduction;
 	private LocalDate date;
+	private int professionalTax;
 
 	@JsonIgnore
 	@OneToOne
@@ -219,11 +220,19 @@ public class Payroll implements Serializable {
 		this.date = date;
 	}
 
+	public int getProfessionalTax() {
+		return professionalTax;
+	}
+
+	public void setProfessionalTax(int professionalTax) {
+		this.professionalTax = professionalTax;
+	}
+
 	public Payroll(int payrollId, String employeeId, Department department, double salary, double taxDeduction,
 			double specialAllowance, double employeeStateInsurance, double houseRentAllowance, double providentFund,
 			double grossSalary, double otherAllowance, double employeeProvidentFund, double basicPay,
-			String employeeName, String location, PayrollStatus payrollStatus, double lopDays, double lopDeduction,
-			LocalDate date, Employee employee) {
+			double reimbursementAmount, String employeeName, String location, PayrollStatus payrollStatus,
+			double lopDays, double lopDeduction, LocalDate date, int professionalTax, Employee employee) {
 		super();
 		this.payrollId = payrollId;
 		this.employeeId = employeeId;
@@ -238,12 +247,14 @@ public class Payroll implements Serializable {
 		this.otherAllowance = otherAllowance;
 		this.employeeProvidentFund = employeeProvidentFund;
 		this.basicPay = basicPay;
+		this.reimbursementAmount = reimbursementAmount;
 		this.employeeName = employeeName;
 		this.location = location;
 		this.payrollStatus = payrollStatus;
 		this.lopDays = lopDays;
 		this.lopDeduction = lopDeduction;
 		this.date = date;
+		this.professionalTax = professionalTax;
 		this.employee = employee;
 	}
 
