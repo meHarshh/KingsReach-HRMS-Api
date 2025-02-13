@@ -56,19 +56,23 @@ public class PayrollServiceImpl implements PayrollService {
 		Employee employee = byEmployeeId.get();
 
 		payroll.setEmployee(employee);
-
-		double lopDays = payroll.getLopDays();
-
-		double salary = payroll.getSalary();
-
-		int finalSalary = calculateLopDeduction(salary, lopDays);
-
-		double pfDeduction = finalSalary * 0.12;
-		finalSalary = (int) (finalSalary - pfDeduction);
-
-		payroll.setSalary(finalSalary);
-
-		payroll.setProvidentFund(pfDeduction);
+//
+//		double lopDays = payroll.getLopDays();
+//
+//		double salary = payroll.getSalary();
+//
+//		int finalSalary = calculateLopDeduction(salary, lopDays);
+//		
+//		double basicPay = calculateBasicPay(salary);
+//		
+//		double pfDeduction = calculateProvidentFund(basicPay);
+//		
+//		finalSalary = (int) (salary - pfDeduction);
+//
+//		payroll.setSalary(salary);
+//		payroll.setGrossSalary(finalSalary);
+//
+//		payroll.setProvidentFund(pfDeduction);
 
 		payroll.setDate(LocalDate.now());
 		System.out.println(LocalDate.now());
@@ -98,13 +102,13 @@ public class PayrollServiceImpl implements PayrollService {
 		LocalDate startDate = currentMonth.atDay(1);
 		LocalDate endDate = currentMonth.atEndOfMonth();
 
-		List<Reimbursement> reimbursements = reimbursementRepo.findByEmployeeIdAndDateBetween(employeeId,
-				startDate, endDate);
+		List<Reimbursement> reimbursements = reimbursementRepo.findByEmployeeIdAndDateBetween(employeeId, startDate,
+				endDate);
 
 		for (Reimbursement reimbursement : reimbursements) {
 			System.out.println(reimbursement.getAmount());
 		}
-	
+
 		// Calculate total approved reimbursement amount
 		return reimbursements.stream().filter(r -> r.getReimbursementStatus() == ReimbursementStatus.APPROVED)
 				.mapToDouble(Reimbursement::getAmount).sum();
@@ -185,7 +189,7 @@ public class PayrollServiceImpl implements PayrollService {
 		double salary = payroll.getSalary();
 		double reimbursment = calculateTotalReimbursement(payroll.getEmployeeId());
 		int lopDeduction = calculateLop(salary, lopDays);
-		int basicPay = calculateBasicPay(salary);
+		//int basicPay = calculateBasicPay(salary);
 
 		existingPayroll.setReimbursementAmount(reimbursment);
 		existingPayroll.setSalary(payroll.getSalary());
@@ -194,12 +198,12 @@ public class PayrollServiceImpl implements PayrollService {
 		existingPayroll.setEmployeeStateInsurance(payroll.getEmployeeStateInsurance());
 		existingPayroll.setHouseRentAllowance(payroll.getHouseRentAllowance());
 		existingPayroll.setProvidentFund(payroll.getProvidentFund());
-		existingPayroll.setGrossSalary(payroll.getGrossSalary());
 		existingPayroll.setOtherAllowance(payroll.getOtherAllowance());
 		existingPayroll.setEmployeeProvidentFund(payroll.getEmployeeProvidentFund());
 		existingPayroll.setLopDays(payroll.getLopDays());
 		existingPayroll.setLopDeduction(lopDeduction);
-		existingPayroll.setBasicPay(basicPay);
+		existingPayroll.setBasicPay(payroll.getBasicPay());
+		existingPayroll.setProfessionalTax(payroll.getProfessionalTax());
 
 		Payroll updatedPayroll = payrollRepo.save(existingPayroll);
 
@@ -219,7 +223,7 @@ public class PayrollServiceImpl implements PayrollService {
 	}
 
 	private int calculateBasicPay(double salary) {
-		int basicPay = (int) (salary - (salary * 0.40));
+		int basicPay = (int)( salary * 0.40);
 		return basicPay;
 	}
 
