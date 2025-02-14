@@ -235,6 +235,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee2.setUpdatedAt(LocalDateTime.now());
 		employee2.setUanNumber(employee.getUanNumber());
 		employee2.setName(employee.getFirstName() + " " + employee.getLastName());
+		employee2.setManager(employee.getManager());
+		employee2.setManagerId(employee.getManagerId());
 
 		Employee employee3 = employeeRepo.save(employee2);
 
