@@ -88,8 +88,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee.setName(employee.getFirstName() + " " + employee.getLastName());
 
 		// Setting the manager for the employee by down-casting the Manager entity
-		if (employee.getRole() != EmployeeRole.ADMIN && employee.getRole() != EmployeeRole.MANAGER && 
-				employee.getRole() != EmployeeRole.HR && employee.getRole() != EmployeeRole.SUPER_ADMIN) {
+		if (employee.getRole() != EmployeeRole.ADMIN && employee.getRole() != EmployeeRole.MANAGER
+				&& employee.getRole() != EmployeeRole.HR && employee.getRole() != EmployeeRole.SUPER_ADMIN) {
 			String managerId = employee.getManagerId();
 			Employee orElseThrow = employeeRepo.findByEmployeeId(managerId).orElseThrow(
 					() -> new EmployeeIdNotExistsException("The Employee with given Id is not Exist, Enter valid ID"));
@@ -235,8 +235,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee2.setUpdatedAt(LocalDateTime.now());
 		employee2.setUanNumber(employee.getUanNumber());
 		employee2.setName(employee.getFirstName() + " " + employee.getLastName());
-		employee2.setManager(employee.getManager());
 		employee2.setManagerId(employee.getManagerId());
+
+		Manager orElseThrow = managerRepo.findByEmployeeId(employee.getManagerId()).orElseThrow();
+
+		employee2.setManager(orElseThrow);
 
 		Employee employee3 = employeeRepo.save(employee2);
 
