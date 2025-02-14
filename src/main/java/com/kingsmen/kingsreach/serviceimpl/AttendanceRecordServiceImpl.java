@@ -19,37 +19,37 @@ import com.kingsmen.kingsreach.service.AttendanceRecordService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
 @Service
-public class AttendanceRecordServiceImpl implements AttendanceRecordService{
-	
+public class AttendanceRecordServiceImpl implements AttendanceRecordService {
+
 	@Autowired
 	private AttendanceRecordRepo attendanceRecordRepo;
-	
+
 	@Autowired
 	private AttendanceRepo attendanceRepo;
-	
+
 	@Autowired
 	private EmployeeRepo employeeRepo;
 
 	@Override
 	public ResponseEntity<ResponseStructure<AttendanceRecord>> saveAttendanceRecord(AttendanceRecord attendanceRecord) {
-		
+
 		attendanceRecord.setAttendanceDate(LocalDate.now());
 		AttendanceRecord record = attendanceRecordRepo.save(attendanceRecord);
-		
+
 		ResponseStructure<AttendanceRecord> responseStructure = new ResponseStructure<AttendanceRecord>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setData(record);
 		responseStructure.setMessage("Attendance Recorded successully");
-		
-		return new ResponseEntity<ResponseStructure<AttendanceRecord>>(responseStructure,HttpStatus.OK);
+
+		return new ResponseEntity<ResponseStructure<AttendanceRecord>>(responseStructure, HttpStatus.OK);
 	}
 
 	private void saveAttendance(AttendanceRecord attendanceRecord) {
 		Optional<Employee> byEmployeeId = Optional.of(employeeRepo.findByEmployeeId(attendanceRecord.getEmployeeId())
 				.orElseThrow(() -> new EmployeeIdNotExistsException("No value present with the ID.")));
-		
+
 		Employee employee = byEmployeeId.get();
-		
+
 		Attendance attendance = new Attendance();
 		attendance.setEmployeeId(attendanceRecord.getEmployeeId());
 		attendance.setFirstPunchIn(attendanceRecord.getFirstPunchIn());
@@ -60,53 +60,48 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService{
 		attendance.setTotalWorkMinutes(attendanceRecord.getTotalWorkMinutes());
 		attendance.setAttendanceDate(LocalDate.now());
 		attendance.setEmployeeName(employee.getName());
-		
-		attendanceRepo.save(attendance);	
-	}
 
+		attendanceRepo.save(attendance);
+	}
 
 	@Override
 	public ResponseEntity<ResponseStructure<AttendanceRecord>> getAttendanceDetail(String employeeId) {
 		LocalDate today = LocalDate.now();
-		AttendanceRecord record =attendanceRecordRepo.findByEmployeeIdAndAttendanceDate(employeeId,today);
-			
+		AttendanceRecord record = attendanceRecordRepo.findByEmployeeIdAndAttendanceDate(employeeId, today);
+
 		ResponseStructure<AttendanceRecord> responseStructure = new ResponseStructure<AttendanceRecord>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setData(record);
 		responseStructure.setMessage("Attendance Recorded fetched successully");
-		
-		return new ResponseEntity<ResponseStructure<AttendanceRecord>>(responseStructure,HttpStatus.OK);
-}
 
-	public ResponseEntity<ResponseStructure<AttendanceRecord>> changeRecordStatus(AttendanceRecord attendanceRecord) {
-	    AttendanceRecord record = attendanceRecordRepo.findById(attendanceRecord.getAttendanceRecordId())
-	            .orElseThrow(() -> new RuntimeException("Attendance Record not found with Id"));
-
-	    // Set last punch-out time, auto-filling if missing
-	    if (attendanceRecord.getLastPunchOut() == null && record.getFirstPunchIn() != null) {
-	        record.setLastPunchOut(record.getFirstPunchIn().plusHours(10)); // Auto punch-out after 10 hours
-	    } else {
-	        record.setLastPunchOut(attendanceRecord.getLastPunchOut());
-	    }
-
-	    record.setTotalBreakMinutes(attendanceRecord.getTotalBreakMinutes());
-	    record.setTotalWorkMinutes(attendanceRecord.getTotalWorkMinutes());
-
-	    AttendanceRecord updatedRecord = attendanceRecordRepo.save(record);
-
-	    // Save attendance only if punch-out time is set
-	    if (record.getLastPunchOut() != null) {
-	        saveAttendance(record);
-	    }
-
-	    // Construct response
-	    ResponseStructure<AttendanceRecord> responseStructure = new ResponseStructure<>();
-	    responseStructure.setStatusCode(HttpStatus.OK.value());
-	    responseStructure.setData(updatedRecord);
-	    responseStructure.setMessage("Attendance record updated successfully");
-
-	    return new ResponseEntity<>(responseStructure, HttpStatus.OK);
+		return new ResponseEntity<ResponseStructure<AttendanceRecord>>(responseStructure, HttpStatus.OK);
 	}
 
+	public ResponseEntity<ResponseStructure<AttendanceRecord>> changeRecordStatus(AttendanceRecord attendanceRecord) {
+		AttendanceRecord record = attendanceRecordRepo.findById(attendanceRecord.getAttendanceRecordId())
+				.orElseThrow(() -> new RuntimeException("Attendance Record not found with Id"));
+
+		if (attendanceRecord.getLastPunchOut() == null && record.getFirstPunchIn() != null) {
+			record.setLastPunchOut(record.getFirstPunchIn().plusHours(10)); // Auto punch-out after 10 hours
+		} else {
+			record.setLastPunchOut(attendanceRecord.getLastPunchOut());
+		}
+
+		record.setTotalBreakMinutes(attendanceRecord.getTotalBreakMinutes());
+		record.setTotalWorkMinutes(attendanceRecord.getTotalWorkMinutes());
+
+		AttendanceRecord updatedRecord = attendanceRecordRepo.save(record);
+
+		if (record.getLastPunchOut() != null) {
+			saveAttendance(record);
+		}
+
+		ResponseStructure<AttendanceRecord> responseStructure = new ResponseStructure<>();
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setData(updatedRecord);
+		responseStructure.setMessage("Attendance record updated successfully");
+
+		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
+	}
 
 }
