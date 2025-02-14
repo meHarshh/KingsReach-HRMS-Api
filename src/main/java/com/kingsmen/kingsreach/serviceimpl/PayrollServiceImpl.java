@@ -233,7 +233,7 @@ public class PayrollServiceImpl implements PayrollService {
 		Payroll payroll = payrollRepo.findById(payrollId)
 				.orElseThrow(() -> new PayrollNotFoundException("Payroll Assosiated with given ID not found"));
 
-		payrollRepo.deleteById(payrollId);
+		payrollRepo.delete(payroll);
 
 		ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
