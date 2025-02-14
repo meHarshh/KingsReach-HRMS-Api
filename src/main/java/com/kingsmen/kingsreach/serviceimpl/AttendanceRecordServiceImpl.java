@@ -78,28 +78,35 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService{
 		return new ResponseEntity<ResponseStructure<AttendanceRecord>>(responseStructure,HttpStatus.OK);
 }
 
-	@Override
 	public ResponseEntity<ResponseStructure<AttendanceRecord>> changeRecordStatus(AttendanceRecord attendanceRecord) {
-		AttendanceRecord record = attendanceRecordRepo.findById(attendanceRecord.getAttendanceRecordId())
-				.orElseThrow(() -> new RuntimeException("Attendence Record not found with Id"));
-	
-		record.setLastPunchOut(attendanceRecord.getLastPunchOut());
-		record.setTotalBreakMinutes(attendanceRecord.getTotalBreakMinutes());
-		record.setTotalWorkMinutes(attendanceRecord.getTotalWorkMinutes());
-		
-		AttendanceRecord record2 = attendanceRecordRepo.save(record);
-		
-		if(attendanceRecord.getLastPunchOut() != null) {
-			saveAttendance(attendanceRecord);
-		}
-		
-		ResponseStructure<AttendanceRecord> responseStructure = new ResponseStructure<AttendanceRecord>();
-		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setData(record2);
-		responseStructure.setMessage("Attendance record updated successully");
-		
-		return new ResponseEntity<ResponseStructure<AttendanceRecord>>(responseStructure,HttpStatus.OK);
-		
+	    AttendanceRecord record = attendanceRecordRepo.findById(attendanceRecord.getAttendanceRecordId())
+	            .orElseThrow(() -> new RuntimeException("Attendance Record not found with Id"));
+
+	    // Set last punch-out time, auto-filling if missing
+	    if (attendanceRecord.getLastPunchOut() == null && record.getFirstPunchIn() != null) {
+	        record.setLastPunchOut(record.getFirstPunchIn().plusHours(10)); // Auto punch-out after 10 hours
+	    } else {
+	        record.setLastPunchOut(attendanceRecord.getLastPunchOut());
+	    }
+
+	    record.setTotalBreakMinutes(attendanceRecord.getTotalBreakMinutes());
+	    record.setTotalWorkMinutes(attendanceRecord.getTotalWorkMinutes());
+
+	    AttendanceRecord updatedRecord = attendanceRecordRepo.save(record);
+
+	    // Save attendance only if punch-out time is set
+	    if (record.getLastPunchOut() != null) {
+	        saveAttendance(record);
+	    }
+
+	    // Construct response
+	    ResponseStructure<AttendanceRecord> responseStructure = new ResponseStructure<>();
+	    responseStructure.setStatusCode(HttpStatus.OK.value());
+	    responseStructure.setData(updatedRecord);
+	    responseStructure.setMessage("Attendance record updated successfully");
+
+	    return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	}
+
 
 }
