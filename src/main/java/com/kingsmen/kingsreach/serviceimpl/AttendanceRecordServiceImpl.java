@@ -80,73 +80,41 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService {
 		return new ResponseEntity<ResponseStructure<AttendanceRecord>>(responseStructure, HttpStatus.OK);
 	}
 
-//	public ResponseEntity<ResponseStructure<AttendanceRecord>> changeRecordStatus(AttendanceRecord attendanceRecord) {
-//		AttendanceRecord record = attendanceRecordRepo.findById(attendanceRecord.getAttendanceRecordId())
-//				.orElseThrow(() -> new RuntimeException("Attendance Record not found with Id"));
-//
-//		if (attendanceRecord.getLastPunchOut() == null && record.getFirstPunchIn() != null) {
-//			record.setLastPunchOut(record.getFirstPunchIn().plusHours(10)); // Auto punch-out after 10 hours
-//		} else {
-//			record.setLastPunchOut(attendanceRecord.getLastPunchOut());
-//		}
-//
-//		record.setTotalBreakMinutes(attendanceRecord.getTotalBreakMinutes());
-//		record.setTotalWorkMinutes(attendanceRecord.getTotalWorkMinutes());
-//
-//		AttendanceRecord updatedRecord = attendanceRecordRepo.save(record);
-//
-//		if (record.getLastPunchOut() != null) {
-//			saveAttendance(record);
-//		}
-//
-//		ResponseStructure<AttendanceRecord> responseStructure = new ResponseStructure<>();
-//		responseStructure.setStatusCode(HttpStatus.OK.value());
-//		responseStructure.setData(updatedRecord);
-//		responseStructure.setMessage("Attendance record updated successfully");
-//
-//		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
-//	}
-	
-	
+	@SuppressWarnings("unused")
 	public ResponseEntity<ResponseStructure<AttendanceRecord>> changeRecordStatus(AttendanceRecord attendanceRecord) {
-	    AttendanceRecord attendanceRecord1 = attendanceRecordRepo.findById(attendanceRecord.getAttendanceRecordId())
-	        .orElseThrow(() -> new RuntimeException("Attendance Record not found with Id"));
+	    AttendanceRecord record = attendanceRecordRepo.findById(attendanceRecord.getAttendanceRecordId())
+	            .orElseThrow(() -> new RuntimeException("Attendance Record not found with Id"));
 
-	    // ✅ Prevent multiple punch-outs
-	    if (attendanceRecord1.getLastPunchOut() != null) {
-	        throw new RuntimeException("User is already punched out.");
-	    }
-
-	    LocalDateTime punchInTime = attendanceRecord1.getFirstPunchIn();
+	    LocalDateTime punchInTime = record.getFirstPunchIn(); // Get the first punch-in from the record
 	    LocalDateTime now = LocalDateTime.now();
-
-	    // Calculate total work duration (excluding breaks)
-	    Duration workedDuration = Duration.between(punchInTime, now).minus(Duration.ofMinutes(attendanceRecord.getTotalBreakMinutes()));
-
-	    if (workedDuration.compareTo(Duration.ofHours(10)) >= 0) {
-	        attendanceRecord1.setLastPunchOut(now);
-	        attendanceRecord1.setTotalWorkMinutes((int) workedDuration.toMinutes());
-
-	        AttendanceRecord updatedRecord = attendanceRecordRepo.save(attendanceRecord1);
-
-	        // Prepare response
-	        ResponseStructure<AttendanceRecord> responseStructure = new ResponseStructure<>();
-	        responseStructure.setStatusCode(HttpStatus.OK.value());
-	        responseStructure.setData(updatedRecord);
-	        responseStructure.setMessage("Auto punch-out successful.");
-
-	        return new ResponseEntity<>(responseStructure, HttpStatus.OK);
+	    
+	    if (punchInTime != null) {
+	        Duration workedDuration = Duration.between(punchInTime, now).minus(Duration.ofMinutes(attendanceRecord.getTotalBreakMinutes()));
+	        
+	        // Auto punch-out logic after 12 hours if not already punched out
+	        if (record.getLastPunchOut() == null && now.isAfter(punchInTime.plusHours(12))) {
+	            record.setLastPunchOut(punchInTime.plusHours(12));
+	        } else if (attendanceRecord.getLastPunchOut() != null) {
+	            record.setLastPunchOut(attendanceRecord.getLastPunchOut());
+	        }
 	    }
 
-	    // If working hours are not completed, return a structured response
+	    record.setTotalBreakMinutes(attendanceRecord.getTotalBreakMinutes());
+	    record.setTotalWorkMinutes(attendanceRecord.getTotalWorkMinutes());
+
+	    AttendanceRecord updatedRecord = attendanceRecordRepo.save(record);
+
+	    if (record.getLastPunchOut() != null) {
+	        saveAttendance(record);
+	    }
+
 	    ResponseStructure<AttendanceRecord> responseStructure = new ResponseStructure<>();
-	    responseStructure.setStatusCode(HttpStatus.BAD_REQUEST.value());
-	    responseStructure.setMessage("User has not completed 10 working hours yet.");
-	    responseStructure.setData(attendanceRecord1);
+	    responseStructure.setStatusCode(HttpStatus.OK.value());
+	    responseStructure.setData(updatedRecord);
+	    responseStructure.setMessage("Attendance record updated successfully");
 
-	    return new ResponseEntity<>(responseStructure, HttpStatus.BAD_REQUEST);
+	    return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	}
-	
-	
 
+	
 }
