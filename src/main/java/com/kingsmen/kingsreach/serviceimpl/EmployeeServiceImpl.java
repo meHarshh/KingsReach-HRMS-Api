@@ -237,9 +237,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee2.setName(employee.getFirstName() + " " + employee.getLastName());
 		employee2.setManagerId(employee.getManagerId());
 
-		Manager orElseThrow = managerRepo.findByEmployeeId(employee.getManagerId()).orElseThrow();
-
-		employee2.setManager(orElseThrow);
+		if (employee.getRole() == EmployeeRole.EMPLOYEE) {
+			Manager orElseThrow = managerRepo.findByEmployeeId(employee.getManagerId()).orElseThrow();
+			employee2.setManager(orElseThrow);
+		}
 
 		Employee employee3 = employeeRepo.save(employee2);
 
