@@ -184,6 +184,7 @@ public class PayrollServiceImpl implements PayrollService {
 		
 		double reimbursment = calculateTotalReimbursement(payroll.getEmployeeId());
 		int lopDeduction = calculateLop(salary, lopDays);
+		@SuppressWarnings("unused")
 		int basicPay = calculateBasicPay(salary);
 		double grossSalary = lopDeduction + tds + pf + professionalTax ;
 		double  finalSalary = salary - grossSalary ;
