@@ -92,7 +92,7 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService {
 	        
 	        // Auto punch-out logic after 12 hours if not already punched out
 	        if (record.getLastPunchOut() == null && now.isAfter(punchInTime.plusHours(12))) {
-	            record.setLastPunchOut(punchInTime.plusHours(12));
+	            record.setLastPunchOut(punchInTime.plusHours(10));
 	        } else if (attendanceRecord.getLastPunchOut() != null) {
 	            record.setLastPunchOut(attendanceRecord.getLastPunchOut());
 	        }
