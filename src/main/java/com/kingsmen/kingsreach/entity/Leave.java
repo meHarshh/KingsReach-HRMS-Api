@@ -34,13 +34,12 @@ public class Leave {
 	private int paidLeaveBalance = 12;
 	private int emergencyLeaveBalance = 7;
 	private int noOfDays;
-
+	private ApprovedBy approvedBy;
+	
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "employee_emp_id")
 	private Employee employee;
-
-	private ApprovedBy approvedBy;
 
 	public String getEmployeeName() {
 		return employeeName;

@@ -104,10 +104,6 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("The employees Reimbursement data is fetched");
 
-		// Notification code
-		Notification notify = new Notification();
-		notify.setMessage("The employees Reimbursement data is fetched");
-		notificationRepo.save(notify);
 		return new ResponseEntity<ResponseStructure<List<Reimbursement>>>(responseStructure, HttpStatus.OK);
 	}
 

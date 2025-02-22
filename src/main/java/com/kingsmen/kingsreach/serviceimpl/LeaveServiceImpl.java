@@ -203,7 +203,7 @@ public class LeaveServiceImpl implements LeaveService {
 	private void saveLeaveRecord(Leave leave) {
 		// Calculate leave days
 		int leaveDays = (int) (ChronoUnit.DAYS.between(leave.getFromDate(), leave.getToDate()) + 1);
-		
+
 		LeaveRecord leaveRecord = new LeaveRecord();
 		leaveRecord.setEmployee(leave.getEmployee());
 		leaveRecord.setEmployeeId(leave.getEmployeeId());
@@ -249,10 +249,17 @@ public class LeaveServiceImpl implements LeaveService {
 	@Override
 	public ResponseEntity<ResponseStructure<List<Leave>>> getLeave() {
 		List<Leave> list = leaveRepository.findAll();
+		
+		List<Leave> approvedLeaves = new ArrayList<>();
 
+		for (Leave leave : list) {
+			if (leave.getLeaveStatus() != null && leave.getLeaveStatus() == LeaveStatus.APPROVED) {
+				approvedLeaves.add(leave);
+			}
+		}
 		ResponseStructure<List<Leave>> responseStructure = new ResponseStructure<List<Leave>>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setData(list);
+		responseStructure.setData(approvedLeaves);
 		responseStructure.setMessage("Leave details fetched Successfully.");
 
 		return ResponseEntity.ok(responseStructure);
@@ -261,6 +268,7 @@ public class LeaveServiceImpl implements LeaveService {
 	@Override
 	public ResponseEntity<ResponseStructure<List<Leave>>> getEmployeeLeave(String employeeId) {
 		List<Leave> all = leaveRepository.findAll();
+		
 		ArrayList<Leave> leaves = new ArrayList<Leave>();
 		for (Leave leave : all) {
 			if (leave.getEmployeeId().equals(employeeId)) {

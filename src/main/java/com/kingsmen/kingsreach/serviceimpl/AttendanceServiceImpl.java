@@ -14,10 +14,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.kingsmen.kingsreach.entity.Attendance;
+import com.kingsmen.kingsreach.entity.AttendanceRecord;
 import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Notification;
 import com.kingsmen.kingsreach.entity.Onsite;
 import com.kingsmen.kingsreach.exceptions.EmployeeIdNotExistsException;
+import com.kingsmen.kingsreach.repo.AttendanceRecordRepo;
 import com.kingsmen.kingsreach.repo.AttendanceRepo;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
 import com.kingsmen.kingsreach.repo.NotificationRepo;
@@ -39,7 +41,11 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 	@Autowired
 	private NotificationRepo notificationRepo;
+	
+	@Autowired
+	private AttendanceRecordRepo attendanceRecordRepo;
 
+	
 	@Override
 	public ResponseEntity<ResponseStructure<Attendance>> addAttendance(Attendance attendance) {
 
@@ -126,11 +132,19 @@ public class AttendanceServiceImpl implements AttendanceService {
 			}
 		}
 
-		List<Attendance> attendances = attendanceRepo.findByAttendanceDate(LocalDate.now());
+	//	List<Attendance> attendances = attendanceRepo.findByAttendanceDate(LocalDate.now());
+		List<AttendanceRecord> attendances = attendanceRecordRepo.findByAttendanceDate(LocalDate.now());
+		ArrayList<AttendanceRecord> attendanceRecords = new ArrayList<AttendanceRecord>();
+		
+		for (AttendanceRecord attendanceRecord : attendances) {
+			if(attendanceRecord.getFirstPunchIn() != null) {
+				attendanceRecords.add(attendanceRecord);
+			}
+		}
 
-		int totalEmployees = attendances.size() + onsites.size();
+		int totalEmployees = attendanceRecords.size() + onsites.size();
 
-		int inOffice = attendances.size() - arrayList.size();
+		int inOffice = attendanceRecords.size() - arrayList.size();
 
 		int[] count = { inOffice, onsites.size(), totalEmployees };
 
