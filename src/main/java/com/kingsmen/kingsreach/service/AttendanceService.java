@@ -26,5 +26,7 @@ public interface AttendanceService {
 	ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceBetween(String employeeId, LocalDate fromDate,
 			LocalDate toDate);
 
+	ResponseEntity<ResponseStructure<Attendance>> addManualAttendance(Attendance attendance);
+
 
 }
