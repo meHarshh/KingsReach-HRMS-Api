@@ -81,6 +81,41 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return new ResponseEntity<ResponseStructure<Attendance>>(responseStructure, HttpStatus.CREATED);
 	}
 
+	
+	@Override
+	public ResponseEntity<ResponseStructure<Attendance>> addManualAttendance(Attendance attendance) {
+		Optional<Employee> byEmployeeId = Optional.of(employeeRepo.findByEmployeeId(attendance.getEmployeeId())
+				.orElseThrow(() -> new EmployeeIdNotExistsException("No value present with the ID.")));
+
+		Employee employee = byEmployeeId.get();
+		attendance.setFirstPunchIn(attendance.getFirstPunchIn());
+		attendance.setLastPunchOut(attendance.getLastPunchOut());
+		attendance.setAttendanceDate(attendance.getAttendanceDate());
+		attendance.setEmployee(employee);
+		attendance.setWorkMode(attendance.getWorkMode());
+		attendance.setLocation(attendance.getLocation());
+		attendance.setEmployeeName(employee.getName());
+		attendance.setTotalBreakMinutes(attendance.getTotalBreakMinutes());
+		attendanceRepo.save(attendance);
+
+		ResponseStructure<Attendance> responseStructure = new ResponseStructure<Attendance>();
+
+		String message = "Attendence Of " + attendance.getEmployeeName() + " is recorded.";
+		responseStructure.setStatusCode(HttpStatus.CREATED.value());
+		responseStructure.setMessage(message);
+		responseStructure.setData(attendance);
+
+		// Notification code
+		Notification notify = new Notification();
+		notify.setEmployeeId(attendance.getEmployeeId());
+		notify.setMessage(message);
+		notify.setCreatedAt(LocalDateTime.now());
+		notificationRepo.save(notify);
+
+		return new ResponseEntity<ResponseStructure<Attendance>>(responseStructure, HttpStatus.CREATED);
+	}
+	
+	
 	@Override
 	public ResponseEntity<ResponseStructure<Attendance>> getAttendance(String employeeId) {
 		Attendance attendance = attendanceRepo.findByEmployeeId(employeeId)

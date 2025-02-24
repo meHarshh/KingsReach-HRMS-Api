@@ -29,6 +29,11 @@ public class AttendanceController {
 	private ResponseEntity<ResponseStructure<Attendance>> addAttendance(@RequestBody Attendance attendance) {
 		return attendanceService.addAttendance(attendance);
 	}
+	
+	@PostMapping(value = "/manualAttendanceCalculator")
+	private ResponseEntity<ResponseStructure<Attendance>> addManualAttendance(@RequestBody Attendance attendance) {
+		return attendanceService.addManualAttendance(attendance);
+	}
 
 	@GetMapping(value = "/getEmployeeAttendance/{employeeId}")
 	private ResponseEntity<ResponseStructure<Attendance>> getAttendance(@PathVariable String employeeId) {
