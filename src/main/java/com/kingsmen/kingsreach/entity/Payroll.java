@@ -45,6 +45,8 @@ public class Payroll implements Serializable {
 	private double lopDeduction;
 	private LocalDate date;
 	private int professionalTax;
+	private int noOfHalfDays;
+	private double halfDayDeduction;
 
 	@JsonIgnore
 	@OneToOne
@@ -228,11 +230,28 @@ public class Payroll implements Serializable {
 		this.professionalTax = professionalTax;
 	}
 
+	public int getNoOfHalfDays() {
+		return noOfHalfDays;
+	}
+
+	public void setNoOfHalfDays(int noOfHalfDays) {
+		this.noOfHalfDays = noOfHalfDays;
+	}
+	
+	public double getHalfDayDeduction() {
+		return halfDayDeduction;
+	}
+
+	public void setHalfDayDeduction(double halfDayDeduction) {
+		this.halfDayDeduction = halfDayDeduction;
+	}
+
 	public Payroll(int payrollId, String employeeId, Department department, double salary, double taxDeduction,
 			double specialAllowance, double employeeStateInsurance, double houseRentAllowance, double providentFund,
 			double grossSalary, double otherAllowance, double employeeProvidentFund, double basicPay,
 			double reimbursementAmount, String employeeName, String location, PayrollStatus payrollStatus,
-			double lopDays, double lopDeduction, LocalDate date, int professionalTax, Employee employee) {
+			double lopDays, double lopDeduction, LocalDate date, int professionalTax, int noOfHalfDays,
+			double halfDayDeduction, Employee employee) {
 		super();
 		this.payrollId = payrollId;
 		this.employeeId = employeeId;
@@ -255,6 +274,8 @@ public class Payroll implements Serializable {
 		this.lopDeduction = lopDeduction;
 		this.date = date;
 		this.professionalTax = professionalTax;
+		this.noOfHalfDays = noOfHalfDays;
+		this.halfDayDeduction = halfDayDeduction;
 		this.employee = employee;
 	}
 
