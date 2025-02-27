@@ -184,13 +184,16 @@ public class PayrollServiceImpl implements PayrollService {
 		double pf = payroll.getProvidentFund();
 		double professionalTax = payroll.getProfessionalTax();
 		LocalDate date = payroll.getDate();
+		double halfDay = payroll.getNoOfHalfDays();
+		int noOfDaysLate = (int) calculateHalfDay(halfDay , salary , date);
+		int otherAllowance = (int) payroll.getOtherAllowance();
 
 		double reimbursment = calculateTotalReimbursement(payroll.getEmployeeId());
 		int lopDeduction = calculateLop(salary, lopDays , date);
 		@SuppressWarnings("unused")
 		int basicPay = calculateBasicPay(salary);
-		double grossSalary = lopDeduction + tds + pf + professionalTax ;
-		double  finalSalary = salary - grossSalary ;
+		double grossSalary = lopDeduction + tds + pf + professionalTax + noOfDaysLate ;
+		double  finalSalary = salary - grossSalary;
 
 
 		existingPayroll.setReimbursementAmount(reimbursment);
@@ -206,7 +209,9 @@ public class PayrollServiceImpl implements PayrollService {
 		existingPayroll.setLopDeduction(lopDeduction);
 		existingPayroll.setBasicPay(payroll.getBasicPay());
 		existingPayroll.setProfessionalTax(payroll.getProfessionalTax());
-		existingPayroll.setGrossSalary(finalSalary + reimbursment);
+		existingPayroll.setNoOfHalfDays(payroll.getNoOfHalfDays());
+		existingPayroll.setHalfDayDeduction(noOfDaysLate);
+		existingPayroll.setGrossSalary(finalSalary + reimbursment + otherAllowance);
 
 		Payroll updatedPayroll = payrollRepo.save(existingPayroll);
 
@@ -223,6 +228,25 @@ public class PayrollServiceImpl implements PayrollService {
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
+	}
+
+	private double calculateHalfDay(double halfDay, double salary, LocalDate date) {
+		 double deductionDays = 0;
+
+		    if (halfDay >= 3 && halfDay <= 3) {
+		        deductionDays = 0.5;
+		    } else if (halfDay >= 4 && halfDay <= 6) {
+		        deductionDays = 1;
+		    } else if (halfDay >= 7 && halfDay <= 9) {
+		        deductionDays = 1.5;
+		    } else if (halfDay >= 10) {
+		        deductionDays = 2;
+		    }
+
+		    int daysInMonth = YearMonth.from(date).lengthOfMonth();
+		    double perDaySalary = salary / daysInMonth;
+		    double halfDayDeduction = deductionDays * perDaySalary;
+		    return halfDayDeduction;
 	}
 
 	private int calculateBasicPay(double salary) {
