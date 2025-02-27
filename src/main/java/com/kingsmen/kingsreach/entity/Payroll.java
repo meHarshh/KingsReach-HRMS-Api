@@ -46,7 +46,7 @@ public class Payroll implements Serializable {
 	private LocalDate date;
 	private int professionalTax;
 	private int noOfHalfDays;
-	private double halfDayDeduction=0.0;
+	private Double halfDayDeduction;
 
 	@JsonIgnore
 	@OneToOne
