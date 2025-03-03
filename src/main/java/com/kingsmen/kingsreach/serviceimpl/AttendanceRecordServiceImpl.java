@@ -31,20 +31,34 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService {
 
 	@Autowired
 	private EmployeeRepo employeeRepo;
-
+	
 	@Override
 	public ResponseEntity<ResponseStructure<AttendanceRecord>> saveAttendanceRecord(AttendanceRecord attendanceRecord) {
+	    Optional<AttendanceRecord> optional = attendanceRecordRepo.findByEmployeeIdAndAttendanceDate(attendanceRecord.getEmployeeId(), LocalDate.now());
 
-		attendanceRecord.setAttendanceDate(LocalDate.now());
-		AttendanceRecord record = attendanceRecordRepo.save(attendanceRecord);
+	    ResponseStructure<AttendanceRecord> responseStructure = new ResponseStructure<>();
 
-		ResponseStructure<AttendanceRecord> responseStructure = new ResponseStructure<AttendanceRecord>();
-		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setData(record);
-		responseStructure.setMessage("Attendance Recorded successully");
+	    if (optional.isPresent()) {
+	        AttendanceRecord existingRecord = optional.get();
+	        
+	        if (existingRecord.getFirstPunchIn() != null) {
+	            responseStructure.setStatusCode(HttpStatus.OK.value());
+	            responseStructure.setMessage("You are already punchedIn. please reload your application");
+	            responseStructure.setData(existingRecord);
+	            return new ResponseEntity<>(responseStructure,HttpStatus.OK);
+	        }
+	    }
+	    
+	    attendanceRecord.setAttendanceDate(LocalDate.now());
+	    AttendanceRecord record = attendanceRecordRepo.save(attendanceRecord);
 
-		return new ResponseEntity<ResponseStructure<AttendanceRecord>>(responseStructure, HttpStatus.OK);
+	    responseStructure.setStatusCode(HttpStatus.OK.value());
+	    responseStructure.setData(record);
+	    responseStructure.setMessage("Attendance recorded successfully");
+
+	    return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	}
+
 
 	private void saveAttendance(AttendanceRecord attendanceRecord) {
 		Optional<Employee> byEmployeeId = Optional.of(employeeRepo.findByEmployeeId(attendanceRecord.getEmployeeId())
@@ -69,17 +83,24 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService {
 	@Override
 	public ResponseEntity<ResponseStructure<AttendanceRecord>> getAttendanceDetail(String employeeId) {
 		LocalDate today = LocalDate.now();
-		AttendanceRecord record = attendanceRecordRepo.findByEmployeeIdAndAttendanceDate(employeeId, today);
-
+		Optional<AttendanceRecord> record = attendanceRecordRepo.findByEmployeeIdAndAttendanceDate(employeeId, today);
+		
 		ResponseStructure<AttendanceRecord> responseStructure = new ResponseStructure<AttendanceRecord>();
-		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setData(record);
-		responseStructure.setMessage("Attendance Recorded fetched successully");
+		
+		if(record.isPresent()) {
+			responseStructure.setStatusCode(HttpStatus.OK.value());
+			responseStructure.setData(record.get());
+			responseStructure.setMessage("Attendance Recorded fetched successully");
 
-		return new ResponseEntity<ResponseStructure<AttendanceRecord>>(responseStructure, HttpStatus.OK);
+			return new ResponseEntity<ResponseStructure<AttendanceRecord>>(responseStructure, HttpStatus.OK);
+		}else {
+	        responseStructure.setStatusCode(HttpStatus.OK.value());
+	        responseStructure.setMessage("No attendance record found for today.");
+	        return new ResponseEntity<>(responseStructure, HttpStatus.OK);
+	    }
 	}
 
-	@SuppressWarnings("unused")
+	@Override
 	public ResponseEntity<ResponseStructure<AttendanceRecord>> changeRecordStatus(AttendanceRecord attendanceRecord) {
 	    AttendanceRecord record = attendanceRecordRepo.findById(attendanceRecord.getAttendanceRecordId())
 	            .orElseThrow(() -> new RuntimeException("Attendance Record not found with Id"));
@@ -88,10 +109,11 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService {
 	    LocalDateTime now = LocalDateTime.now();
 	    
 	    if (punchInTime != null) {
-	        Duration workedDuration = Duration.between(punchInTime, now).minus(Duration.ofMinutes(attendanceRecord.getTotalBreakMinutes()));
+	        @SuppressWarnings("unused")
+			Duration workedDuration = Duration.between(punchInTime, now).minus(Duration.ofMinutes(attendanceRecord.getTotalBreakMinutes()));
 	        
-	        // Auto punch-out logic after 12 hours if not already punched out
-	        if (record.getLastPunchOut() == null && now.isAfter(punchInTime.plusHours(12))) {
+	        // Auto punch-out logic after 10 hours if not already punched out
+	        if (record.getLastPunchOut() == null && now.isAfter(punchInTime.plusHours(10))) {
 	            record.setLastPunchOut(punchInTime.plusHours(10));
 	        } else if (attendanceRecord.getLastPunchOut() != null) {
 	            record.setLastPunchOut(attendanceRecord.getLastPunchOut());
