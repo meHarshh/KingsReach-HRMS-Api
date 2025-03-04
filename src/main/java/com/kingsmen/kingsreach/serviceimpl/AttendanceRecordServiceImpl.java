@@ -137,5 +137,4 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService {
 	    return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	}
 
-	
 }
