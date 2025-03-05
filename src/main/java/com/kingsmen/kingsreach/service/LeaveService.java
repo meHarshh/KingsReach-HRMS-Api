@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.http.ResponseEntity;
 
 import com.kingsmen.kingsreach.entity.Leave;
+import com.kingsmen.kingsreach.entity.LeaveRecord;
 import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
@@ -15,7 +16,7 @@ public interface LeaveService {
 
 	ResponseEntity<ResponseStructure<Leave>> changeLeaveStatus(Leave leave);
 
-	ResponseEntity<ResponseStructure<List<Leave>>> getLeave();
+	ResponseEntity<ResponseStructure<List<LeaveRecord>>> getLeave();
 
 	ResponseEntity<ResponseStructure<List<Leave>>> getEmployeeLeave(String employeeId);
 

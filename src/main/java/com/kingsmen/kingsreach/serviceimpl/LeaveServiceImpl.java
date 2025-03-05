@@ -247,17 +247,17 @@ public class LeaveServiceImpl implements LeaveService {
 	}
 
 	@Override
-	public ResponseEntity<ResponseStructure<List<Leave>>> getLeave() {
-		List<Leave> list = leaveRepository.findAll();
+	public ResponseEntity<ResponseStructure<List<LeaveRecord>>> getLeave() {
+		List<LeaveRecord> list = leaveRecordRepo.findAll();
 		
-		List<Leave> approvedLeaves = new ArrayList<>();
+		List<LeaveRecord> approvedLeaves = new ArrayList<>();
 
-		for (Leave leave : list) {
-			if (leave.getLeaveStatus() != null && leave.getLeaveStatus() == LeaveStatus.APPROVED) {
+		for (LeaveRecord leave : list) {
+			if (leave.getStatus() != null && leave.getStatus() == LeaveStatus.APPROVED) {
 				approvedLeaves.add(leave);
 			}
 		}
-		ResponseStructure<List<Leave>> responseStructure = new ResponseStructure<List<Leave>>();
+		ResponseStructure<List<LeaveRecord>> responseStructure = new ResponseStructure<List<LeaveRecord>>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setData(approvedLeaves);
 		responseStructure.setMessage("Leave details fetched Successfully.");
