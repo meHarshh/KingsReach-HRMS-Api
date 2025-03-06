@@ -95,8 +95,8 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService {
 			return new ResponseEntity<ResponseStructure<AttendanceRecord>>(responseStructure, HttpStatus.OK);
 		}else {
 			responseStructure.setStatusCode(HttpStatus.OK.value());
-			responseStructure.setMessage("No attendance record found for today.");
 			responseStructure.setData(null);
+			responseStructure.setMessage("No attendance record found for today.");
 			return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 		}
 	}
