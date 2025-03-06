@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kingsmen.kingsreach.entity.Leave;
+import com.kingsmen.kingsreach.entity.LeaveRecord;
 import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.service.LeaveService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
@@ -37,7 +38,7 @@ public class LeaveController {
 	}
 
 	@GetMapping(value = "/findAllLeave")
-	private ResponseEntity<ResponseStructure<List<Leave>>> getLeaves() {
+	private ResponseEntity<ResponseStructure<List<LeaveRecord>>> getLeaves() {
 		return leaveservice.getLeave();
 	}
 
