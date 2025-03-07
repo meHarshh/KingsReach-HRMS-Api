@@ -35,7 +35,7 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService {
 	@Override
 	public ResponseEntity<ResponseStructure<AttendanceRecord>> saveAttendanceRecord(AttendanceRecord attendanceRecord) {
 		Optional<AttendanceRecord> optional = attendanceRecordRepo.findByEmployeeIdAndAttendanceDate(attendanceRecord.getEmployeeId(), LocalDate.now());
-
+		
 		ResponseStructure<AttendanceRecord> responseStructure = new ResponseStructure<>();
 
 		if (optional.isPresent()) {
