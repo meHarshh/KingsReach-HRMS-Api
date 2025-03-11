@@ -98,7 +98,6 @@ public class LeaveServiceImpl implements LeaveService {
 		int leaveDays = (int) (ChronoUnit.DAYS.between(leave.getFromDate(), leave.getToDate()) + 1);
 
 		// Fetch the employee's leave record
-
 		Leave existingLeave = leaveRepository.findByEmployeeId(leave.getEmployeeId()).orElse(new Leave());
 		leave.setEmployee(employee);
 		leave.setEmployeeName(employee.getName());
@@ -135,7 +134,7 @@ public class LeaveServiceImpl implements LeaveService {
 				int lopDays = (int) leaveDays - maxSickLeave;
 				payroll.setLopDays(payroll.getLopDays() + lopDays);
 			}
-			existingLeave.setSickLeaveBalance(existingLeave.getSickLeaveBalance() - (int) leaveDays);
+		//	existingLeave.setSickLeaveBalance(existingLeave.getSickLeaveBalance() - (int) leaveDays);
 			break;
 
 		case LeaveType.CASUAL:
@@ -147,7 +146,7 @@ public class LeaveServiceImpl implements LeaveService {
 				int lopDays = (int) leaveDays - maxCasualLeave;
 				payroll.setLopDays(payroll.getLopDays() + lopDays);
 			}
-			existingLeave.setCasualLeaveBalance(existingLeave.getCasualLeaveBalance() - (int) leaveDays);
+		//	existingLeave.setCasualLeaveBalance(existingLeave.getCasualLeaveBalance() - (int) leaveDays);
 			break;
 
 		case LeaveType.PAID:
@@ -163,7 +162,7 @@ public class LeaveServiceImpl implements LeaveService {
 				int lopDays = (int) leaveDays - maxPaidLeave;
 				payroll.setLopDays(payroll.getLopDays() + lopDays);
 			}
-			existingLeave.setPaidLeaveBalance(existingLeave.getPaidLeaveBalance() - (int) leaveDays);
+		//	existingLeave.setPaidLeaveBalance(existingLeave.getPaidLeaveBalance() - (int) leaveDays);
 			break;
 
 		case LeaveType.EMERGENCY:
@@ -175,7 +174,7 @@ public class LeaveServiceImpl implements LeaveService {
 				int lopDays = (int) leaveDays - existingLeave.getEmergencyLeaveBalance();
 				payroll.setLopDays(payroll.getLopDays() + lopDays);
 			}
-			existingLeave.setEmergencyLeaveBalance(existingLeave.getEmergencyLeaveBalance() - (int) leaveDays);
+		//	existingLeave.setEmergencyLeaveBalance(existingLeave.getEmergencyLeaveBalance() - (int) leaveDays);
 			break;
 
 		default:

@@ -28,5 +28,4 @@ public interface AttendanceService {
 
 	ResponseEntity<ResponseStructure<Attendance>> addManualAttendance(Attendance attendance);
 
-
 }

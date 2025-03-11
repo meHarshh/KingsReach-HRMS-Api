@@ -13,10 +13,12 @@ import org.springframework.stereotype.Service;
 import com.kingsmen.kingsreach.entity.Attendance;
 import com.kingsmen.kingsreach.entity.AttendanceRecord;
 import com.kingsmen.kingsreach.entity.Employee;
+import com.kingsmen.kingsreach.entity.Notification;
 import com.kingsmen.kingsreach.exceptions.EmployeeIdNotExistsException;
 import com.kingsmen.kingsreach.repo.AttendanceRecordRepo;
 import com.kingsmen.kingsreach.repo.AttendanceRepo;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
+import com.kingsmen.kingsreach.repo.NotificationRepo;
 import com.kingsmen.kingsreach.service.AttendanceRecordService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
@@ -31,11 +33,14 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService {
 
 	@Autowired
 	private EmployeeRepo employeeRepo;
+	
+	@Autowired
+	private NotificationRepo notificationRepo;
 
 	@Override
 	public ResponseEntity<ResponseStructure<AttendanceRecord>> saveAttendanceRecord(AttendanceRecord attendanceRecord) {
 		Optional<AttendanceRecord> optional = attendanceRecordRepo.findByEmployeeIdAndAttendanceDate(attendanceRecord.getEmployeeId(), LocalDate.now());
-		
+
 		ResponseStructure<AttendanceRecord> responseStructure = new ResponseStructure<>();
 
 		if (optional.isPresent()) {
@@ -56,6 +61,13 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService {
 		responseStructure.setData(record);
 		responseStructure.setMessage("Attendance recorded successfully");
 
+		// Notification code
+		Notification notify = new Notification();
+		notify.setEmployeeId(attendanceRecord.getEmployeeId());
+		notify.setMessage( "Employee ID: " + attendanceRecord.getEmployeeId() + " PunchedIn Successfully");
+		notify.setCreatedAt(LocalDateTime.now());
+		notificationRepo.save(notify);
+		
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	}
 

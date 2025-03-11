@@ -41,11 +41,11 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 	@Autowired
 	private NotificationRepo notificationRepo;
-	
+
 	@Autowired
 	private AttendanceRecordRepo attendanceRecordRepo;
 
-	
+
 	@Override
 	public ResponseEntity<ResponseStructure<Attendance>> addAttendance(Attendance attendance) {
 
@@ -53,7 +53,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 				.orElseThrow(() -> new EmployeeIdNotExistsException("No value present with the ID.")));
 
 		Employee employee = byEmployeeId.get();
-		// attendance.setEmployee(employee);
+		//attendance.setEmployee(employee);
 		attendance.setFirstPunchIn(attendance.getFirstPunchIn());
 		attendance.setLastPunchOut(attendance.getLastPunchOut());
 		attendance.setAttendanceDate(LocalDate.now());
@@ -81,7 +81,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return new ResponseEntity<ResponseStructure<Attendance>>(responseStructure, HttpStatus.CREATED);
 	}
 
-	
+
 	@Override
 	public ResponseEntity<ResponseStructure<Attendance>> addManualAttendance(Attendance attendance) {
 		Optional<Employee> byEmployeeId = Optional.of(employeeRepo.findByEmployeeId(attendance.getEmployeeId())
@@ -114,8 +114,8 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 		return new ResponseEntity<ResponseStructure<Attendance>>(responseStructure, HttpStatus.CREATED);
 	}
-	
-	
+
+
 	@Override
 	public ResponseEntity<ResponseStructure<Attendance>> getAttendance(String employeeId) {
 		Attendance attendance = attendanceRepo.findByEmployeeId(employeeId)
@@ -166,11 +166,10 @@ public class AttendanceServiceImpl implements AttendanceService {
 				arrayList.add(onsite);
 			}
 		}
-
-	//	List<Attendance> attendances = attendanceRepo.findByAttendanceDate(LocalDate.now());
+		
 		List<AttendanceRecord> attendances = attendanceRecordRepo.findByAttendanceDate(LocalDate.now());
 		ArrayList<AttendanceRecord> attendanceRecords = new ArrayList<AttendanceRecord>();
-		
+
 		for (AttendanceRecord attendanceRecord : attendances) {
 			if(attendanceRecord.getFirstPunchIn() != null) {
 				attendanceRecords.add(attendanceRecord);

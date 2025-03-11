@@ -99,9 +99,11 @@ public class LeaveRecordServiceImpl implements LeaveRecordService {
 	public ResponseEntity<ResponseStructure<LeaveRecord>> changeLeaveStatus(int recordId, LeaveStatus status) {
 		LeaveRecord leaveRecord = leaveRecordRepo.findById(recordId)
 				.orElseThrow(() -> new IdNotFoundException("The leaveId is not found"));
+	
 		leaveRecord.setStatus(status);
 
 		LeaveRecord updatedLeaveRecord = leaveRecordRepo.save(leaveRecord);
+		
 
 		ResponseStructure<LeaveRecord> responseStructure = new ResponseStructure<LeaveRecord>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
