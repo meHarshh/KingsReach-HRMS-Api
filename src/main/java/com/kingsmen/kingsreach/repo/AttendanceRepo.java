@@ -10,7 +10,7 @@ import com.kingsmen.kingsreach.entity.Attendance;
 
 public interface AttendanceRepo extends JpaRepository<Attendance, Integer> {
 
-	Optional<Attendance> findByEmployeeId(String employeeId);
+	List<Attendance> findByEmployeeId(String employeeId);
 
 	Optional<Attendance> findByEmployeeIdAndAttendanceDate(String employeeId, LocalDate attendanceDate);
 

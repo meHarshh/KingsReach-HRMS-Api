@@ -117,18 +117,18 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 
 	@Override
-	public ResponseEntity<ResponseStructure<Attendance>> getAttendance(String employeeId) {
-		Attendance attendance = attendanceRepo.findByEmployeeId(employeeId)
-				.orElseThrow(() -> new EmployeeIdNotExistsException(
-						"No value Present with the assosiated ID.Enter the valid Employee ID"));
+	public ResponseEntity<ResponseStructure<List<Attendance>>> getAttendance(String employeeId) {
+		List<Attendance> attendance = attendanceRepo.findByEmployeeId(employeeId);
+//				.orElseThrow(() -> new EmployeeIdNotExistsException(
+//						"No value Present with the assosiated ID.Enter the valid Employee ID"));
 
-		ResponseStructure<Attendance> responseStructure = new ResponseStructure<Attendance>();
+		ResponseStructure<List<Attendance>> responseStructure = new ResponseStructure<List<Attendance>>();
 
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Attendence detail fetched successfully.");
 		responseStructure.setData(attendance);
 
-		return new ResponseEntity<ResponseStructure<Attendance>>(responseStructure, HttpStatus.OK);
+		return new ResponseEntity<ResponseStructure<List<Attendance>>>(responseStructure, HttpStatus.OK);
 	}
 
 	@Override

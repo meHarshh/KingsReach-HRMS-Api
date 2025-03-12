@@ -13,7 +13,7 @@ public interface AttendanceService {
 
 	ResponseEntity<ResponseStructure<Attendance>> addAttendance(Attendance attendance);
 
-	ResponseEntity<ResponseStructure<Attendance>> getAttendance(String employeeId);
+	ResponseEntity<ResponseStructure<List<Attendance>>> getAttendance(String employeeId);
 
 	ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceForMonth();
 
