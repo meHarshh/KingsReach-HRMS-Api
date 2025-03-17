@@ -91,7 +91,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		attendance.setFirstPunchIn(attendance.getFirstPunchIn());
 		attendance.setLastPunchOut(attendance.getLastPunchOut());
 		attendance.setAttendanceDate(attendance.getAttendanceDate());
-		attendance.setEmployee(employee);
+		//attendance.setEmployee(employee);
 		attendance.setWorkMode(attendance.getWorkMode());
 		attendance.setLocation(attendance.getLocation());
 		attendance.setEmployeeName(employee.getName());

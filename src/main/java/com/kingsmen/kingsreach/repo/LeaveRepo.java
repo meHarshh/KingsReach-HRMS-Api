@@ -18,4 +18,6 @@ public interface LeaveRepo extends JpaRepository<Leave, Integer>{
 
 	List<Leave> findByEmployeeIdIn(List<String> employeeIds);
 
+	Optional<Leave> findByEmployeeIdAndFromDate(String employeeId, LocalDate fromDate);
+
 }

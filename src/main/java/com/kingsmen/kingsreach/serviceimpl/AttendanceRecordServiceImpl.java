@@ -59,7 +59,7 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService {
 
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setData(record);
-		responseStructure.setMessage("Attendance recorded successfully");
+		responseStructure.setMessage("PunchIn recorded successfully");
 
 		// Notification code
 		Notification notify = new Notification();
@@ -90,6 +90,7 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService {
 		attendance.setEmployeeName(employee.getName());
 
 		attendanceRepo.save(attendance);
+		
 	}
 
 	@Override

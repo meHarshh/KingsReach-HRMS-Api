@@ -104,7 +104,6 @@ public class LeaveRecordServiceImpl implements LeaveRecordService {
 
 		LeaveRecord updatedLeaveRecord = leaveRecordRepo.save(leaveRecord);
 		
-
 		ResponseStructure<LeaveRecord> responseStructure = new ResponseStructure<LeaveRecord>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage(leaveRecord.getEmployeeName() + "'s Leave status updated successfully");
@@ -120,7 +119,7 @@ public class LeaveRecordServiceImpl implements LeaveRecordService {
 		return new ResponseEntity<ResponseStructure<LeaveRecord>>(responseStructure, HttpStatus.OK);
 
 	}
-
+ 
 	@Override
 	public ResponseEntity<ResponseStructure<List<LeaveRecord>>> fetchLeaveBasedOnManager(String employeeId) {
 		List<LeaveRecord> all = leaveRecordRepo.findAll();
@@ -145,3 +144,6 @@ public class LeaveRecordServiceImpl implements LeaveRecordService {
 	}
 
 }
+
+
+
