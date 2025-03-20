@@ -210,7 +210,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return attendances.stream()
 				.collect(Collectors.groupingBy(Attendance::getEmployeeId));
 	}
-
+	
 	@Override
 	public ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceBetween(String employeeId,
 			LocalDate fromDate, LocalDate toDate) {
@@ -224,6 +224,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK); 
 
 	}
-
+	
 }
 
