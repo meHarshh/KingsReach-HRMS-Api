@@ -17,6 +17,7 @@ import com.kingsmen.kingsreach.entity.Leave;
 import com.kingsmen.kingsreach.entity.LeaveRecord;
 import com.kingsmen.kingsreach.entity.Notification;
 import com.kingsmen.kingsreach.enums.LeaveStatus;
+import com.kingsmen.kingsreach.enums.LeaveType;
 import com.kingsmen.kingsreach.exception.IdNotFoundException;
 import com.kingsmen.kingsreach.repo.LeaveRecordRepo;
 import com.kingsmen.kingsreach.repo.LeaveRepo;
@@ -24,7 +25,7 @@ import com.kingsmen.kingsreach.repo.NotificationRepo;
 import com.kingsmen.kingsreach.service.LeaveRecordService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
-@Service
+@Service 
 public class LeaveRecordServiceImpl implements LeaveRecordService {
 	@Autowired
 	private LeaveRecordRepo leaveRecordRepo;
@@ -96,30 +97,6 @@ public class LeaveRecordServiceImpl implements LeaveRecordService {
 	}
 
 	@Override
-	public ResponseEntity<ResponseStructure<LeaveRecord>> changeLeaveStatus(int recordId, LeaveStatus status) {
-		LeaveRecord leaveRecord = leaveRecordRepo.findById(recordId)
-				.orElseThrow(() -> new IdNotFoundException("The leaveId is not found"));
-		leaveRecord.setStatus(status);
-
-		LeaveRecord updatedLeaveRecord = leaveRecordRepo.save(leaveRecord);
-
-		ResponseStructure<LeaveRecord> responseStructure = new ResponseStructure<LeaveRecord>();
-		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure.setMessage(leaveRecord.getEmployeeName() + "'s Leave status updated successfully");
-		responseStructure.setData(updatedLeaveRecord);
-
-		// Notification code
-		Notification notify = new Notification();
-		notify.setEmployeeId(leaveRecord.getEmployeeId());
-		notify.setMessage(leaveRecord.getEmployeeName() + "'s Leave status updated successfully");
-		notify.setCreatedAt(LocalDateTime.now());
-		notificationRepo.save(notify);
-
-		return new ResponseEntity<ResponseStructure<LeaveRecord>>(responseStructure, HttpStatus.OK);
-
-	}
-
-	@Override
 	public ResponseEntity<ResponseStructure<List<LeaveRecord>>> fetchLeaveBasedOnManager(String employeeId) {
 		List<LeaveRecord> all = leaveRecordRepo.findAll();
 
@@ -142,4 +119,92 @@ public class LeaveRecordServiceImpl implements LeaveRecordService {
 		return new ResponseEntity<ResponseStructure<List<LeaveRecord>>>(responseStructure, HttpStatus.OK);
 	}
 
+	@Override
+	public ResponseEntity<ResponseStructure<LeaveRecord>> changeLeaveStatus(int recordId, LeaveStatus status) {
+		LeaveRecord leaveRecord = leaveRecordRepo.findById(recordId)
+				.orElseThrow(() -> new IdNotFoundException("The leaveId is not found"));
+
+		leaveRecord.setStatus(status);
+
+		LeaveRecord updatedLeaveRecord = leaveRecordRepo.save(leaveRecord);
+		saveLeave(leaveRecord);
+
+		ResponseStructure<LeaveRecord> responseStructure = new ResponseStructure<LeaveRecord>();
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		responseStructure.setMessage(leaveRecord.getEmployeeName() + "'s Leave status updated successfully");
+		responseStructure.setData(updatedLeaveRecord);
+
+		// Notification code
+		Notification notify = new Notification();
+		notify.setEmployeeId(leaveRecord.getEmployeeId());
+		notify.setMessage(leaveRecord.getEmployeeName() + "'s Leave status updated successfully");
+		notify.setCreatedAt(LocalDateTime.now());
+		notificationRepo.save(notify);
+
+		return new ResponseEntity<ResponseStructure<LeaveRecord>>(responseStructure, HttpStatus.OK);
+
+	}
+
+	private void saveLeave(LeaveRecord leaveRecord) {
+		Optional<Leave> leave = leaveRepo.findByEmployeeId(leaveRecord.getEmployeeId());
+		if(leave.isPresent()) {
+			Leave leave1 =leave.get();
+			switch(leaveRecord.getLeaveType()) {
+			case LeaveType.CASUAL:
+				if(leaveRecord.getStatus() == LeaveStatus.APPROVED) {
+					leave1.setCasualLeaveBalance(leave1.getCasualLeaveBalance() - leaveRecord.getNoOfDays());
+					break;
+				}
+				else {
+					leave1.setCasualLeaveBalance(leave1.getCasualLeaveBalance());
+					break;
+				}
+
+			case LeaveType.PAID:
+				if(leaveRecord.getStatus() == LeaveStatus.APPROVED) {
+					leave1.setCasualLeaveBalance(leave1.getCasualLeaveBalance() - leaveRecord.getNoOfDays());
+					break;
+				}
+				else {
+					leave1.setPaidLeaveBalance(leave1.getPaidLeaveBalance());
+					break;
+				}
+
+			case LeaveType.SICK:
+				if(leaveRecord.getStatus() == LeaveStatus.APPROVED) {
+					leave1.setSickLeaveBalance(leave1.getSickLeaveBalance() - leaveRecord.getNoOfDays());
+					break;
+				}
+				else {
+					leave1.setSickLeaveBalance(leave1.getSickLeaveBalance());
+					break;
+				}
+
+			case LeaveType.EMERGENCY:
+				if(leaveRecord.getStatus() == LeaveStatus.APPROVED) {
+					leave1.setEmergencyLeaveBalance(leave1.getEmergencyLeaveBalance() - leaveRecord.getNoOfDays());
+					break;
+				}
+				else {
+					leave1.setEmergencyLeaveBalance(leave1.getEmergencyLeaveBalance());
+					break;
+				}
+
+			default:
+				System.out.println("Invalid Leave Type");
+				break;
+			}
+			leave1.setEmployeeName(leaveRecord.getEmployeeName());
+			leave1.setLeaveType(leaveRecord.getLeaveType());
+			leave1.setReason(leaveRecord.getReason());
+			leave1.setToDate(leaveRecord.getToDate());
+			leave1.setLeaveStatus(leaveRecord.getStatus());
+
+			leaveRepo.save(leave1);
+		}
+	}
+
 }
+
+
+

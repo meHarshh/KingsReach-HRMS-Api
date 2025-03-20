@@ -36,7 +36,7 @@ public class AttendanceController {
 	}
 
 	@GetMapping(value = "/getEmployeeAttendance/{employeeId}")
-	private ResponseEntity<ResponseStructure<Attendance>> getAttendance(@PathVariable String employeeId) {
+	private ResponseEntity<ResponseStructure<List<Attendance>>> getAttendance(@PathVariable String employeeId) {
 		return attendanceService.getAttendance(employeeId);
 	}
 	
@@ -65,5 +65,5 @@ public class AttendanceController {
 	private ResponseEntity<ResponseStructure<Map<String, List<Attendance>>>> getAttendanceForDays(){
 		return attendanceService.getAttendanceForDays();
 	}
-	
+		
 }

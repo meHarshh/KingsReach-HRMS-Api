@@ -41,11 +41,11 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 	@Autowired
 	private NotificationRepo notificationRepo;
-	
+
 	@Autowired
 	private AttendanceRecordRepo attendanceRecordRepo;
 
-	
+
 	@Override
 	public ResponseEntity<ResponseStructure<Attendance>> addAttendance(Attendance attendance) {
 
@@ -53,7 +53,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 				.orElseThrow(() -> new EmployeeIdNotExistsException("No value present with the ID.")));
 
 		Employee employee = byEmployeeId.get();
-		// attendance.setEmployee(employee);
+		//attendance.setEmployee(employee);
 		attendance.setFirstPunchIn(attendance.getFirstPunchIn());
 		attendance.setLastPunchOut(attendance.getLastPunchOut());
 		attendance.setAttendanceDate(LocalDate.now());
@@ -81,7 +81,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return new ResponseEntity<ResponseStructure<Attendance>>(responseStructure, HttpStatus.CREATED);
 	}
 
-	
+
 	@Override
 	public ResponseEntity<ResponseStructure<Attendance>> addManualAttendance(Attendance attendance) {
 		Optional<Employee> byEmployeeId = Optional.of(employeeRepo.findByEmployeeId(attendance.getEmployeeId())
@@ -91,7 +91,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		attendance.setFirstPunchIn(attendance.getFirstPunchIn());
 		attendance.setLastPunchOut(attendance.getLastPunchOut());
 		attendance.setAttendanceDate(attendance.getAttendanceDate());
-		attendance.setEmployee(employee);
+		//attendance.setEmployee(employee);
 		attendance.setWorkMode(attendance.getWorkMode());
 		attendance.setLocation(attendance.getLocation());
 		attendance.setEmployeeName(employee.getName());
@@ -114,21 +114,21 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 		return new ResponseEntity<ResponseStructure<Attendance>>(responseStructure, HttpStatus.CREATED);
 	}
-	
-	
-	@Override
-	public ResponseEntity<ResponseStructure<Attendance>> getAttendance(String employeeId) {
-		Attendance attendance = attendanceRepo.findByEmployeeId(employeeId)
-				.orElseThrow(() -> new EmployeeIdNotExistsException(
-						"No value Present with the assosiated ID.Enter the valid Employee ID"));
 
-		ResponseStructure<Attendance> responseStructure = new ResponseStructure<Attendance>();
+
+	@Override
+	public ResponseEntity<ResponseStructure<List<Attendance>>> getAttendance(String employeeId) {
+		List<Attendance> attendance = attendanceRepo.findByEmployeeId(employeeId);
+//				.orElseThrow(() -> new EmployeeIdNotExistsException(
+//						"No value Present with the assosiated ID.Enter the valid Employee ID"));
+
+		ResponseStructure<List<Attendance>> responseStructure = new ResponseStructure<List<Attendance>>();
 
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Attendence detail fetched successfully.");
 		responseStructure.setData(attendance);
 
-		return new ResponseEntity<ResponseStructure<Attendance>>(responseStructure, HttpStatus.OK);
+		return new ResponseEntity<ResponseStructure<List<Attendance>>>(responseStructure, HttpStatus.OK);
 	}
 
 	@Override
@@ -166,11 +166,10 @@ public class AttendanceServiceImpl implements AttendanceService {
 				arrayList.add(onsite);
 			}
 		}
-
-	//	List<Attendance> attendances = attendanceRepo.findByAttendanceDate(LocalDate.now());
+		
 		List<AttendanceRecord> attendances = attendanceRecordRepo.findByAttendanceDate(LocalDate.now());
 		ArrayList<AttendanceRecord> attendanceRecords = new ArrayList<AttendanceRecord>();
-		
+
 		for (AttendanceRecord attendanceRecord : attendances) {
 			if(attendanceRecord.getFirstPunchIn() != null) {
 				attendanceRecords.add(attendanceRecord);
@@ -211,7 +210,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return attendances.stream()
 				.collect(Collectors.groupingBy(Attendance::getEmployeeId));
 	}
-
+	
 	@Override
 	public ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceBetween(String employeeId,
 			LocalDate fromDate, LocalDate toDate) {
@@ -225,6 +224,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK); 
 
 	}
-
+	
 }
 

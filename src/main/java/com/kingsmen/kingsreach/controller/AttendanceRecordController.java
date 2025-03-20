@@ -28,7 +28,7 @@ public class AttendanceRecordController {
 	
 	@GetMapping(value = "/getAttendanceDetail")
 	private ResponseEntity<ResponseStructure<AttendanceRecord>> getAttendanceDetail(@RequestParam String employeeId){
-		return attendanceRecordService.getAttendanceDetail(employeeId);
+		return attendanceRecordService.getAttendanceDetail(employeeId); 
 	}
 	
 	@PutMapping(value = "/changeRecordStatus")

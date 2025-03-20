@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +24,6 @@ import com.kingsmen.kingsreach.entity.Payroll;
 import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.enums.LeaveStatus;
 import com.kingsmen.kingsreach.enums.LeaveType;
-import com.kingsmen.kingsreach.exceptions.EmployeeIdNotExistsException;
 import com.kingsmen.kingsreach.exceptions.LeaveIdNotFoundException;
 import com.kingsmen.kingsreach.exceptions.PayrollDetailsNotFoundException;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
@@ -98,12 +99,10 @@ public class LeaveServiceImpl implements LeaveService {
 		int leaveDays = (int) (ChronoUnit.DAYS.between(leave.getFromDate(), leave.getToDate()) + 1);
 
 		// Fetch the employee's leave record
-
 		Leave existingLeave = leaveRepository.findByEmployeeId(leave.getEmployeeId()).orElse(new Leave());
 		leave.setEmployee(employee);
 		leave.setEmployeeName(employee.getName());
 		leave.setEmployeeId(employee.getEmployeeId());
-		saveLeaveRecord(leave);
 
 		existingLeave.setEmployeeName(employee.getName());
 		existingLeave.setEmployee(employee);
@@ -135,7 +134,6 @@ public class LeaveServiceImpl implements LeaveService {
 				int lopDays = (int) leaveDays - maxSickLeave;
 				payroll.setLopDays(payroll.getLopDays() + lopDays);
 			}
-			existingLeave.setSickLeaveBalance(existingLeave.getSickLeaveBalance() - (int) leaveDays);
 			break;
 
 		case LeaveType.CASUAL:
@@ -147,7 +145,6 @@ public class LeaveServiceImpl implements LeaveService {
 				int lopDays = (int) leaveDays - maxCasualLeave;
 				payroll.setLopDays(payroll.getLopDays() + lopDays);
 			}
-			existingLeave.setCasualLeaveBalance(existingLeave.getCasualLeaveBalance() - (int) leaveDays);
 			break;
 
 		case LeaveType.PAID:
@@ -163,7 +160,6 @@ public class LeaveServiceImpl implements LeaveService {
 				int lopDays = (int) leaveDays - maxPaidLeave;
 				payroll.setLopDays(payroll.getLopDays() + lopDays);
 			}
-			existingLeave.setPaidLeaveBalance(existingLeave.getPaidLeaveBalance() - (int) leaveDays);
 			break;
 
 		case LeaveType.EMERGENCY:
@@ -175,14 +171,14 @@ public class LeaveServiceImpl implements LeaveService {
 				int lopDays = (int) leaveDays - existingLeave.getEmergencyLeaveBalance();
 				payroll.setLopDays(payroll.getLopDays() + lopDays);
 			}
-			existingLeave.setEmergencyLeaveBalance(existingLeave.getEmergencyLeaveBalance() - (int) leaveDays);
 			break;
 
 		default:
 			responseStructure.setMessage("Invalid leave type");
 			return ResponseEntity.badRequest().body(responseStructure);
 		}
-
+		
+		saveLeaveRecord(leave);
 		leaveRepository.save(existingLeave);
 		payrollRepository.save(payroll);
 
@@ -249,7 +245,7 @@ public class LeaveServiceImpl implements LeaveService {
 	@Override
 	public ResponseEntity<ResponseStructure<List<LeaveRecord>>> getLeave() {
 		List<LeaveRecord> list = leaveRecordRepo.findAll();
-		
+
 		List<LeaveRecord> approvedLeaves = new ArrayList<>();
 
 		for (LeaveRecord leave : list) {
@@ -268,7 +264,7 @@ public class LeaveServiceImpl implements LeaveService {
 	@Override
 	public ResponseEntity<ResponseStructure<List<Leave>>> getEmployeeLeave(String employeeId) {
 		List<Leave> all = leaveRepository.findAll();
-		
+
 		ArrayList<Leave> leaves = new ArrayList<Leave>();
 		for (Leave leave : all) {
 			if (leave.getEmployeeId().equals(employeeId)) {
@@ -294,34 +290,6 @@ public class LeaveServiceImpl implements LeaveService {
 		responseStructure.setData(list);
 
 		return ResponseEntity.ok(responseStructure);
-	}
-
-	@Override
-	public ResponseEntity<ResponseStructure<Map<String, Integer>>> getRemainingLeave(String employeeId) {
-		// TODO Auto-generated method stub
-
-		Leave orElseThrow = leaveRepository.findByEmployeeId(employeeId)
-				.orElseThrow(() -> new EmployeeIdNotExistsException("Invalid Employee ID"));
-
-		int casualLeaveBalance = orElseThrow.getCasualLeaveBalance();
-		int paidLeaveBalance = orElseThrow.getPaidLeaveBalance();
-		int sickLeaveBalance = orElseThrow.getSickLeaveBalance();
-		int emergencyLeaveBalance = orElseThrow.getEmergencyLeaveBalance();
-
-		// int[] pending = { casualLeaveBalance, paidLeaveBalance, sickLeaveBalance };
-		Map<String, Integer> pending = new HashMap<>();
-		pending.put("CasualLeaveBalance", casualLeaveBalance);
-		pending.put("PaidLeaveBalance", paidLeaveBalance);
-		pending.put("SickLeaveBalance", sickLeaveBalance);
-		pending.put("EmergencyLeaveBalance", emergencyLeaveBalance);
-
-		ResponseStructure<Map<String, Integer>> responseStructure = new ResponseStructure<Map<String, Integer>>();
-		responseStructure.setData(pending);
-		responseStructure.setMessage("The response is having the causal , paid, emergency and sick leave in the array");
-		responseStructure.setStatusCode(HttpStatus.OK.value());
-
-		return new ResponseEntity<ResponseStructure<Map<String, Integer>>>(responseStructure, HttpStatus.OK);
-
 	}
 
 	@Override
@@ -366,4 +334,36 @@ public class LeaveServiceImpl implements LeaveService {
 		return new ResponseEntity<ResponseStructure<List<Leave>>>(responseStructure, HttpStatus.OK);
 	}
 
+	@Override
+	public ResponseEntity<ResponseStructure<Map<String, Integer>>> getRemainingLeave(String employeeId) {
+
+		Optional<Leave> orElseThrow = leaveRepository.findByEmployeeId(employeeId);
+
+		Map<String, Integer> pending = new HashMap<>();
+
+		if(orElseThrow.isPresent()) {
+			Leave leave = orElseThrow.get();
+			int casualLeaveBalance = leave.getCasualLeaveBalance();
+			int paidLeaveBalance = leave.getPaidLeaveBalance();
+			int sickLeaveBalance = leave.getSickLeaveBalance();
+			int emergencyLeaveBalance = leave.getEmergencyLeaveBalance();
+
+			pending.put("CasualLeaveBalance", casualLeaveBalance);
+			pending.put("PaidLeaveBalance", paidLeaveBalance);
+			pending.put("SickLeaveBalance", sickLeaveBalance);
+			pending.put("EmergencyLeaveBalance", emergencyLeaveBalance);
+		}
+
+		ResponseStructure<Map<String, Integer>> responseStructure = new ResponseStructure<Map<String, Integer>>();
+		responseStructure.setData(pending);
+		responseStructure.setMessage("The response is having the causal , paid, emergency and sick leave in the array");
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+
+		return new ResponseEntity<ResponseStructure<Map<String, Integer>>>(responseStructure, HttpStatus.OK);
+	}
+
 }
+
+
+
+
