@@ -24,6 +24,7 @@ import com.kingsmen.kingsreach.entity.Payroll;
 import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.enums.LeaveStatus;
 import com.kingsmen.kingsreach.enums.LeaveType;
+import com.kingsmen.kingsreach.exceptions.LeaveAlreadyAppliedForTheDateException;
 import com.kingsmen.kingsreach.exceptions.LeaveIdNotFoundException;
 import com.kingsmen.kingsreach.exceptions.PayrollDetailsNotFoundException;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
@@ -85,6 +86,18 @@ public class LeaveServiceImpl implements LeaveService {
 	}
 
 	public ResponseEntity<ResponseStructure<Leave>> applyLeave(Leave leave) {
+		
+		List<LeaveRecord> existingLeaves = leaveRecordRepo.findByEmployeeId(leave.getEmployeeId());
+
+		for (LeaveRecord leaveRecord : existingLeaves) {
+		    LocalDate fromDate = leaveRecord.getFromDate();
+		    LocalDate toDate = leaveRecord.getToDate();
+
+		    if (!(leave.getToDate().isBefore(fromDate) || leave.getFromDate().isAfter(toDate))) {
+		        throw new LeaveAlreadyAppliedForTheDateException("You already have leave on these dates. Please select different dates.");
+		    }
+		}
+
 		ResponseStructure<Leave> responseStructure = new ResponseStructure<>();
 
 		Employee employee = employeeRepo.findByEmployeeId(leave.getEmployeeId()).orElseThrow();
@@ -177,7 +190,7 @@ public class LeaveServiceImpl implements LeaveService {
 			responseStructure.setMessage("Invalid leave type");
 			return ResponseEntity.badRequest().body(responseStructure);
 		}
-		
+
 		saveLeaveRecord(leave);
 		leaveRepository.save(existingLeave);
 		payrollRepository.save(payroll);
