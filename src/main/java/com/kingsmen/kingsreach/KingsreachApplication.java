@@ -9,6 +9,7 @@ public class KingsreachApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(KingsreachApplication.class, args);
 		System.out.println("The spring application is running");
+		
 	}
 
 }

@@ -87,23 +87,29 @@ public class AttendanceServiceImpl implements AttendanceService {
 		Optional<Employee> byEmployeeId = Optional.of(employeeRepo.findByEmployeeId(attendance.getEmployeeId())
 				.orElseThrow(() -> new EmployeeIdNotExistsException("No value present with the ID.")));
 
+		Optional<Attendance> optionalAttendance =	attendanceRepo.findByEmployeeIdAndAttendanceDate
+				(attendance.getEmployeeId(), attendance.getAttendanceDate());
 		Employee employee = byEmployeeId.get();
-		attendance.setFirstPunchIn(attendance.getFirstPunchIn());
-		attendance.setLastPunchOut(attendance.getLastPunchOut());
-		attendance.setAttendanceDate(attendance.getAttendanceDate());
-		//attendance.setEmployee(employee);
-		attendance.setWorkMode(attendance.getWorkMode());
-		attendance.setLocation(attendance.getLocation());
-		attendance.setEmployeeName(employee.getName());
-		attendance.setTotalBreakMinutes(attendance.getTotalBreakMinutes());
-		attendanceRepo.save(attendance);
+
+		Attendance updatedAttendance = optionalAttendance.orElse(new Attendance());
+
+		updatedAttendance.setEmployeeId(attendance.getEmployeeId());
+		updatedAttendance.setFirstPunchIn(attendance.getFirstPunchIn());
+		updatedAttendance.setLastPunchOut(attendance.getLastPunchOut());
+		updatedAttendance.setAttendanceDate(attendance.getAttendanceDate());
+		updatedAttendance.setWorkMode(attendance.getWorkMode());
+		updatedAttendance.setLocation(attendance.getLocation());
+		updatedAttendance.setEmployeeName(employee.getName());
+		updatedAttendance.setTotalBreakMinutes(attendance.getTotalBreakMinutes());
+
+		attendanceRepo.save(updatedAttendance);
 
 		ResponseStructure<Attendance> responseStructure = new ResponseStructure<Attendance>();
 
 		String message = "Attendence Of " + attendance.getEmployeeName() + " is recorded.";
 		responseStructure.setStatusCode(HttpStatus.CREATED.value());
 		responseStructure.setMessage(message);
-		responseStructure.setData(attendance);
+		responseStructure.setData(updatedAttendance);
 
 		// Notification code
 		Notification notify = new Notification();
@@ -115,17 +121,17 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return new ResponseEntity<ResponseStructure<Attendance>>(responseStructure, HttpStatus.CREATED);
 	}
 
-
 	@Override
 	public ResponseEntity<ResponseStructure<List<Attendance>>> getAttendance(String employeeId) {
 		List<Attendance> attendance = attendanceRepo.findByEmployeeId(employeeId);
-//				.orElseThrow(() -> new EmployeeIdNotExistsException(
-//						"No value Present with the assosiated ID.Enter the valid Employee ID"));
+		//				.orElseThrow(() -> new EmployeeIdNotExistsException(
+		//						"No value Present with the assosiated ID.Enter the valid Employee ID"));
 
 		ResponseStructure<List<Attendance>> responseStructure = new ResponseStructure<List<Attendance>>();
 
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage("Attendence detail fetched successfully.");
+
 		responseStructure.setData(attendance);
 
 		return new ResponseEntity<ResponseStructure<List<Attendance>>>(responseStructure, HttpStatus.OK);
@@ -166,7 +172,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 				arrayList.add(onsite);
 			}
 		}
-		
+
 		List<AttendanceRecord> attendances = attendanceRecordRepo.findByAttendanceDate(LocalDate.now());
 		ArrayList<AttendanceRecord> attendanceRecords = new ArrayList<AttendanceRecord>();
 
@@ -210,7 +216,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return attendances.stream()
 				.collect(Collectors.groupingBy(Attendance::getEmployeeId));
 	}
-	
+
 	@Override
 	public ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceBetween(String employeeId,
 			LocalDate fromDate, LocalDate toDate) {
@@ -224,6 +230,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK); 
 
 	}
-	
+
 }
 
