@@ -65,5 +65,5 @@ public class AttendanceController {
 	private ResponseEntity<ResponseStructure<Map<String, List<Attendance>>>> getAttendanceForDays(){
 		return attendanceService.getAttendanceForDays();
 	}
-		
+
 }

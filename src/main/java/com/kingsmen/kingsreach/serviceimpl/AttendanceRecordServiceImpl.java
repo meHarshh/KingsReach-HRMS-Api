@@ -40,7 +40,13 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService {
 	@Override
 	public ResponseEntity<ResponseStructure<AttendanceRecord>> saveAttendanceRecord(AttendanceRecord attendanceRecord) {
 		Optional<AttendanceRecord> optional = attendanceRecordRepo.findByEmployeeIdAndAttendanceDate(attendanceRecord.getEmployeeId(), LocalDate.now());
+		
+		Optional<Employee> byEmployeeId = Optional.of(employeeRepo.findByEmployeeId(attendanceRecord.getEmployeeId())
+				.orElseThrow(() -> new EmployeeIdNotExistsException("No value present with the ID.")));
 
+		Employee employee = byEmployeeId.get();
+		attendanceRecord.setDepartment(employee.getDepartment());
+	
 		ResponseStructure<AttendanceRecord> responseStructure = new ResponseStructure<>();
 
 		if (optional.isPresent()) {
@@ -88,6 +94,7 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService {
 		attendance.setTotalWorkMinutes(attendanceRecord.getTotalWorkMinutes());
 		attendance.setAttendanceDate(attendanceRecord.getAttendanceDate());
 		attendance.setEmployeeName(employee.getName());
+		attendance.setDepartment(employee.getDepartment());
 
 		attendanceRepo.save(attendance);
 		

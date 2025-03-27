@@ -198,24 +198,24 @@ public class AttendanceServiceImpl implements AttendanceService {
 	}
 
 
-	@Override
-	public ResponseEntity<ResponseStructure<Map<String, List<Attendance>>>> getAttendanceForDays() {
-
-		Map<String, List<Attendance>> groupedAttendance = fetchGroupedAttendance();
-
-		ResponseStructure<Map<String, List<Attendance>>> responseStructure = new ResponseStructure<>();
-		responseStructure.setData(groupedAttendance);
-		responseStructure.setMessage("Attendance data fetched successfully");
-		responseStructure.setStatusCode(HttpStatus.OK.value());
-
-		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
-	}
-
-	private Map<String, List<Attendance>> fetchGroupedAttendance() {
-		List<Attendance> attendances = attendanceRepo.findAll();
-		return attendances.stream()
-				.collect(Collectors.groupingBy(Attendance::getEmployeeId));
-	}
+		@Override
+		public ResponseEntity<ResponseStructure<Map<String, List<Attendance>>>> getAttendanceForDays() {
+	
+			Map<String, List<Attendance>> groupedAttendance = fetchGroupedAttendance();
+	
+			ResponseStructure<Map<String, List<Attendance>>> responseStructure = new ResponseStructure<>();
+			responseStructure.setData(groupedAttendance);
+			responseStructure.setMessage("Attendance data fetched successfully");
+			responseStructure.setStatusCode(HttpStatus.OK.value());
+	
+			return new ResponseEntity<>(responseStructure, HttpStatus.OK);
+		}
+	
+		private Map<String, List<Attendance>> fetchGroupedAttendance() {
+			List<Attendance> attendances = attendanceRepo.findAll();
+			return attendances.stream()
+					.collect(Collectors.groupingBy(Attendance::getEmployeeId));
+		}
 
 	@Override
 	public ResponseEntity<ResponseStructure<List<Attendance>>> getAttendanceBetween(String employeeId,
