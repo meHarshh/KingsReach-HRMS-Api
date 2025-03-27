@@ -3,6 +3,7 @@ package com.kingsmen.kingsreach.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.enums.Workmode;
 
 import jakarta.persistence.Entity;
@@ -24,6 +25,7 @@ public class AttendanceRecord {
 	private LocalDate attendanceDate;
 	private int totalWorkMinutes;
 	private int totalBreakMinutes;
+	private Department department;
 	
 	public int getAttendanceRecordId() {
 		return attendanceRecordId;
@@ -95,6 +97,14 @@ public class AttendanceRecord {
 
 	public void setTotalBreakMinutes(int totalBreakMinutes) {
 		this.totalBreakMinutes = totalBreakMinutes;
+	}
+
+	public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
 	}
 
 }

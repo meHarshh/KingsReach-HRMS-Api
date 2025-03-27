@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.enums.Workmode;
 
 import jakarta.persistence.Entity;
@@ -30,6 +31,7 @@ public class Attendance {
 	private String employeeName;
 	private String employeeId;
 	private int totalBreakMinutes;
+	private Department department;
 
 	@JsonIgnore
 	@ManyToOne
@@ -156,6 +158,14 @@ public class Attendance {
 
 	public void setTotalBreakMinutes(int totalBreakMinutes) {
 		this.totalBreakMinutes = totalBreakMinutes;
+	}
+
+	public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
 	}
 	
 
