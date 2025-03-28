@@ -101,6 +101,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		updatedAttendance.setLocation(attendance.getLocation());
 		updatedAttendance.setEmployeeName(employee.getName());
 		updatedAttendance.setTotalBreakMinutes(attendance.getTotalBreakMinutes());
+		updatedAttendance.setTotalWorkMinutes(attendance.getTotalWorkMinutes());
 
 		attendanceRepo.save(updatedAttendance);
 
