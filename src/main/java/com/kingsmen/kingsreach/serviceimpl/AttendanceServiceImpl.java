@@ -53,15 +53,17 @@ public class AttendanceServiceImpl implements AttendanceService {
 				.orElseThrow(() -> new EmployeeIdNotExistsException("No value present with the ID.")));
 
 		Employee employee = byEmployeeId.get();
-		//attendance.setEmployee(employee);
+		
 		attendance.setFirstPunchIn(attendance.getFirstPunchIn());
 		attendance.setLastPunchOut(attendance.getLastPunchOut());
 		attendance.setAttendanceDate(LocalDate.now());
-		attendance.setEmployee(employee);
+		attendance.setEmployeeId(attendance.getEmployeeId());
 		attendance.setWorkMode(attendance.getWorkMode());
 		attendance.setLocation(attendance.getLocation());
 		attendance.setEmployeeName(employee.getName());
 		attendance.setTotalBreakMinutes(attendance.getTotalBreakMinutes());
+		attendance.setTotalWorkMinutes(attendance.getTotalWorkMinutes());
+		attendance.setDepartment(employee.getDepartment());
 		attendanceRepo.save(attendance);
 
 		ResponseStructure<Attendance> responseStructure = new ResponseStructure<Attendance>();
@@ -102,6 +104,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		updatedAttendance.setEmployeeName(employee.getName());
 		updatedAttendance.setTotalBreakMinutes(attendance.getTotalBreakMinutes());
 		updatedAttendance.setTotalWorkMinutes(attendance.getTotalWorkMinutes());
+		updatedAttendance.setDepartment(employee.getDepartment());
 
 		attendanceRepo.save(updatedAttendance);
 
