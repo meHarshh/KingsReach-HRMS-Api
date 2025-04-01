@@ -18,7 +18,6 @@ import com.kingsmen.kingsreach.entity.AttendanceRecord;
 import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Notification;
 import com.kingsmen.kingsreach.entity.Onsite;
-import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.exceptions.EmployeeIdNotExistsException;
 import com.kingsmen.kingsreach.repo.AttendanceRecordRepo;
 import com.kingsmen.kingsreach.repo.AttendanceRepo;
@@ -214,14 +213,10 @@ public class AttendanceServiceImpl implements AttendanceService {
 		}
 		
 		private Map<String, List<Attendance>> fetchGroupedAttendance() {
-		    List<Attendance> attendances = attendanceRepo.findAll();
+			List<Attendance> attendances = attendanceRepo.findAll();
+			return attendances.stream()
+					.collect(Collectors.groupingBy(Attendance::getEmployeeId));
 
-		    return attendances.stream()
-		            .collect(Collectors.groupingBy(attendance -> {
-		                String employeeId = attendance.getEmployeeId();
-		                Department department = (attendance.getDepartment() != null) ? attendance.getDepartment(): null;
-		                return employeeId + "-" + department;
-		            }));
 		}
 
 	@Override
