@@ -3,6 +3,8 @@ package com.kingsmen.kingsreach.serviceimpl;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import com.kingsmen.kingsreach.entity.AttendanceRecord;
 import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Notification;
 import com.kingsmen.kingsreach.exceptions.EmployeeIdNotExistsException;
+import com.kingsmen.kingsreach.helper.AttendanceRecordHelper;
 import com.kingsmen.kingsreach.repo.AttendanceRecordRepo;
 import com.kingsmen.kingsreach.repo.AttendanceRepo;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
@@ -33,20 +36,20 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService {
 
 	@Autowired
 	private EmployeeRepo employeeRepo;
-	
+
 	@Autowired
 	private NotificationRepo notificationRepo;
 
 	@Override
 	public ResponseEntity<ResponseStructure<AttendanceRecord>> saveAttendanceRecord(AttendanceRecord attendanceRecord) {
 		Optional<AttendanceRecord> optional = attendanceRecordRepo.findByEmployeeIdAndAttendanceDate(attendanceRecord.getEmployeeId(), LocalDate.now());
-		
+
 		Optional<Employee> byEmployeeId = Optional.of(employeeRepo.findByEmployeeId(attendanceRecord.getEmployeeId())
 				.orElseThrow(() -> new EmployeeIdNotExistsException("No value present with the ID.")));
 
 		Employee employee = byEmployeeId.get();
 		attendanceRecord.setDepartment(employee.getDepartment());
-	
+
 		ResponseStructure<AttendanceRecord> responseStructure = new ResponseStructure<>();
 
 		if (optional.isPresent()) {
@@ -73,7 +76,7 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService {
 		notify.setMessage( "Employee ID: " + attendanceRecord.getEmployeeId() + " PunchedIn Successfully");
 		notify.setCreatedAt(LocalDateTime.now());
 		notificationRepo.save(notify);
-		
+
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	}
 
@@ -97,7 +100,7 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService {
 		attendance.setDepartment(employee.getDepartment());
 
 		attendanceRepo.save(attendance);
-		
+
 	}
 
 	@Override
@@ -157,4 +160,58 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService {
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	}
+	
+	@Override
+	public ResponseEntity<ResponseStructure<List<AttendanceRecordHelper>>> getPunchInRecords() {
+
+	    List<Employee> employees = employeeRepo.findAll();
+	    List<AttendanceRecord> attendanceRecords = attendanceRecordRepo.findByAttendanceDate(LocalDate.now());
+
+	    List<AttendanceRecordHelper> attendanceRecordHelpers = new ArrayList<>();
+
+	    for (Employee employee : employees) {
+	        AttendanceRecord record = null;
+	        for (AttendanceRecord attendance : attendanceRecords) {
+	            if (attendance.getEmployeeId().equals(employee.getEmployeeId())) {
+	                record = attendance;
+	                break;
+	            }
+	        }
+
+	        AttendanceRecordHelper attendanceRecordHelper = new AttendanceRecordHelper();
+	        attendanceRecordHelper.setEmployeeId(employee.getEmployeeId());
+	        attendanceRecordHelper.setEmployeeName(employee.getName());
+	        attendanceRecordHelper.setGender(employee.getGender());
+
+	        if (record != null) {
+	            attendanceRecordHelper.setFirstPunchIn(record.getFirstPunchIn());
+	            attendanceRecordHelper.setLastPunchOut(record.getLastPunchOut());
+	            attendanceRecordHelper.setLocation(record.getLocation());
+	            attendanceRecordHelper.setWorkMode(record.getWorkMode());
+	            attendanceRecordHelper.setAttendanceDate(record.getAttendanceDate());
+	            attendanceRecordHelper.setTotalWorkMinutes(record.getTotalWorkMinutes());
+	            attendanceRecordHelper.setTotalBreakMinutes(record.getTotalBreakMinutes());
+	            attendanceRecordHelper.setDepartment(record.getDepartment());
+	        } else {
+	            attendanceRecordHelper.setFirstPunchIn(null);
+	            attendanceRecordHelper.setLastPunchOut(null);
+	            attendanceRecordHelper.setLocation(null);
+	            attendanceRecordHelper.setWorkMode(null);
+	            attendanceRecordHelper.setAttendanceDate(LocalDate.now());
+	            attendanceRecordHelper.setTotalWorkMinutes(0);
+	            attendanceRecordHelper.setTotalBreakMinutes(0);
+	            attendanceRecordHelper.setDepartment(null);
+	        }
+
+	        attendanceRecordHelpers.add(attendanceRecordHelper);
+	    }
+
+	    ResponseStructure<List<AttendanceRecordHelper>> responseStructure = new ResponseStructure<>();
+	    responseStructure.setStatusCode(HttpStatus.OK.value());
+	    responseStructure.setData(attendanceRecordHelpers);
+	    responseStructure.setMessage("Attendance records fetched successfully");
+
+	    return new ResponseEntity<>(responseStructure, HttpStatus.OK);
+	}
+
 }
