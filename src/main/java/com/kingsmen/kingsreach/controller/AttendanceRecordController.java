@@ -1,5 +1,7 @@
 package com.kingsmen.kingsreach.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kingsmen.kingsreach.entity.AttendanceRecord;
+import com.kingsmen.kingsreach.helper.AttendanceRecordHelper;
 import com.kingsmen.kingsreach.service.AttendanceRecordService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
@@ -34,6 +37,11 @@ public class AttendanceRecordController {
 	@PutMapping(value = "/changeRecordStatus")
 	private ResponseEntity<ResponseStructure<AttendanceRecord>>  changeRecordStatus(@RequestBody AttendanceRecord attendanceRecord){
 		return attendanceRecordService.changeRecordStatus(attendanceRecord);
+	}
+	
+	@GetMapping(value = "/punchInRecords")
+	private ResponseEntity<ResponseStructure<List<AttendanceRecordHelper>>>  getPunchInRecords(){
+		return attendanceRecordService.getPunchInRecords();
 	}
 
 }
