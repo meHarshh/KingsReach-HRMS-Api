@@ -132,9 +132,9 @@ public class LeaveServiceImpl implements LeaveService {
 		Month currentMonth = leave.getFromDate().getMonth();
 
 		// Define max leave limits for March and April
-		int maxCasualLeave = 1; // 1/month for all months
+		int maxPaidLeave  = 1; // 1/month for all months
 		int maxSickLeave = 1; // 1/month for all months
-		int maxPaidLeave = (currentMonth == Month.MARCH || currentMonth == Month.APRIL) ? 0 : 1;
+		int maxCasualLeave= (currentMonth == Month.MARCH || currentMonth == Month.APRIL) ? 0 : 1;
 
 		// Check leave type and update balances
 		switch (leave.getLeaveType()) {
@@ -149,9 +149,9 @@ public class LeaveServiceImpl implements LeaveService {
 			}
 			break;
 
-		case LeaveType.CASUAL:
+		case LeaveType.PAID:
 			if (existingLeave.getCasualLeaveBalance() <= leaveDays) {
-				responseStructure.setMessage("Insufficient casual leave balance");
+				responseStructure.setMessage("Insufficient paid leave balance");
 				return ResponseEntity.badRequest().body(responseStructure);
 			}
 			if (leaveDays > maxCasualLeave) {
@@ -160,9 +160,9 @@ public class LeaveServiceImpl implements LeaveService {
 			}
 			break;
 
-		case LeaveType.PAID:
+		case LeaveType.CASUAL:
 			if (currentMonth == Month.MARCH || currentMonth == Month.APRIL) {
-				responseStructure.setMessage("Paid leave is not available in March and April");
+				responseStructure.setMessage("Casual leave is not available in March and April");
 				return ResponseEntity.badRequest().body(responseStructure);
 			}
 			if (existingLeave.getPaidLeaveBalance() < leaveDays) {
