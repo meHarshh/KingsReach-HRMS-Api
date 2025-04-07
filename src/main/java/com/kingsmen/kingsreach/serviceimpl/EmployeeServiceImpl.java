@@ -236,9 +236,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee2.setUanNumber(employee.getUanNumber());
 		employee2.setName(employee.getFirstName() + " " + employee.getLastName());
 		employee2.setManagerId(employee.getManagerId());
+		employee2.setInProbation(employee.isInProbation());
 
 		if (employee.getRole() == EmployeeRole.EMPLOYEE) {
-			Manager orElseThrow = managerRepo.findByEmployeeId(employee.getManagerId()).orElseThrow();
+			Manager orElseThrow = managerRepo.findByEmployeeId(employee.getManagerId())
+					.orElseThrow(() -> new RuntimeException("Manager not found with ID: " + employee.getManagerId()));;
 			employee2.setManager(orElseThrow);
 		}
 
