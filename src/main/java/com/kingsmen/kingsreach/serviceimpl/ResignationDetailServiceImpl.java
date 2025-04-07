@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,11 +14,13 @@ import org.springframework.stereotype.Service;
 import com.kingsmen.kingsreach.entity.Employee;
 import com.kingsmen.kingsreach.entity.Notification;
 import com.kingsmen.kingsreach.entity.ResignationDetail;
+import com.kingsmen.kingsreach.entity.ResignedEmployee;
 import com.kingsmen.kingsreach.entity.TerminationDetail;
 import com.kingsmen.kingsreach.exceptions.ResignationIdNotFoundException;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
 import com.kingsmen.kingsreach.repo.NotificationRepo;
 import com.kingsmen.kingsreach.repo.ResignationDetailRepo;
+import com.kingsmen.kingsreach.repo.ResignedEmployeeRepo;
 import com.kingsmen.kingsreach.repo.TerminationDetailRepo;
 import com.kingsmen.kingsreach.service.ResignationDetailService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
@@ -36,6 +39,9 @@ public class ResignationDetailServiceImpl implements ResignationDetailService {
 
 	@Autowired
 	private NotificationRepo notificationRepo;
+	
+	@Autowired
+	private ResignedEmployeeRepo resignedEmployeeRepo;
 
 	@Override
 	public ResponseEntity<ResponseStructure<ResignationDetail>> resignationDetail(ResignationDetail resignationDetail) {
@@ -72,13 +78,19 @@ public class ResignationDetailServiceImpl implements ResignationDetailService {
 	@Override
 	public ResponseEntity<ResponseStructure<ResignationDetail>> changeResignationStatus(int resignationId,ResignationDetail resignationDetail) {
 
-
 		ResignationDetail existingResignation = resignationDetailRepo.findById(resignationId)
 				.orElseThrow(() -> new ResignationIdNotFoundException("Resignation with ID " + resignationId + " not found"));
+		
+		Optional<Employee> byEmployeeId = employeeRepo.findByEmployeeId(existingResignation.getEmployeeId());
+		Employee employee = byEmployeeId.get();
 
+		saveResignedEmployeeDetail(existingResignation);
+		
 		existingResignation.setResignationStatus(resignationDetail.getResignationStatus());
 		ResignationDetail updatedDetail = resignationDetailRepo.save(existingResignation);
-
+		
+		employeeRepo.delete(employee);
+		
 		ResponseStructure<ResignationDetail> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage(existingResignation.getName() + " Resignation status updated successfully.");
@@ -92,6 +104,57 @@ public class ResignationDetailServiceImpl implements ResignationDetailService {
 		notificationRepo.save(notify);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);
+	}
+
+	private void saveResignedEmployeeDetail(ResignationDetail existingResignation) {
+		Optional<Employee> byEmployeeId = employeeRepo.findByEmployeeId(existingResignation.getEmployeeId());
+		Employee employee = byEmployeeId.get();
+		
+		ResignedEmployee resignedEmployee = new ResignedEmployee();
+		
+		resignedEmployee.setEmployeeId(existingResignation.getEmployeeId());
+		resignedEmployee.setFirstName(employee.getFirstName());
+		resignedEmployee.setLastName(employee.getLastName());
+		resignedEmployee.setUserName(employee.getUserName());
+		resignedEmployee.setName(existingResignation.getName());
+		resignedEmployee.setRole(employee.getRole());
+		resignedEmployee.setOfficialEmail(employee.getOfficialEmail());
+		resignedEmployee.setPassword(employee.getPassword());
+		resignedEmployee.setConfirmPassword(employee.getConfirmPassword());
+		resignedEmployee.setJoiningDate(employee.getJoiningDate());
+		resignedEmployee.setPhoneNumber(employee.getPhoneNumber());
+		resignedEmployee.setDepartment(employee.getDepartment());
+		resignedEmployee.setAadharCardNumber(employee.getAadharCardNumber());
+		resignedEmployee.setPanCardNumber(employee.getPanCardNumber());
+		resignedEmployee.setDob(employee.getDob());
+		resignedEmployee.setBloodGroup(employee.getBloodGroup());
+		resignedEmployee.setFatherName(employee.getFatherName());
+		resignedEmployee.setMotherName(employee.getMotherName());
+		resignedEmployee.setFatherContactNumber(employee.getFatherContactNumber());
+		resignedEmployee.setMotherNumber(employee.getMotherNumber());
+		resignedEmployee.setPermanentAddress(employee.getPermanentAddress());
+		resignedEmployee.setEmergencyContact(employee.getEmergencyContact());
+		resignedEmployee.setOfficialNumber(employee.getOfficialNumber());
+		resignedEmployee.setEmergencyContactName(employee.getEmergencyContactName());
+		resignedEmployee.setEmergencyContactRelation(employee.getEmergencyContactRelation());
+		resignedEmployee.setLocalAddress(employee.getLocalAddress());
+		resignedEmployee.setBankName(employee.getBankName());
+		resignedEmployee.setBranchName(employee.getBranchName());
+		resignedEmployee.setAccountNumber(employee.getAccountNumber());
+		resignedEmployee.setIfscCode(employee.getIfscCode());
+		resignedEmployee.setEmail(employee.getEmail());
+		resignedEmployee.setGender(employee.getGender());
+		resignedEmployee.setDate(employee.getDate());
+		resignedEmployee.setUanNumber(employee.getUanNumber());
+		resignedEmployee.setCasualLeaveBalance(employee.getCasualLeaveBalance());
+		resignedEmployee.setSickLeaveBalance(employee.getSickLeaveBalance());
+		resignedEmployee.setPaidLeaveBalance(employee.getPaidLeaveBalance());
+		resignedEmployee.setEmergencyDeathLeave(employee.getEmergencyDeathLeave());
+		resignedEmployee.setExperience(employee.getExperience());
+		resignedEmployee.setUpdatedAt(employee.getUpdatedAt());
+		resignedEmployee.setCreatedAt(employee.getCreatedAt());
+		
+		resignedEmployeeRepo.save(resignedEmployee);	
 	}
 
 	@Override

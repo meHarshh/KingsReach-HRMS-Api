@@ -42,6 +42,5 @@ public class ResignationDetailController {
 	@GetMapping(value = "/getAllDetails")
 	private ResponseEntity<ResponseStructure<Map<String, Object>>> getAllDetails(){
 		return resignationDetailService.getAllDetails();
-		
 	}
 }

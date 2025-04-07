@@ -24,6 +24,7 @@ import com.kingsmen.kingsreach.entity.Payroll;
 import com.kingsmen.kingsreach.enums.Department;
 import com.kingsmen.kingsreach.enums.LeaveStatus;
 import com.kingsmen.kingsreach.enums.LeaveType;
+import com.kingsmen.kingsreach.exceptions.EmployeeInProbationException;
 import com.kingsmen.kingsreach.exceptions.LeaveAlreadyAppliedForTheDateException;
 import com.kingsmen.kingsreach.exceptions.LeaveIdNotFoundException;
 import com.kingsmen.kingsreach.exceptions.PayrollDetailsNotFoundException;
@@ -108,6 +109,12 @@ public class LeaveServiceImpl implements LeaveService {
 					"Payroll record not found for employee ID: " + leave.getEmployeeId() + " Enter valid Employee ID");
 		}
 
+		if (employee.isInProbation()) {
+		    if (leave.getLeaveType() == LeaveType.CASUAL || leave.getLeaveType() == LeaveType.PAID) {
+		        throw new EmployeeInProbationException("Employees in probation cannot apply for Casual or Paid leave.");
+		    }
+		}
+
 		// Calculate leave days
 		int leaveDays = (int) (ChronoUnit.DAYS.between(leave.getFromDate(), leave.getToDate()) + 1);
 
@@ -135,7 +142,7 @@ public class LeaveServiceImpl implements LeaveService {
 		int maxPaidLeave  = 1; // 1/month for all months
 		int maxSickLeave = 1; // 1/month for all months
 		int maxCasualLeave= (currentMonth == Month.MARCH || currentMonth == Month.APRIL) ? 0 : 1;
-
+		
 		// Check leave type and update balances
 		switch (leave.getLeaveType()) {
 		case LeaveType.SICK:
@@ -150,12 +157,12 @@ public class LeaveServiceImpl implements LeaveService {
 			break;
 
 		case LeaveType.PAID:
-			if (existingLeave.getCasualLeaveBalance() <= leaveDays) {
+			if (existingLeave.getPaidLeaveBalance() < leaveDays) {
 				responseStructure.setMessage("Insufficient paid leave balance");
 				return ResponseEntity.badRequest().body(responseStructure);
 			}
-			if (leaveDays > maxCasualLeave) {
-				int lopDays = (int) leaveDays - maxCasualLeave;
+			if (leaveDays > maxPaidLeave) {
+				int lopDays = (int) leaveDays - maxPaidLeave;
 				payroll.setLopDays(payroll.getLopDays() + lopDays);
 			}
 			break;
@@ -165,12 +172,12 @@ public class LeaveServiceImpl implements LeaveService {
 				responseStructure.setMessage("Casual leave is not available in March and April");
 				return ResponseEntity.badRequest().body(responseStructure);
 			}
-			if (existingLeave.getPaidLeaveBalance() < leaveDays) {
-				responseStructure.setMessage("Insufficient paid leave balance");
+			if (existingLeave.getCasualLeaveBalance() <= leaveDays) {
+				responseStructure.setMessage("Insufficient casual leave balance");
 				return ResponseEntity.badRequest().body(responseStructure);
 			}
-			if (leaveDays > maxPaidLeave) {
-				int lopDays = (int) leaveDays - maxPaidLeave;
+			if (leaveDays > maxCasualLeave) {
+				int lopDays = (int) leaveDays - maxCasualLeave;
 				payroll.setLopDays(payroll.getLopDays() + lopDays);
 			}
 			break;
