@@ -22,6 +22,7 @@ import com.kingsmen.kingsreach.entity.ResignationDetail;
 import com.kingsmen.kingsreach.entity.ResignedEmployee;
 import com.kingsmen.kingsreach.entity.TerminationDetail;
 import com.kingsmen.kingsreach.entity.Ticket;
+import com.kingsmen.kingsreach.enums.ResignationStatus;
 import com.kingsmen.kingsreach.exceptions.ResignationIdNotFoundException;
 import com.kingsmen.kingsreach.repo.AssetRepo;
 import com.kingsmen.kingsreach.repo.AttendanceRepo;
@@ -121,11 +122,12 @@ public class ResignationDetailServiceImpl implements ResignationDetailService {
 		List<Reimbursement> reimbursement = reimbursementRepo.findByEmployeeId(employeeId);
 		List<Attendance> attendance = attendanceRepo.findByEmployeeId(employeeId);
 		List<Ticket> tickets = ticketRepo.findByEmployeeId(employeeId);
-
-		saveResignedEmployeeDetail(existingResignation);
 		
 		existingResignation.setResignationStatus(resignationDetail.getResignationStatus());
 		ResignationDetail updatedDetail = resignationDetailRepo.save(existingResignation);
+
+		if(existingResignation.getResignationStatus() == ResignationStatus.ACCEPTED) {
+		saveResignedEmployeeDetail(existingResignation);
 		
 		assetRepo.deleteAll(asset);
 		if (payroll != null) {
@@ -136,6 +138,7 @@ public class ResignationDetailServiceImpl implements ResignationDetailService {
 		reimbursementRepo.deleteAll(reimbursement);
 		ticketRepo.deleteAll(tickets);
 		employeeRepo.delete(employee);
+		}
 	
 		ResponseStructure<ResignationDetail> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
