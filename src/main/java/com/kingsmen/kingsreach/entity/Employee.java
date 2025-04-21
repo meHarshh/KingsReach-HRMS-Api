@@ -23,7 +23,6 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Transient;
 
 @SuppressWarnings("serial")
@@ -92,8 +91,8 @@ public class Employee implements Serializable {
 	@OneToMany(mappedBy = "employee")
 	private List<Asset> asset;
 
-	@OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
-	private Payroll payroll;
+	@OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
+	private List<Payroll> payroll = new ArrayList<Payroll>();
 
 	@OneToMany(mappedBy = "employee")
 	private List<Reimbursement> reimbursement = new ArrayList<Reimbursement>();
@@ -358,11 +357,11 @@ public class Employee implements Serializable {
 		this.emergencyContact = emergencyContact;
 	}
 
-	public Payroll getPayroll() {
+	public List<Payroll> getPayroll() {
 		return payroll;
 	}
 
-	public void setPayroll(Payroll payroll) {
+	public void setPayroll(List<Payroll> payroll) {
 		this.payroll = payroll;
 	}
 

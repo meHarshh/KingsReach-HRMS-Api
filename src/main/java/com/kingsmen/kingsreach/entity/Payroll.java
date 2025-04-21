@@ -12,7 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 
 @SuppressWarnings("serial")
 @Entity
@@ -49,9 +49,8 @@ public class Payroll implements Serializable {
 	private double halfDayDeduction;
 
 	@JsonIgnore
-	@OneToOne
+	@ManyToOne
 	private Employee employee;
-
 	
 	public double getReimbursementAmount() {
 		return reimbursementAmount;
