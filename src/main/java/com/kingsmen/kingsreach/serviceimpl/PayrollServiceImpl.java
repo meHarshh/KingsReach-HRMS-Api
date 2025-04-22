@@ -68,8 +68,7 @@ public class PayrollServiceImpl implements PayrollService {
 		payroll.setDate(LocalDate.now());
 		System.out.println(LocalDate.now());
 
-		String message = "The payroll of " + employee.getName() + " from " + payroll.getDepartment()
-		+ " department has been updated";
+		String message = "The payroll of " + employee.getName() + " from " + payroll.getDepartment() + " department has been updated";
 
 		ResponseStructure<Payroll> responseStructure = new ResponseStructure<Payroll>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
@@ -137,12 +136,12 @@ public class PayrollServiceImpl implements PayrollService {
 	}
 
 	@Override
-	public ResponseEntity<ResponseStructure<Payroll>> getEmployeeSalary(String employeeId) {
+	public ResponseEntity<ResponseStructure<List<Payroll>>> getEmployeeSalary(String employeeId) {
 
 		Optional<Employee> optionalEmployee = employeeRepo.findByEmployeeId(employeeId);
 
 		if (optionalEmployee.isEmpty()) {
-			ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
+			ResponseStructure<List<Payroll>> responseStructure = new ResponseStructure<>();
 			responseStructure.setStatusCode(HttpStatus.NOT_FOUND.value());
 			responseStructure.setMessage("Employee not found with ID: " + employeeId);
 			responseStructure.setData(null);
@@ -152,10 +151,10 @@ public class PayrollServiceImpl implements PayrollService {
 
 		Employee employee = optionalEmployee.get();
 
-		Payroll payroll = employee.getPayroll();
+		List<Payroll> payroll = employee.getPayroll();
 
 		if (payroll == null) {
-			ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
+			ResponseStructure<List<Payroll>> responseStructure = new ResponseStructure<>();
 			responseStructure.setStatusCode(HttpStatus.NOT_FOUND.value());
 			responseStructure.setMessage("No payroll record found for employee ID: " + employeeId);
 			responseStructure.setData(null);
@@ -163,10 +162,9 @@ public class PayrollServiceImpl implements PayrollService {
 			return new ResponseEntity<>(responseStructure, HttpStatus.NOT_FOUND);
 		}
 
-		ResponseStructure<Payroll> responseStructure = new ResponseStructure<>();
+		ResponseStructure<List<Payroll>> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
-		responseStructure
-		.setMessage("Salary details of employee " + payroll.getEmployeeName() + " fetched successfully.");
+		responseStructure.setMessage("Salary details of employee " + employee.getName() + " fetched successfully.");
 		responseStructure.setData(payroll);
 
 		return new ResponseEntity<>(responseStructure, HttpStatus.OK);

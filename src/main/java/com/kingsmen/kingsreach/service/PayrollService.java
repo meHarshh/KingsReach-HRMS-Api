@@ -16,7 +16,7 @@ public interface PayrollService {
 
 	ResponseEntity<ResponseStructure<Payroll>> deleteEmployeeSalary(int payrollId);
 
-	ResponseEntity<ResponseStructure<Payroll>> getEmployeeSalary(String employeeId);
+	ResponseEntity<ResponseStructure<List<Payroll>>> getEmployeeSalary(String employeeId);
 
 	ResponseEntity<ResponseStructure<Payroll>> editEmployeeSalary(Payroll payroll);
 

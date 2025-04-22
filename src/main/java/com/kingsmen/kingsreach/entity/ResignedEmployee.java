@@ -63,7 +63,8 @@ public class ResignedEmployee {
 	private int experience;
 	private LocalDateTime updatedAt;
 	private LocalDateTime createdAt;
-	
+	private boolean inProbation;
+
 	public int getId() {
 		return id;
 	}
@@ -315,6 +316,12 @@ public class ResignedEmployee {
 	}
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
+	}
+	public boolean isInProbation() {
+		return inProbation;
+	}
+	public void setInProbation(boolean inProbation) {
+		this.inProbation = inProbation;
 	}
 
 }

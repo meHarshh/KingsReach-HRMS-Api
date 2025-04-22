@@ -37,7 +37,7 @@ public class PayrollController {
 	}
 	
 	@GetMapping(value = "/getSalary")
-	public ResponseEntity<ResponseStructure<Payroll>> getEmployeeSalary(@RequestParam String employeeId){
+	public ResponseEntity<ResponseStructure<List<Payroll>>> getEmployeeSalary(@RequestParam String employeeId){
 		return payrollService.getEmployeeSalary(employeeId);
 	}
 	

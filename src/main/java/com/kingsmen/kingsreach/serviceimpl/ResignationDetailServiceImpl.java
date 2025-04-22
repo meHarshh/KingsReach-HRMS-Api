@@ -11,17 +11,30 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.kingsmen.kingsreach.entity.Asset;
+import com.kingsmen.kingsreach.entity.Attendance;
 import com.kingsmen.kingsreach.entity.Employee;
+import com.kingsmen.kingsreach.entity.LeaveRecord;
 import com.kingsmen.kingsreach.entity.Notification;
+import com.kingsmen.kingsreach.entity.Payroll;
+import com.kingsmen.kingsreach.entity.Reimbursement;
 import com.kingsmen.kingsreach.entity.ResignationDetail;
 import com.kingsmen.kingsreach.entity.ResignedEmployee;
 import com.kingsmen.kingsreach.entity.TerminationDetail;
+import com.kingsmen.kingsreach.entity.Ticket;
+import com.kingsmen.kingsreach.enums.ResignationStatus;
 import com.kingsmen.kingsreach.exceptions.ResignationIdNotFoundException;
+import com.kingsmen.kingsreach.repo.AssetRepo;
+import com.kingsmen.kingsreach.repo.AttendanceRepo;
 import com.kingsmen.kingsreach.repo.EmployeeRepo;
+import com.kingsmen.kingsreach.repo.LeaveRecordRepo;
 import com.kingsmen.kingsreach.repo.NotificationRepo;
+import com.kingsmen.kingsreach.repo.PayrollRepo;
+import com.kingsmen.kingsreach.repo.ReimbursementRepo;
 import com.kingsmen.kingsreach.repo.ResignationDetailRepo;
 import com.kingsmen.kingsreach.repo.ResignedEmployeeRepo;
 import com.kingsmen.kingsreach.repo.TerminationDetailRepo;
+import com.kingsmen.kingsreach.repo.TicketRepo;
 import com.kingsmen.kingsreach.service.ResignationDetailService;
 import com.kingsmen.kingsreach.util.ResponseStructure;
 
@@ -42,6 +55,24 @@ public class ResignationDetailServiceImpl implements ResignationDetailService {
 	
 	@Autowired
 	private ResignedEmployeeRepo resignedEmployeeRepo;
+	
+	@Autowired
+	private AssetRepo assetRepo;
+	
+	@Autowired
+	private LeaveRecordRepo leaveRecordRepo;
+	
+	@Autowired
+	private PayrollRepo payrollRepo;
+	
+	@Autowired
+	private ReimbursementRepo reimbursementRepo;
+	
+	@Autowired
+	private AttendanceRepo attendanceRepo;
+	
+	@Autowired
+	private TicketRepo ticketRepo;
 
 	@Override
 	public ResponseEntity<ResponseStructure<ResignationDetail>> resignationDetail(ResignationDetail resignationDetail) {
@@ -74,7 +105,7 @@ public class ResignationDetailServiceImpl implements ResignationDetailService {
 
 		return new ResponseEntity<ResponseStructure<List<ResignationDetail>>>(responseStructure,HttpStatus.CREATED);
 	}
-
+	
 	@Override
 	public ResponseEntity<ResponseStructure<ResignationDetail>> changeResignationStatus(int resignationId,ResignationDetail resignationDetail) {
 
@@ -83,14 +114,32 @@ public class ResignationDetailServiceImpl implements ResignationDetailService {
 		
 		Optional<Employee> byEmployeeId = employeeRepo.findByEmployeeId(existingResignation.getEmployeeId());
 		Employee employee = byEmployeeId.get();
-
-		saveResignedEmployeeDetail(existingResignation);
+		
+		String employeeId = existingResignation.getEmployeeId();
+		List<Asset> asset = assetRepo.findByEmployeeId(employeeId);
+		Payroll payroll = payrollRepo.findByEmployeeId(employeeId);
+		List<LeaveRecord> leaveRecord = leaveRecordRepo.findByEmployeeId(employeeId);
+		List<Reimbursement> reimbursement = reimbursementRepo.findByEmployeeId(employeeId);
+		List<Attendance> attendance = attendanceRepo.findByEmployeeId(employeeId);
+		List<Ticket> tickets = ticketRepo.findByEmployeeId(employeeId);
 		
 		existingResignation.setResignationStatus(resignationDetail.getResignationStatus());
 		ResignationDetail updatedDetail = resignationDetailRepo.save(existingResignation);
+
+		if(existingResignation.getResignationStatus() == ResignationStatus.ACCEPTED) {
+		saveResignedEmployeeDetail(existingResignation);
 		
+		assetRepo.deleteAll(asset);
+		if (payroll != null) {
+		    payrollRepo.delete(payroll);
+		}
+		leaveRecordRepo.deleteAll(leaveRecord);
+		attendanceRepo.deleteAll(attendance);
+		reimbursementRepo.deleteAll(reimbursement);
+		ticketRepo.deleteAll(tickets);
 		employeeRepo.delete(employee);
-		
+		}
+	
 		ResponseStructure<ResignationDetail> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		responseStructure.setMessage(existingResignation.getName() + " Resignation status updated successfully.");
@@ -153,6 +202,7 @@ public class ResignationDetailServiceImpl implements ResignationDetailService {
 		resignedEmployee.setExperience(employee.getExperience());
 		resignedEmployee.setUpdatedAt(employee.getUpdatedAt());
 		resignedEmployee.setCreatedAt(employee.getCreatedAt());
+		resignedEmployee.setInProbation(employee.isInProbation());
 		
 		resignedEmployeeRepo.save(resignedEmployee);	
 	}
